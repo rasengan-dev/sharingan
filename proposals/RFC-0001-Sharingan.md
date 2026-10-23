@@ -69,6 +69,7 @@ enhancement: the hero must read well without it.
 | Shader language | TypeGPU shader functions in TypeScript (`"use gpu"`, compiled to WGSL by `unplugin-typegpu`); raw WGSL allowed where TypeGPU cannot express it yet |
 | Targets | React component **and** Web Component, both thin layers over one engine |
 | Distribution | **shadcn registry**: `registry:lib` for the core, `registry:block` per hero |
+| Website | a **Rasengan.js** app, created with `npx create-rasengan@beta` (create-rasengan 1.5.0-beta.5, Rasengan.js 2.0.0-beta.5 at the time of writing). It hosts the docs, the live previews and the registry files |
 | Content | typed `content` prop (Zod), like Rasengan UI v2 |
 | Look | typed `config` (Zod): colours from CSS variables, speed, density, interaction |
 | Fallback | still poster (pre-rendered frame) plus a CSS gradient; content always visible |
@@ -95,7 +96,7 @@ sharingan/
         meta.ts                   what it is, cost, interactions (for docs and agents)
         poster.webp               generated still frame
   apps/
-    site/                         docs, live previews, registry host (registry.json, /r/*.json)
+    site/                         Rasengan.js app (npx create-rasengan@beta): docs, live previews, registry host (registry.json, /r/*.json)
   proposals/
 ```
 
@@ -246,12 +247,15 @@ Separate project, shared conventions:
 ## Milestones
 
 1. **M1 — Core and one hero.** `@sharingan/core` and `ink-flow`, in React
-   and as a Web Component. Validates TypeGPU, the theme bridge, the fallback
-   and the budget on real devices (a laptop with integrated graphics, a
-   mid-range Android, Safari).
+   and as a Web Component, previewed in a first `apps/site` scaffolded with
+   `npx create-rasengan@beta`. Validates TypeGPU with Rasengan.js and Vite,
+   the theme bridge, the fallback and the budget on real devices (a laptop
+   with integrated graphics, a mid-range Android, Safari).
 2. **M2 — Collection v0.1.** The five other heroes.
-3. **M3 — Site and registry.** Docs with live previews and a config panel,
-   the registry, posters generated in CI.
+3. **M3 — Site and registry.** The Rasengan.js site (`apps/site`, scaffolded
+   with `npx create-rasengan@beta`): docs with live previews and a config
+   panel, the registry, posters generated in CI. The site is also the first
+   real user of the heroes, in React.
 4. **M4 — Bridge.** Rasengan UI v2 integration and a first hero there.
 
 ## Alternatives considered
