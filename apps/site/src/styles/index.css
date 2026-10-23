@@ -4,6 +4,7 @@
 
 /* Heroes live outside the app; let Tailwind see their classes. */
 @source '../../../../registry/heroes';
+@source '../../../../packages/core/src';
 
 @custom-variant dark (&:is(.dark *));
 

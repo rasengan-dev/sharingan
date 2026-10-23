@@ -11,6 +11,7 @@
     /* Aliases for intellisence */
     "paths": {
       "@/lib/sharingan": ["../../packages/core/src/index.ts"],
+      "@/lib/sharingan/react": ["../../packages/core/src/react.tsx"],
       "@/heroes/*": ["../../registry/heroes/*"],
       "@/*": ["src/*"]
     },

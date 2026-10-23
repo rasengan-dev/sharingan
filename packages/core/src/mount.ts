@@ -118,10 +118,13 @@ export async function mountScene({ canvas, host, create, onFallback, maxPixelRat
 		if (sized && width === canvas.width && height === canvas.height) return;
 		canvas.width = width;
 		canvas.height = height;
+		const firstSize = !sized;
 		scene.resize(width, height);
 		sized = true;
 		stillIsCurrent = false;
 		if (mode !== "ready") drawStill();
+		// Warm start: a live hero begins from its settled still frame instead of an empty canvas.
+		else if (firstSize && !destroyed) scene.still();
 	});
 	resizeObserver.observe(canvas);
 

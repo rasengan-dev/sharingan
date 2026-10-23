@@ -1,11 +1,15 @@
-import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
-import type { FallbackReason } from "@/lib/sharingan";
-import { createInkFlow, type InkFlowHandle } from "./engine";
+import { fallbackGradient } from "@/lib/sharingan";
+import { HeroCanvas, HeroSection } from "@/lib/sharingan/react";
+import type { RefObject } from "react";
+import { createInkFlow } from "./engine";
 import { inkFlowExample } from "./example";
-import { inkFlowFallbackStyle } from "./fallback";
-import type { InkFlowConfigInput, InkFlowContent } from "./schema";
+import { inkFlowConfigSchema, type InkFlowConfigInput, type InkFlowContent } from "./schema";
 
-const join = (...classes: (string | false | undefined)[]) => classes.filter(Boolean).join(" ");
+/** CSS shown before WebGPU starts, and instead of it when unavailable. */
+export const inkFlowFallbackStyle = (config?: InkFlowConfigInput) => {
+	const { colors, background } = inkFlowConfigSchema.parse(config ?? {});
+	return fallbackGradient(colors, background);
+};
 
 export type InkFlowBackgroundProps = {
 	config?: InkFlowConfigInput;
@@ -16,37 +20,7 @@ export type InkFlowBackgroundProps = {
 
 /** Only the ink layer, for people who bring their own hero layout. Place it in a positioned parent. */
 export function InkFlowBackground({ config, hostRef, className }: InkFlowBackgroundProps) {
-	const wrapper = useRef<HTMLDivElement>(null);
-	const canvas = useRef<HTMLCanvasElement>(null);
-	const engine = useRef<InkFlowHandle | null>(null);
-	const [fallback, setFallback] = useState<FallbackReason | null>(null);
-	const configKey = JSON.stringify(config ?? {});
-
-	useEffect(() => {
-		const host = hostRef?.current ?? wrapper.current?.parentElement ?? wrapper.current;
-		if (!canvas.current || !host) return;
-		engine.current = createInkFlow({ canvas: canvas.current, host, config, onFallback: setFallback });
-		return () => {
-			engine.current?.destroy();
-			engine.current = null;
-		};
-		// The engine is created once; config changes go through setConfig below.
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [hostRef]);
-
-	useEffect(() => {
-		engine.current?.setConfig(JSON.parse(configKey));
-	}, [configKey]);
-
-	const fallbackStyle = useMemo(() => inkFlowFallbackStyle(JSON.parse(configKey)), [configKey]);
-	const poster = (config?.poster as string | undefined) ?? undefined;
-
-	return (
-		<div ref={wrapper} aria-hidden="true" data-sharingan="ink-flow" data-state={fallback ?? "live"} className={join("pointer-events-none overflow-hidden", className)} style={fallbackStyle}>
-			{fallback && poster && <img src={poster} alt="" className="size-full object-cover" />}
-			<canvas ref={canvas} hidden={fallback !== null} className="block size-full" />
-		</div>
-	);
+	return <HeroCanvas name="ink-flow" create={createInkFlow} config={config} fallbackStyle={inkFlowFallbackStyle} hostRef={hostRef} className={className} />;
 }
 
 export type InkFlowHeroProps = {
@@ -60,34 +34,13 @@ export type InkFlowHeroProps = {
  * Ink flow (Sharingan). Brand-coloured ink swirls behind the headline and
  * follows the cursor. The text and buttons are ordinary DOM over the canvas.
  */
-export function InkFlowHero({ content = inkFlowExample, config, id = "hero", className }: InkFlowHeroProps) {
-	const section = useRef<HTMLElement>(null);
-
+export function InkFlowHero({ content = inkFlowExample, config, id, className }: InkFlowHeroProps) {
 	return (
-		<section ref={section} id={id} aria-labelledby={`${id}-title`} className={join("relative isolate flex min-h-[640px] items-center justify-center overflow-hidden px-6 py-24", className)}>
-			<InkFlowBackground config={config} hostRef={section} className="absolute inset-0 -z-10" />
-
-			<div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-				{content.eyebrow && <p className="font-mono text-xs tracking-[0.18em] text-muted-foreground uppercase">{content.eyebrow}</p>}
-				<h1 id={`${id}-title`} className="mt-5 text-5xl font-semibold tracking-tight text-balance text-foreground sm:text-7xl">
-					{content.headline}
-				</h1>
-				{content.subheadline && <p className="mt-6 max-w-xl text-lg text-pretty text-muted-foreground">{content.subheadline}</p>}
-				{(content.primaryCta || content.secondaryCta) && (
-					<div className="mt-10 flex flex-wrap justify-center gap-3">
-						{content.primaryCta && (
-							<a href={content.primaryCta.href} className="inline-flex h-12 items-center rounded-full bg-primary px-6 font-medium text-primary-foreground transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
-								{content.primaryCta.label}
-							</a>
-						)}
-						{content.secondaryCta && (
-							<a href={content.secondaryCta.href} className="inline-flex h-12 items-center rounded-full border border-border bg-background/60 px-6 font-medium text-foreground backdrop-blur-sm transition-colors hover:bg-background focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
-								{content.secondaryCta.label}
-							</a>
-						)}
-					</div>
-				)}
-			</div>
-		</section>
+		<HeroSection
+			id={id}
+			className={className}
+			content={content}
+			background={(section) => <InkFlowBackground config={config} hostRef={section} className="absolute inset-0 -z-10" />}
+		/>
 	);
 }

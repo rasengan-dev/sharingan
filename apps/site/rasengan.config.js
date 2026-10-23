@@ -12,6 +12,7 @@ export default defineConfig(async () => {
         symbole: '@rasengan-src-unused',
         alias: [
           // Heroes import the paths they have once installed by the shadcn CLI; these point them at the sources.
+          { find: '@/lib/sharingan/react', replacement: '../../packages/core/src/react.tsx' },
           { find: '@/lib/sharingan', replacement: '../../packages/core/src/index.ts' },
           { find: '@/heroes', replacement: '../../registry/heroes' },
           { find: '@', replacement: './src' },

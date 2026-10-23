@@ -1,11 +1,10 @@
 import * as d from "typegpu/data";
 import {
-	mountScene,
-	onThemeChange,
-	resolveColor,
-	type FallbackReason,
+	createHeroEngine,
+	type HeroEngine,
+	type HeroEngineOptions,
+	type HeroResolved,
 	type LinearColor,
-	type MountedScene,
 	type PointerState,
 	type Scene,
 	type SceneContext,
@@ -20,7 +19,7 @@ const PRESSURE_ITERATIONS = 20;
 const STILL_STEPS = 150;
 const GAIN = 2.2;
 
-type Resolved = { config: InkFlowConfig; palette: LinearColor[]; background: LinearColor };
+type Resolved = HeroResolved<InkFlowConfig>;
 
 type Splat = { x: number; y: number; fx: number; fy: number; color: LinearColor; amount: number; radius: number };
 
@@ -222,9 +221,8 @@ function createInkScene({ root, device, context, format }: SceneContext, current
 	}
 
 	function draw() {
-		const { config, background } = current();
 		// Ink fades into a light page much sooner than into a dark one: give light backgrounds denser ink.
-		const luminance = 0.2126 * background[0] + 0.7152 * background[1] + 0.0722 * background[2];
+		const { config, background, luminance } = current();
 		renderParams.buffer.write({
 			background: d.vec4f(background[0], background[1], background[2], 1),
 			calmZone: d.vec4f(0.5, 0.42, 0.34, 0.24),
@@ -291,55 +289,9 @@ function createInkScene({ root, device, context, format }: SceneContext, current
 	};
 }
 
-export type InkFlowHandle = {
-	/** Change the look or behaviour; colours are read again from the page. */
-	setConfig(next: InkFlowConfigInput): void;
-	destroy(): void;
-};
-
-export type CreateInkFlowOptions = {
-	canvas: HTMLCanvasElement;
-	/** The hero element: the pointer is followed over it and CSS colours are resolved from it. */
-	host: HTMLElement;
-	config?: InkFlowConfigInput;
-	onFallback?: (reason: FallbackReason) => void;
-};
+export type InkFlowHandle = HeroEngine<InkFlowConfigInput>;
 
 /** Starts Ink flow on a canvas. Framework-free: the React component and the Web Component both use it. */
-export function createInkFlow({ canvas, host, config, onFallback }: CreateInkFlowOptions): InkFlowHandle {
-	const resolve = (input: InkFlowConfigInput | undefined): Resolved => {
-		const parsed = inkFlowConfigSchema.parse(input ?? {});
-		return {
-			config: parsed,
-			palette: parsed.colors.map((color) => resolveColor(host, color, [0.35, 0.55, 1])),
-			background: resolveColor(host, parsed.background, [0.004, 0.004, 0.006]),
-		};
-	};
-
-	let input = config;
-	let resolved = resolve(input);
-	let mounted: MountedScene | null = null;
-	const cancel = new AbortController();
-
-	const stopTheme = onThemeChange(() => {
-		resolved = resolve(input);
-		mounted?.invalidate();
-	});
-
-	mountScene({ canvas, host, onFallback, signal: cancel.signal, create: (context) => createInkScene(context, () => resolved) }).then((scene) => {
-		mounted = scene;
-	});
-
-	return {
-		setConfig(next) {
-			input = next;
-			resolved = resolve(input);
-			mounted?.invalidate();
-		},
-		destroy() {
-			cancel.abort();
-			stopTheme();
-			mounted?.destroy();
-		},
-	};
+export function createInkFlow(options: HeroEngineOptions<InkFlowConfigInput>): InkFlowHandle {
+	return createHeroEngine(options, { parse: (input) => inkFlowConfigSchema.parse(input ?? {}), createScene: createInkScene });
 }

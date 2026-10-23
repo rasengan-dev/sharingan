@@ -1,6 +1,6 @@
 # RFC-0001: Sharingan — open-source WebGPU heroes
 
-- Status: Draft (M1 implemented: `@sharingan/core`, `ink-flow` in React and as a Web Component, `apps/site`)
+- Status: Draft (M1 and M2 implemented: `@sharingan/core` and the six v0.1 heroes, in React and as Web Components, previewed in `apps/site`)
 - Author: Dilane Kombou
 - Created: 2026-10-23
 - Repository: `rasengan-dev/sharingan` (new, MIT)
@@ -225,6 +225,15 @@ steps run back to back, plus a light full-screen render pass, so about
 3 ms per frame against the 8 ms budget. Software rendering (SwiftShader)
 runs at about 8 fps: good for correctness checks, not for tuning, since
 anything injected per frame looks several times weaker there.
+
+**Measured in M2**, same machine, 1440×900 window, dark theme, median GPU
+time per frame (submit to done, so an upper bound): gravity-field 2.3 ms,
+particle-type 3.4 ms, reaction-diffusion 3.5 ms, ink-flow 5–7 ms,
+aurora-mesh 8.4 ms, liquid-glass 9.8 ms, all at 60 fps. Aurora mesh first
+ran at 1.5 fps (87 ms): its layered noise is costly per pixel, so it now
+renders at half resolution (`maxPixelRatio: 0.5`, invisible on soft light)
+with three noise octaves instead of five. Its "cost 1" label measured the
+technique, not the price; costs are now taken from measurements.
 
 ### Initial collection (v0.1)
 

@@ -96,9 +96,15 @@ importers:
         specifier: 0.12.8
         version: 0.12.8
     devDependencies:
+      '@types/react':
+        specifier: ^19.2.0
+        version: 19.3.0
       '@webgpu/types':
         specifier: ^0.1.60
         version: 0.1.74
+      react:
+        specifier: ^19.2.0
+        version: 19.3.1
       typescript:
         specifier: ^5.9.2
         version: 5.9.3

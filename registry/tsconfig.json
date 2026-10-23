@@ -14,7 +14,8 @@
     "isolatedModules": true,
     "baseUrl": ".",
     "paths": {
-      "@/lib/sharingan": ["../packages/core/src/index.ts"]
+      "@/lib/sharingan": ["../packages/core/src/index.ts"],
+      "@/lib/sharingan/react": ["../packages/core/src/react.tsx"]
     }
   },
   "include": ["heroes"]

@@ -5,18 +5,18 @@ Built with TypeGPU, for React and as Web Components, and copied into your projec
 
 Text, links and buttons stay in the DOM; only the background is drawn on the GPU. Colours come from your CSS variables, and a still poster takes over when WebGPU or motion is unavailable.
 
-> **Status: proposal.** Nothing is published yet. The design is in [RFC-0001](proposals/RFC-0001-Sharingan.md); previews and live links arrive with each hero.
+> **Status: v0.1 in progress.** The six heroes run locally (`pnpm dev`); nothing is published to the registry yet. The design is in [RFC-0001](proposals/RFC-0001-Sharingan.md).
 
 ## Heroes
 
 | Hero | Concept | GPU cost | Status |
 | --- | --- | --- | --- |
-| **Aurora mesh** | Slow bands of light drifting behind the headline, the quiet one | Light | Planned |
-| **Ink flow** | Brand-coloured ink that swirls and follows the cursor, a fluid simulation in compute passes | Medium | Next (M1) |
-| **Particle type** | The headline breaks into particles on hover, then reforms | Medium | Planned |
-| **Gravity field** | 200,000 particles pulled toward the pointer | Medium | Planned |
-| **Reaction-diffusion** | A living pattern that grows behind the title | Medium | Planned |
-| **Liquid glass** | Refraction and caustics over your product shot | Heavy | Planned |
+| **Aurora mesh** | Slow bands of light drifting behind the headline, the quiet one | Light | Draft |
+| **Ink flow** | Brand-coloured ink that swirls and follows the cursor, a fluid simulation in compute passes | Medium | Draft |
+| **Particle type** | The headline breaks into particles on hover, then reforms | Medium | Draft |
+| **Gravity field** | 200,000 particles pulled toward the pointer | Medium | Draft |
+| **Reaction-diffusion** | A living pattern that grows behind the title | Medium | Draft |
+| **Liquid glass** | Refraction and caustics over your product shot | Heavy | Draft |
 
 Later: **Black hole** (gravitational lensing on the headline), **Gamepad 3D** (a playable controller as navigation), **Metaballs**.
 

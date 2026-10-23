@@ -9,3 +9,6 @@ export { readMotionMode, onMotionPreferenceChange, type MotionMode } from "./mot
 export { trackPointer, type PointerState } from "./pointer";
 export { resolveColor, splitColorList, onThemeChange, type LinearColor } from "./theme";
 export { mountScene, type Scene, type SceneContext, type MountOptions, type MountedScene } from "./mount";
+export { createHeroEngine, fallbackGradient, type HeroBaseConfig, type HeroResolved, type HeroEngine, type HeroEngineOptions, type HeroDefinition } from "./hero";
+export { defineHeroElement, type HeroElementSpec, type AttributeKind } from "./element";
+export * as wgsl from "./wgsl";
