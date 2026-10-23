@@ -4,8 +4,10 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm --filter @sharingan/site dev",
-    "build": "pnpm --filter @sharingan/site build",
-    "typecheck": "pnpm -r typecheck"
+    "registry": "node scripts/registry.mjs",
+    "build": "pnpm registry && pnpm --filter @sharingan/site build",
+    "typecheck": "pnpm -r typecheck",
+    "posters": "node scripts/posters.mjs"
   },
   "engines": {
     "node": ">=20.18.0"

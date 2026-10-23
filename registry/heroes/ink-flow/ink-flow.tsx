@@ -41,7 +41,7 @@ export function InkFlowHero({ content = inkFlowExample, config, id, className }:
 			id={id}
 			className={className}
 			content={content}
-			background={(section) => <InkFlowBackground config={config} hostRef={section} className="absolute inset-0 -z-10" />}
+			background={(section) => <InkFlowBackground config={config} hostRef={section} className="sg-hero-layer" />}
 		/>
 	);
 }

@@ -1,0 +1,90 @@
+---
+metadata:
+  title: Getting started · Sharingan
+  description: Add the Sharingan registry, install a hero with the shadcn CLI, and use it in React or as a Web Component.
+toc: true
+---
+
+# Copy a hero into your project
+
+Sharingan heroes are not a package: the shadcn CLI copies their source into your project, where they are yours to read and change. Each one works in React and as a framework-free Web Component, and keeps its text, links and buttons in the DOM.
+
+There are two engines. **WebGPU** heroes draw their background on the GPU (fluids, particles, simulations) and show a CSS fallback where WebGPU is missing. **DOM** heroes are made of HTML, SVG and CSS 3D and run in every browser.
+
+## Add the registry
+
+In a project set up for shadcn (a `components.json` with the `@/` alias), declare the `@sharingan` registry:
+
+<RegistryConfig />
+
+<Note>Tailwind is not required: every hero brings its own small stylesheet.</Note>
+
+## Install a hero
+
+```bash title="Terminal"
+npx shadcn@latest add @sharingan/holo-card
+```
+
+The hero lands in `components/heroes/holo-card/`, the shared runtime in `lib/sharingan/`. WebGPU heroes also add `lib/sharingan/webgpu/` and `typegpu`. Without the registry entry, the full address works too:
+
+<InstallByUrl name="holo-card" />
+
+## Use it in React
+
+Every hero takes `content` (what it says) and `config` (how it looks and moves). Both are typed by the hero's Zod schemas, and both have defaults, so the hero renders with no props at all. React 19 is required.
+
+```tsx title="app/page.tsx" showLineNumbers
+import { HoloCardHero } from "@/components/heroes/holo-card/holo-card";
+
+export default function Page() {
+  return (
+    <HoloCardHero
+      content={{
+        headline: "Your pass for the summit",
+        card: { issuer: "SUMMIT/27", name: "Ada Obi", role: "Speaker" },
+      }}
+      config={{ surface: "light", pattern: "lines" }}
+    />
+  );
+}
+```
+
+<Note>Each hero's page lists all its props and has a **Customize** panel that writes this code for you.</Note>
+
+## Or as a Web Component
+
+The same engine, for any page: define the element once, then write its content as plain HTML. Config options become attributes (`speed`, `colors="#f97316, var(--brand)"`).
+
+```html title="index.html" showLineNumbers
+<script type="module">
+  import { defineHoloCardElement } from "@/components/heroes/holo-card/holo-card.element";
+  defineHoloCardElement(); // registers <sg-holo-card>
+</script>
+
+<sg-holo-card surface="light">
+  <div class="sg-hc-copy">…</div>
+  <div>
+    <div data-sg-card>
+      <div data-sg-front>…</div>
+      <div data-sg-back>…</div>
+    </div>
+  </div>
+</sg-holo-card>
+```
+
+The markup each element expects is written at the top of its `engine.ts`, and shown in the Web Component demo at the bottom of every hero page.
+
+## Colours and theme
+
+Heroes read the usual shadcn tokens: `--background`, `--foreground`, `--muted-foreground`, `--primary`, `--border`, plus `--brand` for the accent. Colour options take any CSS colour, variables included, and follow your theme when it changes.
+
+Without those tokens, WebGPU heroes default to a dark look (light on a dark background) and DOM heroes to a light one.
+
+## Motion and fallbacks
+
+- `prefers-reduced-motion` is honoured: one still frame, no loop.
+- `?motion=final` (or `data-motion="final"` on `<html>`) shows a repeatable still frame, for screenshots and visual tests; `?motion=off` turns motion off.
+- Heroes pause when they are off screen.
+- Where WebGPU is missing, WebGPU heroes show a CSS gradient in their colours, and the `poster` image if you give one. Their wrapper says why in `data-state`.
+
+Ready? <Link to="/#collection">Browse the collection</Link>.

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
-import { join } from "../react";
+import { HeroStyles, join } from "../react";
 import type { FallbackReason } from "./device";
 import type { HeroEngine, HeroEngineOptions } from "./hero";
 
@@ -46,9 +46,10 @@ export function HeroCanvas<I extends { poster?: string }>({ name, create, config
 	const style = useMemo(() => fallbackStyle(JSON.parse(configKey)), [configKey, fallbackStyle]);
 
 	return (
-		<div ref={wrapper} aria-hidden="true" data-sharingan={name} data-state={fallback ?? "live"} className={join("pointer-events-none overflow-hidden", className)} style={style}>
-			{fallback && config?.poster && <img src={config.poster} alt="" className="size-full object-cover" />}
-			<canvas ref={canvas} hidden={fallback !== null} className="block size-full" />
+		<div ref={wrapper} aria-hidden="true" data-sharingan={name} data-state={fallback ?? "live"} className={join("sg-hero-canvas", className)} style={style}>
+			<HeroStyles />
+			{fallback && config?.poster && <img src={config.poster} alt="" />}
+			<canvas ref={canvas} hidden={fallback !== null} />
 		</div>
 	);
 }

@@ -37,13 +37,25 @@ Later (WebGPU): **Black hole** (gravitational lensing on the headline), **Metaba
 
 ## Use a hero
 
-Add the `@sharingan` registry to your `components.json`, then:
+In a project set up for shadcn, add the `@sharingan` registry to `components.json`, with the address the website is served from:
+
+```json
+{
+  "registries": {
+    "@sharingan": "https://<sharingan-site>/r/{name}.json"
+  }
+}
+```
+
+Then:
 
 ```bash
 npx shadcn@latest add @sharingan/ink-flow
 ```
 
-In React:
+The hero lands in `components/heroes/ink-flow/`, the shared runtime in `lib/sharingan/`. No Tailwind or tsconfig change is needed: each hero brings its own stylesheet, and WebGPU heroes load their types themselves.
+
+In React (19):
 
 ```tsx
 <InkFlowHero
@@ -61,7 +73,7 @@ In any page, as a Web Component:
 </sg-ink-flow>
 ```
 
-Each hero ships its engine (TypeGPU shaders), the React component, the Web Component, a typed content and config schema, and its poster.
+Each hero ships its engine, the React component, the Web Component and a typed content and config schema. The website's getting-started page (`/docs`) and each hero's page (props tables, a Customize panel that writes the code) cover the rest.
 
 ## Run locally
 
@@ -74,9 +86,16 @@ pnpm dev
 
 This starts the website with every hero previewed. Add `?motion=final` to a preview URL to freeze it on its poster frame, or `?motion=off` to see the fallback.
 
+| Command | What it does |
+| --- | --- |
+| `pnpm registry` | Writes `registry.json` from the sources and builds it into `apps/site/public/r` with the shadcn CLI. Set `SHARINGAN_URL` to the site's public address (default `http://localhost:3100`). |
+| `pnpm posters` | With `pnpm dev` running: renders every hero's still frame, light and dark, into `public/thumbs` (cards) and `public/posters` (WebGPU fallbacks). `HEADLESS=0` uses the real GPU. |
+| `pnpm build` | `pnpm registry`, then the website. |
+| `pnpm typecheck` | Every package. |
+
 ## Website
 
-`apps/site` is the collection website: docs, live previews with a config panel, and the registry files (`registry.json`, `/r/*.json`).
+`apps/site` is the collection website: a getting-started guide, live previews with props tables and a config panel, and the registry files (`/r/*.json`, built by `pnpm registry`).
 It is a **[Rasengan.js](https://rasengan.dev)** app, created with:
 
 ```bash
@@ -95,8 +114,9 @@ On Vercel, one project:
 
 1. **M1** · Core and Ink flow, in React and as a Web Component, previewed in the Rasengan.js site.
 2. **M2** · The rest of the v0.1 collection.
-3. **M3** · Website, registry and posters generated in CI.
-4. **M4** · Bridge with [Rasengan UI](https://github.com/rasengan-dev/rasengan-ui) v2: Sharingan backgrounds under its art directions.
+3. **M3** · Website, registry and posters (local script; CI once the repository is public).
+4. **M3b** · DOM heroes: the second engine, eight heroes for every browser.
+5. **M4** · Bridge with [Rasengan UI](https://github.com/rasengan-dev/rasengan-ui) v2: Sharingan backgrounds under its art directions.
 
 ## Support
 

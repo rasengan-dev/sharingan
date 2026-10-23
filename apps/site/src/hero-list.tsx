@@ -1,50 +1,77 @@
 import type { ComponentType, ReactNode } from 'react';
+import type { z } from 'zod';
 import { GamepadHero } from '@/heroes/gamepad/gamepad';
 import { defineGamepadElement } from '@/heroes/gamepad/gamepad.element';
 import { meta as gamepadMeta } from '@/heroes/gamepad/meta';
+import * as gamepadSchema from '@/heroes/gamepad/schema';
 import { HoloCardHero } from '@/heroes/holo-card/holo-card';
 import { defineHoloCardElement } from '@/heroes/holo-card/holo-card.element';
 import { meta as holoCardMeta } from '@/heroes/holo-card/meta';
+import * as holoCardSchema from '@/heroes/holo-card/schema';
 import { SplitHeadlineHero } from '@/heroes/split-headline/split-headline';
 import { defineSplitHeadlineElement } from '@/heroes/split-headline/split-headline.element';
 import { meta as splitHeadlineMeta } from '@/heroes/split-headline/meta';
+import * as splitHeadlineSchema from '@/heroes/split-headline/schema';
 import { MarqueeTypeHero } from '@/heroes/marquee-type/marquee-type';
 import { defineMarqueeTypeElement } from '@/heroes/marquee-type/marquee-type.element';
 import { meta as marqueeTypeMeta } from '@/heroes/marquee-type/meta';
+import * as marqueeTypeSchema from '@/heroes/marquee-type/schema';
 import { TerminalBootHero } from '@/heroes/terminal-boot/terminal-boot';
 import { defineTerminalBootElement } from '@/heroes/terminal-boot/terminal-boot.element';
 import { meta as terminalBootMeta } from '@/heroes/terminal-boot/meta';
+import * as terminalBootSchema from '@/heroes/terminal-boot/schema';
 import { AppWindowHero } from '@/heroes/app-window/app-window';
 import { defineAppWindowElement } from '@/heroes/app-window/app-window.element';
 import { meta as appWindowMeta } from '@/heroes/app-window/meta';
+import * as appWindowSchema from '@/heroes/app-window/schema';
 import { BeamGridHero } from '@/heroes/beam-grid/beam-grid';
 import { defineBeamGridElement } from '@/heroes/beam-grid/beam-grid.element';
 import { meta as beamGridMeta } from '@/heroes/beam-grid/meta';
+import * as beamGridSchema from '@/heroes/beam-grid/schema';
 import { ConicRaysHero } from '@/heroes/conic-rays/conic-rays';
 import { defineConicRaysElement } from '@/heroes/conic-rays/conic-rays.element';
 import { meta as conicRaysMeta } from '@/heroes/conic-rays/meta';
+import * as conicRaysSchema from '@/heroes/conic-rays/schema';
 import { AuroraMeshHero } from '@/heroes/aurora-mesh/aurora-mesh';
 import { defineAuroraMeshElement } from '@/heroes/aurora-mesh/aurora-mesh.element';
 import { meta as auroraMeshMeta } from '@/heroes/aurora-mesh/meta';
+import * as auroraMeshSchema from '@/heroes/aurora-mesh/schema';
 import { GravityFieldHero } from '@/heroes/gravity-field/gravity-field';
 import { defineGravityFieldElement } from '@/heroes/gravity-field/gravity-field.element';
 import { meta as gravityFieldMeta } from '@/heroes/gravity-field/meta';
+import * as gravityFieldSchema from '@/heroes/gravity-field/schema';
 import { InkFlowHero } from '@/heroes/ink-flow/ink-flow';
 import { defineInkFlowElement } from '@/heroes/ink-flow/ink-flow.element';
 import { meta as inkFlowMeta } from '@/heroes/ink-flow/meta';
+import * as inkFlowSchema from '@/heroes/ink-flow/schema';
 import { ReactionDiffusionHero } from '@/heroes/reaction-diffusion/reaction-diffusion';
 import { defineReactionDiffusionElement } from '@/heroes/reaction-diffusion/reaction-diffusion.element';
 import { meta as reactionDiffusionMeta } from '@/heroes/reaction-diffusion/meta';
+import * as reactionDiffusionSchema from '@/heroes/reaction-diffusion/schema';
 import { ParticleTypeHero } from '@/heroes/particle-type/particle-type';
 import { defineParticleTypeElement } from '@/heroes/particle-type/particle-type.element';
 import { meta as particleTypeMeta } from '@/heroes/particle-type/meta';
+import * as particleTypeSchema from '@/heroes/particle-type/schema';
 import { LiquidGlassHero } from '@/heroes/liquid-glass/liquid-glass';
 import { defineLiquidGlassElement } from '@/heroes/liquid-glass/liquid-glass.element';
 import { meta as liquidGlassMeta } from '@/heroes/liquid-glass/meta';
+import * as liquidGlassSchema from '@/heroes/liquid-glass/schema';
+
+type Schema = z.ZodObject<z.ZodRawShape>;
+
+/** A hero's two schemas, found by name in its schema module (`…ContentSchema`, `…ConfigSchema`). */
+function schemasOf(module: Record<string, unknown>) {
+  const find = (suffix: string) => Object.entries(module).find(([key]) => key.endsWith(suffix))?.[1] as Schema;
+  return { content: find('ContentSchema'), config: find('ConfigSchema') };
+}
 
 export type HeroEntry = {
-  meta: { name: string; title: string; engine: 'webgpu' | 'dom'; summary: string; useWhen: string; gpu?: { cost: number } };
-  Hero: ComponentType<{ className?: string }>;
+  meta: { name: string; title: string; engine: 'webgpu' | 'dom'; summary: string; useWhen: string; gpu?: { cost: number }; poster?: boolean };
+  /** For the props tables and the config panel. */
+  schemas: { content: Schema; config: Schema };
+  // Each hero takes its own config type; the site drives them all from their schemas.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Hero: ComponentType<{ className?: string; config?: any }>;
   /** Registers the Web Component; its tag is `sg-<name>`. */
   defineElement: () => void;
   /** Attributes for the Web Component demo: a different palette than the React one. */
@@ -57,42 +84,49 @@ export type HeroEntry = {
 export const heroes: HeroEntry[] = [
   {
     meta: auroraMeshMeta,
+    schemas: schemasOf(auroraMeshSchema),
     Hero: AuroraMeshHero,
     defineElement: () => defineAuroraMeshElement(),
     elementAttributes: { colors: 'oklch(0.8 0.15 85), oklch(0.7 0.19 40), oklch(0.6 0.2 350)', speed: '1.4' },
   },
   {
     meta: inkFlowMeta,
+    schemas: schemasOf(inkFlowSchema),
     Hero: InkFlowHero,
     defineElement: () => defineInkFlowElement(),
     elementAttributes: { colors: 'oklch(0.78 0.17 75), oklch(0.68 0.22 25), oklch(0.6 0.2 300)', swirl: '32', calm: '0.6' },
   },
   {
     meta: gravityFieldMeta,
+    schemas: schemasOf(gravityFieldSchema),
     Hero: GravityFieldHero,
     defineElement: () => defineGravityFieldElement(),
     elementAttributes: { colors: 'oklch(0.75 0.18 30), oklch(0.82 0.14 70), oklch(0.95 0.05 95)', gravity: '1.4', size: '1.8' },
   },
   {
     meta: reactionDiffusionMeta,
+    schemas: schemasOf(reactionDiffusionSchema),
     Hero: ReactionDiffusionHero,
     defineElement: () => defineReactionDiffusionElement(),
     elementAttributes: { colors: 'oklch(0.7 0.18 30), oklch(0.85 0.14 80)', pattern: 'maze' },
   },
   {
     meta: particleTypeMeta,
+    schemas: schemasOf(particleTypeSchema),
     Hero: ParticleTypeHero,
     defineElement: () => defineParticleTypeElement(),
     elementAttributes: { colors: 'oklch(0.8 0.15 85), oklch(0.7 0.19 30), oklch(0.95 0.04 95)', gap: '3' },
   },
   {
     meta: liquidGlassMeta,
+    schemas: schemasOf(liquidGlassSchema),
     Hero: LiquidGlassHero,
     defineElement: () => defineLiquidGlassElement(),
     elementAttributes: { colors: 'oklch(0.78 0.15 60), oklch(0.98 0.02 90)', image: '/sharingan/product.png', refraction: '1.4' },
   },
   {
     meta: gamepadMeta,
+    schemas: schemasOf(gamepadSchema),
     Hero: GamepadHero,
     defineElement: () => defineGamepadElement(),
     elementAttributes: { colors: 'oklch(0.7 0.17 160), oklch(0.62 0.2 300), oklch(0.82 0.15 75), oklch(0.65 0.21 15)', shell: 'graphite', 'data-wordmark': 'SG·PAD', 'data-wordmark-tagline': 'WEB COMPONENT', 'data-collaborators': 'Kai' },
@@ -126,6 +160,7 @@ export const heroes: HeroEntry[] = [
   },
   {
     meta: holoCardMeta,
+    schemas: schemasOf(holoCardSchema),
     Hero: HoloCardHero,
     defineElement: () => defineHoloCardElement(),
     elementAttributes: { colors: 'oklch(0.85 0.13 85), oklch(0.75 0.17 40), oklch(0.82 0.12 170)', surface: 'light', pattern: 'lines' },
@@ -167,6 +202,7 @@ export const heroes: HeroEntry[] = [
   },
   {
     meta: splitHeadlineMeta,
+    schemas: schemasOf(splitHeadlineSchema),
     Hero: SplitHeadlineHero,
     defineElement: () => defineSplitHeadlineElement(),
     elementAttributes: { intro: 'rise', accent: 'oklch(0.7 0.19 40)', radius: '2', stagger: '40' },
@@ -182,6 +218,7 @@ export const heroes: HeroEntry[] = [
   },
   {
     meta: marqueeTypeMeta,
+    schemas: schemasOf(marqueeTypeSchema),
     Hero: MarqueeTypeHero,
     defineElement: () => defineMarqueeTypeElement(),
     elementAttributes: { look: 'outline', direction: 'left', tilt: '0', separator: '/', accent: 'oklch(0.7 0.19 40)', speed: '1.6' },
@@ -214,6 +251,7 @@ export const heroes: HeroEntry[] = [
   },
   {
     meta: terminalBootMeta,
+    schemas: schemasOf(terminalBootSchema),
     Hero: TerminalBootHero,
     defineElement: () => defineTerminalBootElement(),
     elementAttributes: { accent: 'oklch(0.75 0.17 60)', speed: '30', loop: 'true' },
@@ -264,6 +302,7 @@ export const heroes: HeroEntry[] = [
   },
   {
     meta: appWindowMeta,
+    schemas: schemasOf(appWindowSchema),
     Hero: AppWindowHero,
     defineElement: () => defineAppWindowElement(),
     elementAttributes: { accent: 'oklch(0.7 0.17 160)', stagger: '160' },
@@ -312,6 +351,7 @@ export const heroes: HeroEntry[] = [
   },
   {
     meta: beamGridMeta,
+    schemas: schemasOf(beamGridSchema),
     Hero: BeamGridHero,
     defineElement: () => defineBeamGridElement(),
     elementAttributes: { colors: 'oklch(0.75 0.17 60), oklch(0.68 0.2 25)', cell: '40', beams: '10', speed: '1.6', length: '100' },
@@ -325,6 +365,7 @@ export const heroes: HeroEntry[] = [
   },
   {
     meta: conicRaysMeta,
+    schemas: schemasOf(conicRaysSchema),
     Hero: ConicRaysHero,
     defineElement: () => defineConicRaysElement(),
     elementAttributes: { colors: 'oklch(0.8 0.15 85), oklch(0.7 0.19 40), oklch(0.6 0.2 350)', origin: 'bottom', rays: '16', spread: '0.3', speed: '1.6' },

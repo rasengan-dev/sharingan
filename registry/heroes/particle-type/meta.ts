@@ -8,5 +8,7 @@ export const meta = {
 	interaction: ["pointer", "idle"],
 	gpu: { compute: true, cost: 2 },
 	weight: { jsKb: 0 },
+	// Its particles draw the headline: a still image of them would double the real text when shown as a fallback.
+	poster: false,
 	status: "draft",
 } as const;

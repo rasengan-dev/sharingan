@@ -46,11 +46,12 @@ export function LiquidGlassHero({ content = liquidGlassExample, config, id, clas
 	return (
 		<HeroSection
 			id={id}
-			className={["min-h-[820px] items-start pt-32", className].filter(Boolean).join(" ")}
+			className={className}
+			style={{ minHeight: 820, alignItems: "flex-start", paddingTop: 128 }}
 			content={content}
-			background={(section) => <LiquidGlassBackground config={{ image: content.media.src, ...config }} hostRef={section} className="absolute inset-0 -z-10" />}
+			background={(section) => <LiquidGlassBackground config={{ image: content.media.src, ...config }} hostRef={section} className="sg-hero-layer" />}
 		>
-			<p className="sr-only">{content.media.alt}</p>
+			<p className="sg-hero-sr">{content.media.alt}</p>
 		</HeroSection>
 	);
 }

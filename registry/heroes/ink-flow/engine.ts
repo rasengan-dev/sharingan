@@ -25,7 +25,10 @@ type Splat = { x: number; y: number; fx: number; fy: number; color: LinearColor;
 /** Two textures that take turns being read and written. */
 class PingPong {
 	private views: [GPUTextureView, GPUTextureView];
-	constructor(private textures: [GPUTexture, GPUTexture]) {
+	// A plain field, not a parameter property: projects with `erasableSyntaxOnly` reject those.
+	private textures: [GPUTexture, GPUTexture];
+	constructor(textures: [GPUTexture, GPUTexture]) {
+		this.textures = textures;
 		this.views = [textures[0].createView(), textures[1].createView()];
 	}
 	get read() {

@@ -4,8 +4,12 @@ import tgpu, { type TgpuRoot } from "typegpu";
 export type FallbackReason = "unsupported" | "no-adapter" | "lost" | "error";
 
 export class GpuUnavailableError extends Error {
-	constructor(readonly reason: FallbackReason, message: string) {
+	// A plain field, not a parameter property: projects with `erasableSyntaxOnly` reject those.
+	readonly reason: FallbackReason;
+
+	constructor(reason: FallbackReason, message: string) {
 		super(message);
+		this.reason = reason;
 		this.name = "GpuUnavailableError";
 	}
 }

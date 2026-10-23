@@ -37,7 +37,7 @@ export function ParticleTypeHero({ content = particleTypeExample, config, id, cl
 			id={id}
 			className={className}
 			content={content}
-			background={(section) => <ParticleTypeBackground config={config} hostRef={section} className="absolute inset-0 -z-10" />}
+			background={(section) => <ParticleTypeBackground config={config} hostRef={section} className="sg-hero-layer" />}
 		/>
 	);
 }

@@ -37,7 +37,7 @@ export function AuroraMeshHero({ content = auroraMeshExample, config, id, classN
 			id={id}
 			className={className}
 			content={content}
-			background={(section) => <AuroraMeshBackground config={config} hostRef={section} className="absolute inset-0 -z-10" />}
+			background={(section) => <AuroraMeshBackground config={config} hostRef={section} className="sg-hero-layer" />}
 		/>
 	);
 }

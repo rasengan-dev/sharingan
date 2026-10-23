@@ -31,10 +31,18 @@ html {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  overflow-x: hidden;
+  /* clip, not hidden: hidden would make <body> a scroll container that never scrolls, and position: sticky would stop working */
+  overflow-x: clip;
 }
 
 @theme inline {
+  /* The docs' code surface (bg-code-bg, border-code-border, text-code-faint…) */
+  --color-code-bg: var(--code-bg);
+  --color-code-header: var(--code-header);
+  --color-code-border: var(--code-border);
+  --color-code-fg: var(--code-fg);
+  --color-code-faint: var(--code-faint);
+  --color-code-accent: var(--code-accent);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -73,6 +81,14 @@ html {
 }
 
 :root {
+  --header-height: 64px;
+  --code-bg: oklch(0.985 0.002 286);
+  --code-header: oklch(0.967 0.003 286);
+  --code-border: oklch(0.92 0.004 286.32);
+  --code-fg: oklch(0.21 0.006 285.885);
+  --code-faint: oklch(0.552 0.016 285.938);
+  --code-accent: oklch(0.62 0.21 262);
+  --code-accent-soft: oklch(0.62 0.21 262 / 10%);
   --brand: oklch(0.62 0.21 262);
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -109,6 +125,13 @@ html {
 }
 
 .dark {
+  --code-bg: oklch(0.18 0.004 286);
+  --code-header: oklch(0.21 0.005 286);
+  --code-border: oklch(1 0 0 / 9%);
+  --code-fg: oklch(0.93 0.003 286);
+  --code-faint: oklch(0.65 0.012 286);
+  --code-accent: oklch(0.7 0.18 262);
+  --code-accent-soft: oklch(0.7 0.18 262 / 14%);
   --brand: oklch(0.7 0.18 262);
   --background: oklch(0.141 0.005 285.823);
   --foreground: oklch(0.985 0 0);
@@ -150,4 +173,67 @@ html {
   body {
     @apply bg-background text-foreground font-sans;
   }
+}
+
+/*
+ * Code blocks of the MDX docs: rehype-pretty-code renders both themes into
+ * each token (`--shiki-light`, `--shiki-dark`); the class on <html> picks one.
+ */
+pre code[data-theme] span {
+  color: var(--shiki-light);
+}
+.dark pre code[data-theme] span {
+  color: var(--shiki-dark);
+}
+/* The same, for code highlighted at runtime with shiki (src/lib/highlight.ts) */
+.shiki span {
+  color: var(--shiki-light);
+}
+.dark .shiki span {
+  color: var(--shiki-dark);
+}
+
+/*
+ * Code blocks (background dropped, on the `--code-*` surface):
+ * line padding, highlighted lines and characters, optional line numbers.
+ */
+/* A grid drops the newline text between lines, which a <pre> would otherwise render as blank lines. */
+pre > code[data-language] {
+  display: grid;
+}
+pre [data-line] {
+  padding: 0 1.25rem;
+  border-left: 2px solid transparent;
+}
+pre [data-highlighted-line] {
+  background: var(--code-accent-soft);
+  border-left-color: var(--code-accent);
+}
+pre mark[data-highlighted-chars] {
+  background: var(--code-accent-soft);
+  border-radius: 4px;
+  padding: 0.1rem 0.25rem;
+}
+pre code[data-line-numbers] {
+  counter-reset: line;
+}
+pre code[data-line-numbers] > [data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 2ch;
+  margin-right: 1.25rem;
+  text-align: right;
+  color: var(--code-faint);
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scroll-padding-top: calc(var(--header-height) + 24px);
 }

@@ -19,7 +19,7 @@
     },
     "types": ["@webgpu/types"]
   },
-  "include": ["src", "rasengan-env.d.ts", "../../registry/heroes", "../../packages/core/src"],
+  "include": ["src", "mdx-components.tsx", "rasengan-env.d.ts", "../../registry/heroes", "../../packages/core/src"],
 
   "extends": "./node_modules/rasengan/tsconfig.base.json"
 }
