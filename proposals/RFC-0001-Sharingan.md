@@ -1,20 +1,23 @@
-# RFC-0001: Sharingan — open-source WebGPU heroes
+# RFC-0001: Sharingan — open-source animated heroes
 
-- Status: Draft (M1 and M2 implemented: `@sharingan/core` and the six v0.1 heroes, in React and as Web Components, previewed in `apps/site`)
+- Status: Draft (M1 and M2 implemented: `@sharingan/core` and the six WebGPU heroes of v0.1, in React and as Web Components, previewed in `apps/site`. Scope widened to DOM heroes, see "Two engines")
 - Author: Dilane Kombou
 - Created: 2026-10-23
 - Repository: `rasengan-dev/sharingan` (new, MIT)
 
 ## Summary
 
-Sharingan is an open-source collection of **hero sections rendered with
-WebGPU**: fluid ink, particle headlines, auroras, gravity fields, liquid
-glass. Each hero is copied into a project with the shadcn CLI, ships for
+Sharingan is an open-source collection of **animated hero sections**, built
+on two engines. **WebGPU heroes** draw a background on the GPU: fluid ink,
+particle headlines, auroras, gravity fields, liquid glass. **DOM heroes** are
+made of HTML, SVG and CSS 3D only: an interactive object such as a game
+controller, animated type, a product mockup that comes alive. They run in
+every browser. Each hero is copied into a project with the shadcn CLI, ships for
 **React and as a framework-free Web Component**, and keeps its text, links
 and buttons in the DOM so the page stays accessible and indexable. Only the
 background is drawn on the GPU.
 
-Shaders are written in TypeScript with **TypeGPU**, so buffers, uniforms
+WebGPU shaders are written with **TypeGPU**, so buffers, uniforms
 and shader functions are typed end to end. Every hero reads its colours from
 CSS custom properties, which lets it follow a site's theme, and falls back
 to a still poster wherever WebGPU or motion is unavailable.
@@ -48,6 +51,8 @@ enhancement: the hero must read well without it.
 - The same hero works in React and in any page through a custom element
   (`<sg-ink-flow>`), from one shared engine.
 - 60 fps on an integrated laptop GPU at 1440p; graceful on phones.
+- Every browser gets a moving hero: DOM heroes need nothing beyond CSS
+  transforms and SVG, which every current browser supports.
 - Accessible by construction: content in the DOM, `prefers-reduced-motion`
   honoured, nothing essential drawn on the canvas.
 - Typed shaders and typed configuration (TypeGPU, Zod), readable by people
@@ -58,6 +63,10 @@ enhancement: the hero must read well without it.
 - A 3D engine or scene graph. Each hero is a small, purpose-built renderer.
 - A WebGL renderer for every hero. The fallback is a poster, not a port
   (see "Fallback").
+- WebGL. Effects that need a shader stay WebGPU; effects a browser can
+  compose stay DOM. A third engine would double the maintenance for a
+  shrinking gap.
+- Canvas 2D heroes. Anything drawn per pixel belongs to WebGPU.
 - Full pages or non-hero sections. Heroes first; other GPU backgrounds may
   follow if the format proves itself.
 
@@ -74,6 +83,7 @@ enhancement: the hero must read well without it.
 | Look | typed `config` (Zod): colours from CSS variables, speed, density, interaction |
 | Fallback | still poster (pre-rendered frame) plus a CSS gradient; content always visible |
 | Motion preferences | `prefers-reduced-motion`: render one still frame, no loop |
+| Engines | Two: `webgpu` (TypeGPU, a canvas behind the content) and `dom` (HTML, SVG, CSS 3D, small scripts). Declared in `meta.engine`, shown as a badge and a filter on the site |
 | Licence | MIT for code; TypeGPU is MIT |
 
 ## Detailed design
@@ -185,6 +195,47 @@ export const meta = {
 } satisfies HeroMeta;
 ```
 
+### Two engines
+
+Sharingan began as a WebGPU collection. WebGPU is still missing on many
+phones (Android before 12 or on older GPUs, iOS before 26), where those heroes
+show their CSS fallback. The Noa Pad demo, a playable game controller built
+from SVG and CSS 3D transforms, showed that a hero can be striking without
+the GPU and run everywhere. The collection now holds both kinds, under one
+contract.
+
+| | `webgpu` | `dom` |
+|---|---|---|
+| Made of | a canvas behind the content, WGSL passes through TypeGPU | HTML, inline SVG, CSS transforms and keyframes, a small script for input |
+| For | per-pixel work: fluids, particles, simulations, refraction | objects, type, mockups, light vector backgrounds |
+| Runs on | browsers with WebGPU; elsewhere the CSS fallback | every current browser |
+| Fallback | gradient and poster (see "Fallback") | none needed; reduced motion shows the final state |
+| Budget | GPU time per frame (see "Performance budget") | no long tasks, transforms and opacity only, no layout per frame |
+
+**Shared by both:** the `content` schema, a typed `config`, colours read from
+CSS custom properties, the motion modes (`ready`, `reduced`, `final`, `off`),
+pointer tracking, pausing off screen, React and Web Component targets, the
+`meta.ts` read by people and agents. `@sharingan/core` splits accordingly:
+motion, pointer, theme and the element helper serve both engines; the device,
+frame loop and `mountScene` serve WebGPU heroes only, so a DOM hero copies
+none of the GPU code.
+
+**DOM-specific rules:**
+
+- Interactive parts are real controls (`<button>`, `<a>`) with focus
+  styles and keyboard input, never a picture of a button. When an object
+  serves as navigation (the controller's D-pad), the same links exist as
+  plain DOM for assistive technology.
+- Animate `transform` and `opacity` only; no layout or paint-heavy
+  properties in a loop. `will-change` only while moving.
+- Decorative SVG is `aria-hidden`; the object carries a label when it means
+  something.
+- Styles live with the hero (Tailwind classes in React, a `<style>` in the
+  Web Component's shadow root), driven by the same CSS variables.
+
+`meta.ts` gains `engine: "webgpu" | "dom"`; `gpu` applies to WebGPU heroes
+only.
+
 ### Fallback
 
 A hero has three states:
@@ -249,6 +300,19 @@ technique, not the price; costs are now taken from measurements.
 Later: `black-hole` (gravitational lensing on the headline), `gamepad-3d`
 (the playable controller hero in real 3D), `metaballs`.
 
+### DOM collection (v0.2)
+
+| Hero | Style | Idea |
+|---|---|---|
+| `gamepad` | object | the Noa Pad: a controller whose D-pad and buttons navigate the page, also from a real gamepad |
+| `holo-card` | object | a card that tilts toward the pointer with a moving holographic sheen |
+| `split-headline` | type | the headline assembles letter by letter, then reacts to the pointer with a variable font axis |
+| `marquee-type` | type | oversized words sliding in opposite rows, slowing under the pointer |
+| `terminal-boot` | mockup | a terminal types the install command and the product appears from its output |
+| `app-window` | mockup | an app screen builds itself panel by panel, then follows the pointer in light 3D |
+| `beam-grid` | background | an SVG grid with beams of light running along its lines |
+| `conic-rays` | background | slow conic rays behind the title, the universal counterpart of `aurora-mesh` |
+
 ## Relation to Rasengan UI
 
 Separate project, shared conventions:
@@ -273,7 +337,10 @@ Separate project, shared conventions:
    with `npx create-rasengan@beta`): docs with live previews and a config
    panel, the registry, posters generated in CI. The site is also the first
    real user of the heroes, in React.
-4. **M4 — Bridge.** Rasengan UI v2 integration and a first hero there.
+4. **M3b — DOM heroes.** Split the core by engine, port the Noa Pad as
+   `gamepad`, then the rest of the DOM collection (v0.2). Can run before or
+   alongside M3.
+5. **M4 — Bridge.** Rasengan UI v2 integration and a first hero there.
 
 ## Alternatives considered
 
@@ -302,3 +369,6 @@ Separate project, shared conventions:
    config as code?
 5. Headless CI usually has no GPU: render posters on a GPU runner, or with
    a software adapter?
+6. Can a WebGPU hero fall back to a DOM hero instead of a gradient (for
+   example `aurora-mesh` to `conic-rays`), or does that blur what each one
+   promises?

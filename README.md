@@ -1,13 +1,15 @@
 # Sharingan
 
-Open-source hero sections rendered with WebGPU.
-Built with TypeGPU, for React and as Web Components, and copied into your project with the shadcn CLI.
+Open-source animated hero sections, for React and as Web Components, copied into your project with the shadcn CLI.
+Two engines: **WebGPU** heroes draw their background on the GPU with TypeGPU; **DOM** heroes are made of HTML, SVG and CSS 3D and run in every browser.
 
-Text, links and buttons stay in the DOM; only the background is drawn on the GPU. Colours come from your CSS variables, and a still poster takes over when WebGPU or motion is unavailable.
+Text, links and buttons always stay in the DOM. Colours come from your CSS variables; a WebGPU hero shows a still poster when WebGPU or motion is unavailable.
 
 > **Status: v0.1 in progress.** The six heroes run locally (`pnpm dev`); nothing is published to the registry yet. The design is in [RFC-0001](proposals/RFC-0001-Sharingan.md).
 
 ## Heroes
+
+### WebGPU
 
 | Hero | Concept | GPU cost | Status |
 | --- | --- | --- | --- |
@@ -18,7 +20,20 @@ Text, links and buttons stay in the DOM; only the background is drawn on the GPU
 | **Reaction-diffusion** | A living pattern that grows behind the title | Medium | Draft |
 | **Liquid glass** | Refraction and caustics over your product shot | Heavy | Draft |
 
-Later: **Black hole** (gravitational lensing on the headline), **Gamepad 3D** (a playable controller as navigation), **Metaballs**.
+### DOM
+
+| Hero | Concept | Status |
+| --- | --- | --- |
+| **Gamepad** | A game controller whose D-pad and buttons navigate the page, also from a real gamepad | Planned |
+| **Holo card** | A card that tilts toward the pointer with a holographic sheen | Planned |
+| **Split headline** | The headline assembles letter by letter and reacts to the pointer | Planned |
+| **Marquee type** | Oversized words sliding in opposite rows | Planned |
+| **Terminal boot** | A terminal types the install command and the product appears | Planned |
+| **App window** | An app screen that builds itself panel by panel | Planned |
+| **Beam grid** | Beams of light running along an SVG grid | Planned |
+| **Conic rays** | Slow rays of light behind the title | Planned |
+
+Later (WebGPU): **Black hole** (gravitational lensing on the headline), **Metaballs**.
 
 ## Use a hero
 
