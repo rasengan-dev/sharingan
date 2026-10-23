@@ -322,6 +322,7 @@ Later: `black-hole` (gravitational lensing on the headline), `gamepad-3d`
 | `app-window` | mockup | an app screen builds itself panel by panel, then follows the pointer in light 3D |
 | `beam-grid` | background | a grid (two CSS gradients) with beams of light running along its lines, moved by the Web Animations API |
 | `conic-rays` | background | slow conic rays behind the title, the universal counterpart of `aurora-mesh` |
+| `gallery-fan` | object | a full-screen fan of artwork cards in CSS 3D; the nearest card rises, collaborator cursors drift between cards (added after v0.2, from a design reference) |
 
 ## Relation to Rasengan UI
 

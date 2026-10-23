@@ -31,6 +31,10 @@ import * as beamGridSchema from '@/heroes/beam-grid/schema';
 import { ConicRaysHero } from '@/heroes/conic-rays/conic-rays';
 import { defineConicRaysElement } from '@/heroes/conic-rays/conic-rays.element';
 import { meta as conicRaysMeta } from '@/heroes/conic-rays/meta';
+import { GalleryFanHero } from '@/heroes/gallery-fan/gallery-fan';
+import { defineGalleryFanElement } from '@/heroes/gallery-fan/gallery-fan.element';
+import { meta as galleryFanMeta } from '@/heroes/gallery-fan/meta';
+import * as galleryFanSchema from '@/heroes/gallery-fan/schema';
 import * as conicRaysSchema from '@/heroes/conic-rays/schema';
 import { AuroraMeshHero } from '@/heroes/aurora-mesh/aurora-mesh';
 import { defineAuroraMeshElement } from '@/heroes/aurora-mesh/aurora-mesh.element';
@@ -375,6 +379,47 @@ export const heroes: HeroEntry[] = [
         <h2 className="text-5xl font-semibold tracking-tight">&lt;sg-conic-rays&gt;</h2>
         <p>The same engine, driven by attributes: warmer light from below, thinner rays, turning faster.</p>
       </div>
+    ),
+  },
+  {
+    meta: galleryFanMeta,
+    schemas: schemasOf(galleryFanSchema),
+    Hero: GalleryFanHero,
+    defineElement: () => defineGalleryFanElement(),
+    elementAttributes: { spread: '0.6', angle: '30', depth: '320', colors: 'oklch(0.7 0.19 40)' },
+    elementChildren: (
+      <>
+        <p className="sg-gf-eyebrow">Web Component · no framework</p>
+        <h2 className="text-5xl font-semibold tracking-tight">&lt;sg-gallery-fan&gt;</h2>
+        <div data-sg-fan="">
+            <a data-sg-card="" href="https://unsplash.com/photos/6JO92DACboQ" aria-label="Blue square, by Fons Heijnsbroek">
+              <img src="/sharingan/gallery/stripes.webp" alt="" />
+              <span className="sg-gf-caption"><b>Blue square</b><span>Fons Heijnsbroek</span></span>
+            </a>
+            <a data-sg-card="" href="https://unsplash.com/photos/62DpZ5uJxJc" aria-label="Rooster on gold, by Europeana">
+              <img src="/sharingan/gallery/rooster.webp" alt="" />
+              <span className="sg-gf-caption"><b>Rooster on gold</b><span>Europeana</span></span>
+            </a>
+            <a data-sg-card="" href="https://unsplash.com/photos/e_95AkA4A4A" aria-label="Bird in colour, by Fons Heijnsbroek">
+              <img src="/sharingan/gallery/bird.webp" alt="" />
+              <span className="sg-gf-caption"><b>Bird in colour</b><span>Fons Heijnsbroek</span></span>
+            </a>
+            <a data-sg-card="" href="https://unsplash.com/photos/dy3z3x8Khz4" aria-label="Red, blue, black, by Fons Heijnsbroek">
+              <img src="/sharingan/gallery/strokes.webp" alt="" />
+              <span className="sg-gf-caption"><b>Red, blue, black</b><span>Fons Heijnsbroek</span></span>
+            </a>
+            <a data-sg-card="" href="https://unsplash.com/photos/mOrJ9WCGbUo" aria-label="Geometric study, by The New York Public Library">
+              <img src="/sharingan/gallery/shapes.webp" alt="" />
+              <span className="sg-gf-caption"><b>Geometric study</b><span>The New York Public Library</span></span>
+            </a>
+          <div data-sg-cursor="" data-card="2" aria-hidden="true">
+            <div className="sg-gf-bob">
+              <span className="sg-gf-bubble">@you</span>
+            </div>
+          </div>
+        </div>
+        <p className="sg-gf-sub">The same engine, driven by attributes: five cards, a narrower and deeper fan, one collaborator.</p>
+      </>
     ),
   },
 ];

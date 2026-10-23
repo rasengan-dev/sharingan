@@ -118,9 +118,9 @@ for (const { name, engine, poster } of heroes) {
 }
 
 socket.close();
-// Chrome writes to its profile until it has exited.
+// Chrome writes to its profile until it has exited, and its helper processes a moment longer.
 await new Promise((resolve) => {
 	chrome.once("exit", resolve);
 	chrome.kill();
 });
-rmSync(profile, { recursive: true, force: true });
+rmSync(profile, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
