@@ -1,9 +1,8 @@
 import type { FallbackReason } from "./device";
 import type { HeroEngine, HeroEngineOptions } from "./hero";
-import { splitColorList } from "../theme";
+import { readAttributes, type AttributeKind } from "../attributes";
 
-/** How an attribute is read: `colors` splits a colour list on top-level commas. */
-export type AttributeKind = "string" | "number" | "boolean" | "colors";
+export type { AttributeKind };
 
 export type HeroElementSpec<I> = {
 	tag: string;
@@ -20,19 +19,6 @@ const STYLE = `
 canvas, img { display: block; width: 100%; height: 100%; object-fit: cover; }
 [hidden] { display: none !important; }
 `;
-
-const camel = (name: string) => name.replace(/-([a-z])/g, (_, letter: string) => letter.toUpperCase());
-
-function readConfig<I>(element: HTMLElement, attributes: HeroElementSpec<I>["attributes"]): I {
-	const config: Record<string, unknown> = {};
-	for (const [name, kind] of Object.entries(attributes)) {
-		const value = element.getAttribute(name);
-		if (value === null) continue;
-		config[camel(name)] =
-			kind === "number" ? Number(value) : kind === "boolean" ? value !== "false" : kind === "colors" ? splitColorList(value) : value;
-	}
-	return config as I;
-}
 
 /**
  * Defines a hero's custom element. Its children are the hero's content and
@@ -66,7 +52,7 @@ export function defineHeroElement<I>(spec: HeroElementSpec<I>) {
 		}
 
 		get config(): I {
-			return readConfig<I>(this, spec.attributes);
+			return readAttributes<I>(this, spec.attributes);
 		}
 
 		connectedCallback() {

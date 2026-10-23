@@ -24,7 +24,7 @@ Text, links and buttons always stay in the DOM. Colours come from your CSS varia
 
 | Hero | Concept | Status |
 | --- | --- | --- |
-| **Gamepad** | A game controller whose D-pad and buttons navigate the page, also from a real gamepad | Planned |
+| **Gamepad** | A game controller whose D-pad and buttons navigate the page, also from a real gamepad | Draft |
 | **Holo card** | A card that tilts toward the pointer with a holographic sheen | Planned |
 | **Split headline** | The headline assembles letter by letter and reacts to the pointer | Planned |
 | **Marquee type** | Oversized words sliding in opposite rows | Planned |

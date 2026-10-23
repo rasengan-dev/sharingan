@@ -50,6 +50,7 @@ const HeroPage: PageComponent = () => {
           <p className="text-sm text-muted-foreground">
             <span className="text-foreground">Use when:</span> {meta.useWhen}
           </p>
+          <p className="font-mono text-xs text-muted-foreground">Engine: {meta.engine === 'dom' ? 'DOM (HTML, SVG, CSS 3D), every browser' : 'WebGPU, with a CSS fallback'}</p>
           <p className="font-mono text-xs text-muted-foreground" data-testid="render-states">
             Render: {states.join(' · ') || '…'}
           </p>
@@ -73,11 +74,13 @@ const HeroPage: PageComponent = () => {
         {createElement(
           `sg-${meta.name}`,
           { ...hero.elementAttributes, 'data-sg-element': '' },
-          <div className="mx-auto flex min-h-[520px] max-w-3xl flex-col items-center justify-center px-6 py-20 text-center">
-            <p className="font-mono text-xs tracking-[0.18em] text-muted-foreground uppercase">Web Component · no framework</p>
-            <p data-sg-text="" className="mt-5 text-4xl font-semibold tracking-tight text-balance sm:text-6xl">&lt;sg-{meta.name}&gt;</p>
-            <p className="mt-5 max-w-lg text-muted-foreground">The same engine, driven by attributes. Its text is the page’s own DOM, slotted over the GPU layer.</p>
-          </div>,
+          hero.elementChildren ?? (
+            <div className="mx-auto flex min-h-[520px] max-w-3xl flex-col items-center justify-center px-6 py-20 text-center">
+              <p className="font-mono text-xs tracking-[0.18em] text-muted-foreground uppercase">Web Component · no framework</p>
+              <p data-sg-text="" className="mt-5 text-4xl font-semibold tracking-tight text-balance sm:text-6xl">&lt;sg-{meta.name}&gt;</p>
+              <p className="mt-5 max-w-lg text-muted-foreground">The same engine, driven by attributes. Its text is the page’s own DOM, slotted over the GPU layer.</p>
+            </div>
+          ),
         )}
       </section>
     </main>
@@ -88,7 +91,7 @@ HeroPage.generatePaths = async () => defineStaticPaths(heroes.map((hero) => ({ n
 
 HeroPage.metadata = {
   title: 'Sharingan heroes',
-  description: 'Open-source hero sections rendered with WebGPU.',
+  description: 'Open-source animated hero sections, on WebGPU or plain DOM.',
 };
 
 export default HeroPage;

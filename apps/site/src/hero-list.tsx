@@ -1,4 +1,7 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, ReactNode } from 'react';
+import { GamepadHero } from '@/heroes/gamepad/gamepad';
+import { defineGamepadElement } from '@/heroes/gamepad/gamepad.element';
+import { meta as gamepadMeta } from '@/heroes/gamepad/meta';
 import { AuroraMeshHero } from '@/heroes/aurora-mesh/aurora-mesh';
 import { defineAuroraMeshElement } from '@/heroes/aurora-mesh/aurora-mesh.element';
 import { meta as auroraMeshMeta } from '@/heroes/aurora-mesh/meta';
@@ -19,15 +22,17 @@ import { defineLiquidGlassElement } from '@/heroes/liquid-glass/liquid-glass.ele
 import { meta as liquidGlassMeta } from '@/heroes/liquid-glass/meta';
 
 export type HeroEntry = {
-  meta: { name: string; title: string; summary: string; useWhen: string; gpu: { cost: number } };
+  meta: { name: string; title: string; engine: 'webgpu' | 'dom'; summary: string; useWhen: string; gpu?: { cost: number } };
   Hero: ComponentType<{ className?: string }>;
   /** Registers the Web Component; its tag is `sg-<name>`. */
   defineElement: () => void;
   /** Attributes for the Web Component demo: a different palette than the React one. */
   elementAttributes: Record<string, string>;
+  /** The Web Component's children, when the hero needs more than a title (DOM heroes bring their sections). */
+  elementChildren?: ReactNode;
 };
 
-/** Every hero of the collection, in the order of the RFC's v0.1 list. */
+/** Every hero of the collection: the WebGPU v0.1 list, then the DOM v0.2 list (RFC-0001). */
 export const heroes: HeroEntry[] = [
   {
     meta: auroraMeshMeta,
@@ -64,6 +69,39 @@ export const heroes: HeroEntry[] = [
     Hero: LiquidGlassHero,
     defineElement: () => defineLiquidGlassElement(),
     elementAttributes: { colors: 'oklch(0.78 0.15 60), oklch(0.98 0.02 90)', image: '/sharingan/product.png', refraction: '1.4' },
+  },
+  {
+    meta: gamepadMeta,
+    Hero: GamepadHero,
+    defineElement: () => defineGamepadElement(),
+    elementAttributes: { colors: 'oklch(0.7 0.17 160), oklch(0.62 0.2 300), oklch(0.82 0.15 75), oklch(0.65 0.21 15)', shell: 'graphite', 'data-wordmark': 'SG·PAD', 'data-wordmark-tagline': 'WEB COMPONENT', 'data-collaborators': 'Kai' },
+    elementChildren: (
+      <>
+        <div data-sg-slide="home">
+          <p className="sg-gp-eyebrow">Web Component · no framework</p>
+          <h2 className="!text-5xl">&lt;sg-gamepad&gt;</h2>
+          <p>The same engine, driven by attributes. Each section below is plain HTML in the page; the controller only shows one at a time.</p>
+        </div>
+        <div data-sg-slide="" data-label="Markup">
+          <h2>Sections are your own HTML</h2>
+          <p>One data-sg-slide="home", then up to four data-sg-slide elements with a data-label. They land on Y, X, B and A.</p>
+        </div>
+        <div data-sg-slide="" data-label="Attributes">
+          <h2>Configured with attributes</h2>
+          <ul>
+            <li>colors</li>
+            <li>shell</li>
+            <li>tilt</li>
+            <li>keyboard</li>
+            <li>gamepad</li>
+          </ul>
+        </div>
+        <div data-sg-slide="" data-label="Everywhere">
+          <h2>Runs in every browser</h2>
+          <p>HTML, SVG and CSS 3D transforms only. No canvas, no WebGPU: phones get the same hero as desktops.</p>
+        </div>
+      </>
+    ),
   },
 ];
 

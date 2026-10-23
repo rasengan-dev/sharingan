@@ -230,11 +230,21 @@ none of the GPU code.
   properties in a loop. `will-change` only while moving.
 - Decorative SVG is `aria-hidden`; the object carries a label when it means
   something.
-- Styles live with the hero (Tailwind classes in React, a `<style>` in the
-  Web Component's shadow root), driven by the same CSS variables.
+- No shadow root: the sections are the page's content and stay in its DOM,
+  in React and in the Web Component alike. Styles are one stylesheet per
+  hero with `sg-<prefix>-` classes, rendered by React as a hoisted
+  `<style href>` and added once by the Web Component (`adoptStyles`), driven
+  by the same CSS variables.
+- Keyboard: inside the hero every key works; elsewhere on the page only
+  letters and Esc, only while the hero is mostly on screen, never while
+  typing in a field. Arrows stay with the page's scrolling.
+- On touch screens, controls drawn smaller than 44 px get a full-size
+  equivalent next to them (the gamepad's legend).
 
 `meta.ts` gains `engine: "webgpu" | "dom"`; `gpu` applies to WebGPU heroes
-only.
+only. In the code, the shared core is `@/lib/sharingan` (with
+`defineDomElement`, `adoptStyles`, `trackVisibility`) and the WebGPU engine
+`@/lib/sharingan/webgpu`; a DOM hero imports only the first.
 
 ### Fallback
 
@@ -337,8 +347,9 @@ Separate project, shared conventions:
    with `npx create-rasengan@beta`): docs with live previews and a config
    panel, the registry, posters generated in CI. The site is also the first
    real user of the heroes, in React.
-4. **M3b — DOM heroes.** Split the core by engine, port the Noa Pad as
-   `gamepad`, then the rest of the DOM collection (v0.2). Can run before or
+4. **M3b — DOM heroes.** Split the core by engine (done), port the Noa Pad
+   as `gamepad` (done, in React and as a Web Component), then the rest of the
+   DOM collection (v0.2). Can run before or
    alongside M3.
 5. **M4 — Bridge.** Rasengan UI v2 integration and a first hero there.
 
