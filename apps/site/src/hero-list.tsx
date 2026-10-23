@@ -11,6 +11,9 @@ import { meta as splitHeadlineMeta } from '@/heroes/split-headline/meta';
 import { MarqueeTypeHero } from '@/heroes/marquee-type/marquee-type';
 import { defineMarqueeTypeElement } from '@/heroes/marquee-type/marquee-type.element';
 import { meta as marqueeTypeMeta } from '@/heroes/marquee-type/meta';
+import { TerminalBootHero } from '@/heroes/terminal-boot/terminal-boot';
+import { defineTerminalBootElement } from '@/heroes/terminal-boot/terminal-boot.element';
+import { meta as terminalBootMeta } from '@/heroes/terminal-boot/meta';
 import { AuroraMeshHero } from '@/heroes/aurora-mesh/aurora-mesh';
 import { defineAuroraMeshElement } from '@/heroes/aurora-mesh/aurora-mesh.element';
 import { meta as auroraMeshMeta } from '@/heroes/aurora-mesh/meta';
@@ -194,6 +197,56 @@ export const heroes: HeroEntry[] = [
               <li>Amapiano</li>
               <li>Highlife</li>
               <li>Jazz</li>
+            </ul>
+          </div>
+        </div>
+      </>
+    ),
+  },
+  {
+    meta: terminalBootMeta,
+    Hero: TerminalBootHero,
+    defineElement: () => defineTerminalBootElement(),
+    elementAttributes: { accent: 'oklch(0.75 0.17 60)', speed: '30', loop: 'true' },
+    elementChildren: (
+      <>
+        <div className="sg-tb-copy">
+          <p className="sg-tb-eyebrow">Web Component · no framework</p>
+          <h2 className="text-5xl font-semibold tracking-tight">&lt;sg-terminal-boot&gt;</h2>
+          <p>The same engine, driven by attributes: a warmer prompt, faster hands, and it starts again by itself.</p>
+        </div>
+        <div className="sg-tb-scene">
+          <div className="sg-tb-terminal" role="group" aria-label="Terminal">
+            <div className="sg-tb-bar">
+              <span className="sg-tb-dots" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+              </span>
+              <span className="sg-tb-title">~/site</span>
+              <span className="sg-tb-actions" data-sg-actions="" />
+            </div>
+            <ul className="sg-tb-body">
+              <li>
+                <span className="sg-tb-prompt" aria-hidden="true">$</span>
+                <code data-sg-command="">npx shadcn@latest add @sharingan/terminal-boot</code>
+              </li>
+              <li data-sg-line="" data-status="ok">
+                <span data-sg-icon="" aria-hidden="true">✔</span>
+                <span>Checked components.json</span>
+              </li>
+              <li data-sg-line="" data-status="ok">
+                <span data-sg-icon="" aria-hidden="true">✔</span>
+                <span>Added lib/sharingan and heroes/terminal-boot</span>
+              </li>
+              <li data-sg-line="" data-status="info">
+                <span data-sg-icon="" aria-hidden="true">›</span>
+                <span>No canvas, no WebGPU: runs in every browser</span>
+              </li>
+              <li data-sg-done="">
+                <span data-sg-icon="" aria-hidden="true">➜</span>
+                <span>Done. Import TerminalBootHero.</span>
+              </li>
             </ul>
           </div>
         </div>
