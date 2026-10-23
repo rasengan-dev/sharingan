@@ -32,23 +32,25 @@ export function defineHeroElement<I>(spec: HeroElementSpec<I>) {
 	class SharinganHeroElement extends HTMLElement {
 		static observedAttributes = Object.keys(spec.attributes);
 
-		private engine: HeroEngine<I> | null = null;
-		private readonly layer = document.createElement("div");
-		private readonly canvas = document.createElement("canvas");
-		private readonly poster = document.createElement("img");
+		#engine: HeroEngine<I> | null = null;
+		// `#` fields: React sets a prop as a property when the element has one by that name,
+		// so a plain `poster` field would be overwritten by the `poster` attribute's string.
+		readonly #layer = document.createElement("div");
+		readonly #canvas = document.createElement("canvas");
+		readonly #poster = document.createElement("img");
 
 		constructor() {
 			super();
 			const shadow = this.attachShadow({ mode: "open" });
 			const style = document.createElement("style");
 			style.textContent = STYLE;
-			this.layer.className = "layer";
-			this.layer.setAttribute("aria-hidden", "true");
-			this.layer.part.add("background");
-			this.poster.alt = "";
-			this.poster.hidden = true;
-			this.layer.append(this.poster, this.canvas);
-			shadow.append(style, this.layer, document.createElement("slot"));
+			this.#layer.className = "layer";
+			this.#layer.setAttribute("aria-hidden", "true");
+			this.#layer.part.add("background");
+			this.#poster.alt = "";
+			this.#poster.hidden = true;
+			this.#layer.append(this.#poster, this.#canvas);
+			shadow.append(style, this.#layer, document.createElement("slot"));
 		}
 
 		get config(): I {
@@ -56,9 +58,9 @@ export function defineHeroElement<I>(spec: HeroElementSpec<I>) {
 		}
 
 		connectedCallback() {
-			Object.assign(this.layer.style, spec.fallbackStyle(this.config));
-			this.engine = spec.create({
-				canvas: this.canvas,
+			Object.assign(this.#layer.style, spec.fallbackStyle(this.config));
+			this.#engine = spec.create({
+				canvas: this.#canvas,
 				host: this,
 				config: this.config,
 				onFallback: (reason: FallbackReason) => this.showFallback(reason),
@@ -66,22 +68,22 @@ export function defineHeroElement<I>(spec: HeroElementSpec<I>) {
 		}
 
 		disconnectedCallback() {
-			this.engine?.destroy();
-			this.engine = null;
+			this.#engine?.destroy();
+			this.#engine = null;
 		}
 
 		attributeChangedCallback() {
-			Object.assign(this.layer.style, spec.fallbackStyle(this.config));
-			this.engine?.setConfig(this.config);
+			Object.assign(this.#layer.style, spec.fallbackStyle(this.config));
+			this.#engine?.setConfig(this.config);
 		}
 
 		private showFallback(reason: FallbackReason) {
 			this.dataset.state = reason;
-			this.canvas.hidden = true;
+			this.#canvas.hidden = true;
 			const poster = this.getAttribute("poster");
 			if (poster) {
-				this.poster.src = poster;
-				this.poster.hidden = false;
+				this.#poster.src = poster;
+				this.#poster.hidden = false;
 			}
 		}
 	}

@@ -72,19 +72,20 @@ export function defineDomElement<I>(spec: DomElementSpec<I>) {
 
 	class SharinganDomElement extends HTMLElement {
 		static observedAttributes = Object.keys(spec.attributes);
-		private hero: DomHero<I> | null = null;
+		// `#`: a prop named like a plain field would be set on it by React instead of as an attribute.
+		#hero: DomHero<I> | null = null;
 
 		connectedCallback() {
-			this.hero = spec.create({ host: this, config: readAttributes<I>(this, spec.attributes) });
+			this.#hero = spec.create({ host: this, config: readAttributes<I>(this, spec.attributes) });
 		}
 
 		disconnectedCallback() {
-			this.hero?.destroy();
-			this.hero = null;
+			this.#hero?.destroy();
+			this.#hero = null;
 		}
 
 		attributeChangedCallback() {
-			this.hero?.setConfig(readAttributes<I>(this, spec.attributes));
+			this.#hero?.setConfig(readAttributes<I>(this, spec.attributes));
 		}
 	}
 
