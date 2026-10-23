@@ -2,6 +2,9 @@ import type { ComponentType, ReactNode } from 'react';
 import { GamepadHero } from '@/heroes/gamepad/gamepad';
 import { defineGamepadElement } from '@/heroes/gamepad/gamepad.element';
 import { meta as gamepadMeta } from '@/heroes/gamepad/meta';
+import { HoloCardHero } from '@/heroes/holo-card/holo-card';
+import { defineHoloCardElement } from '@/heroes/holo-card/holo-card.element';
+import { meta as holoCardMeta } from '@/heroes/holo-card/meta';
 import { AuroraMeshHero } from '@/heroes/aurora-mesh/aurora-mesh';
 import { defineAuroraMeshElement } from '@/heroes/aurora-mesh/aurora-mesh.element';
 import { meta as auroraMeshMeta } from '@/heroes/aurora-mesh/meta';
@@ -99,6 +102,47 @@ export const heroes: HeroEntry[] = [
         <div data-sg-slide="" data-label="Everywhere">
           <h2>Runs in every browser</h2>
           <p>HTML, SVG and CSS 3D transforms only. No canvas, no WebGPU: phones get the same hero as desktops.</p>
+        </div>
+      </>
+    ),
+  },
+  {
+    meta: holoCardMeta,
+    Hero: HoloCardHero,
+    defineElement: () => defineHoloCardElement(),
+    elementAttributes: { colors: 'oklch(0.85 0.13 85), oklch(0.75 0.17 40), oklch(0.82 0.12 170)', surface: 'light', pattern: 'lines' },
+    elementChildren: (
+      <>
+        <div className="sg-hc-copy">
+          <p className="sg-hc-eyebrow">Web Component · no framework</p>
+          <h2 className="text-5xl font-semibold tracking-tight">&lt;sg-holo-card&gt;</h2>
+          <p>The same engine, driven by attributes: a light surface and engraved lines here. Click the card or the button to turn it over.</p>
+        </div>
+        <div>
+          <div data-sg-card="" role="group" aria-label="Member card">
+            <div data-sg-front="">
+              <div className="sg-hc-row">
+                <span className="sg-hc-issuer">ATELIER·CLUB</span>
+              </div>
+              <div>
+                <p className="sg-hc-name">Kai Mensah</p>
+                <p className="sg-hc-role">Member since 2024</p>
+              </div>
+              <div className="sg-hc-row">
+                <span className="sg-hc-detail">Valid until Dec 2027</span>
+                <span className="sg-hc-number">M-2207</span>
+              </div>
+            </div>
+            <div data-sg-back="">
+              <div>
+                <h2>Members get</h2>
+                <ul>
+                  <li>Open studio on Saturdays</li>
+                  <li>Ten percent off workshops</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
       </>
     ),
