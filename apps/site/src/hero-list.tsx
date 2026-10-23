@@ -17,6 +17,9 @@ import { meta as terminalBootMeta } from '@/heroes/terminal-boot/meta';
 import { AppWindowHero } from '@/heroes/app-window/app-window';
 import { defineAppWindowElement } from '@/heroes/app-window/app-window.element';
 import { meta as appWindowMeta } from '@/heroes/app-window/meta';
+import { BeamGridHero } from '@/heroes/beam-grid/beam-grid';
+import { defineBeamGridElement } from '@/heroes/beam-grid/beam-grid.element';
+import { meta as beamGridMeta } from '@/heroes/beam-grid/meta';
 import { AuroraMeshHero } from '@/heroes/aurora-mesh/aurora-mesh';
 import { defineAuroraMeshElement } from '@/heroes/aurora-mesh/aurora-mesh.element';
 import { meta as auroraMeshMeta } from '@/heroes/aurora-mesh/meta';
@@ -302,6 +305,19 @@ export const heroes: HeroEntry[] = [
           </div>
         </div>
       </>
+    ),
+  },
+  {
+    meta: beamGridMeta,
+    Hero: BeamGridHero,
+    defineElement: () => defineBeamGridElement(),
+    elementAttributes: { colors: 'oklch(0.75 0.17 60), oklch(0.68 0.2 25)', cell: '40', beams: '10', speed: '1.6', length: '100' },
+    elementChildren: (
+      <div className="sg-bm-copy">
+        <p className="sg-bm-eyebrow">Web Component · no framework</p>
+        <h2 className="text-5xl font-semibold tracking-tight">&lt;sg-beam-grid&gt;</h2>
+        <p>The same engine, driven by attributes: a finer grid, warmer and faster beams. Click anywhere on the grid.</p>
+      </div>
     ),
   },
 ];

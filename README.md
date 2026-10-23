@@ -30,7 +30,7 @@ Text, links and buttons always stay in the DOM. Colours come from your CSS varia
 | **Marquee type** | Oversized words sliding in opposite rows; a row slows under the pointer, scrolling pushes them | Draft |
 | **Terminal boot** | A terminal types your install command, prints its output, and your product rises from it | Draft |
 | **App window** | Your product screen in HTML builds itself panel by panel, then leans toward the pointer | Draft |
-| **Beam grid** | Beams of light running along an SVG grid | Planned |
+| **Beam grid** | Beams of light running along a fine grid; it brightens around the pointer, a click sends beams | Draft |
 | **Conic rays** | Slow rays of light behind the title | Planned |
 
 Later (WebGPU): **Black hole** (gravitational lensing on the headline), **Metaballs**.

@@ -320,7 +320,7 @@ Later: `black-hole` (gravitational lensing on the headline), `gamepad-3d`
 | `marquee-type` | type | oversized words sliding in opposite rows, slowing under the pointer |
 | `terminal-boot` | mockup | a terminal types the install command and the product appears from its output |
 | `app-window` | mockup | an app screen builds itself panel by panel, then follows the pointer in light 3D |
-| `beam-grid` | background | an SVG grid with beams of light running along its lines |
+| `beam-grid` | background | a grid (two CSS gradients) with beams of light running along its lines, moved by the Web Animations API |
 | `conic-rays` | background | slow conic rays behind the title, the universal counterpart of `aurora-mesh` |
 
 ## Relation to Rasengan UI
@@ -348,7 +348,7 @@ Separate project, shared conventions:
    panel, the registry, posters generated in CI. The site is also the first
    real user of the heroes, in React.
 4. **M3b — DOM heroes.** Split the core by engine (done), port the Noa Pad
-   as `gamepad` (done, in React and as a Web Component), `holo-card`, `split-headline`, `marquee-type`, `terminal-boot` and `app-window` (done),
+   as `gamepad` (done, in React and as a Web Component), `holo-card`, `split-headline`, `marquee-type`, `terminal-boot`, `app-window` and `beam-grid` (done),
    then the rest of the DOM collection (v0.2). Can run before or
    alongside M3.
 5. **M4 — Bridge.** Rasengan UI v2 integration and a first hero there.
