@@ -1,6 +1,6 @@
 # RFC-0001: Sharingan — open-source animated heroes
 
-- Status: Draft (M1 and M2 implemented: `@sharingan/core` and the six WebGPU heroes of v0.1, in React and as Web Components, previewed in `apps/site`. Scope widened to DOM heroes, see "Two engines")
+- Status: Draft (M1, M2 and M3b implemented: `@sharingan/core`, the six WebGPU heroes of v0.1 and the eight DOM heroes of v0.2, in React and as Web Components, previewed in `apps/site`)
 - Author: Dilane Kombou
 - Created: 2026-10-23
 - Repository: `rasengan-dev/sharingan` (new, MIT)
@@ -347,9 +347,9 @@ Separate project, shared conventions:
    with `npx create-rasengan@beta`): docs with live previews and a config
    panel, the registry, posters generated in CI. The site is also the first
    real user of the heroes, in React.
-4. **M3b — DOM heroes.** Split the core by engine (done), port the Noa Pad
-   as `gamepad` (done, in React and as a Web Component), `holo-card`, `split-headline`, `marquee-type`, `terminal-boot`, `app-window` and `beam-grid` (done),
-   then the rest of the DOM collection (v0.2). Can run before or
+4. **M3b — DOM heroes.** Done: the core split by engine, the Noa Pad
+   ported as `gamepad`, and the rest of the DOM collection (v0.2), each in
+   React and as a Web Component. Can run before or
    alongside M3.
 5. **M4 — Bridge.** Rasengan UI v2 integration and a first hero there.
 

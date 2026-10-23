@@ -20,6 +20,9 @@ import { meta as appWindowMeta } from '@/heroes/app-window/meta';
 import { BeamGridHero } from '@/heroes/beam-grid/beam-grid';
 import { defineBeamGridElement } from '@/heroes/beam-grid/beam-grid.element';
 import { meta as beamGridMeta } from '@/heroes/beam-grid/meta';
+import { ConicRaysHero } from '@/heroes/conic-rays/conic-rays';
+import { defineConicRaysElement } from '@/heroes/conic-rays/conic-rays.element';
+import { meta as conicRaysMeta } from '@/heroes/conic-rays/meta';
 import { AuroraMeshHero } from '@/heroes/aurora-mesh/aurora-mesh';
 import { defineAuroraMeshElement } from '@/heroes/aurora-mesh/aurora-mesh.element';
 import { meta as auroraMeshMeta } from '@/heroes/aurora-mesh/meta';
@@ -317,6 +320,19 @@ export const heroes: HeroEntry[] = [
         <p className="sg-bm-eyebrow">Web Component · no framework</p>
         <h2 className="text-5xl font-semibold tracking-tight">&lt;sg-beam-grid&gt;</h2>
         <p>The same engine, driven by attributes: a finer grid, warmer and faster beams. Click anywhere on the grid.</p>
+      </div>
+    ),
+  },
+  {
+    meta: conicRaysMeta,
+    Hero: ConicRaysHero,
+    defineElement: () => defineConicRaysElement(),
+    elementAttributes: { colors: 'oklch(0.8 0.15 85), oklch(0.7 0.19 40), oklch(0.6 0.2 350)', origin: 'bottom', rays: '16', spread: '0.3', speed: '1.6' },
+    elementChildren: (
+      <div className="sg-cr-copy">
+        <p className="sg-cr-eyebrow">Web Component · no framework</p>
+        <h2 className="text-5xl font-semibold tracking-tight">&lt;sg-conic-rays&gt;</h2>
+        <p>The same engine, driven by attributes: warmer light from below, thinner rays, turning faster.</p>
       </div>
     ),
   },

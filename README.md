@@ -5,7 +5,7 @@ Two engines: **WebGPU** heroes draw their background on the GPU with TypeGPU; **
 
 Text, links and buttons always stay in the DOM. Colours come from your CSS variables; a WebGPU hero shows a still poster when WebGPU or motion is unavailable.
 
-> **Status: v0.1 in progress.** The six heroes run locally (`pnpm dev`); nothing is published to the registry yet. The design is in [RFC-0001](proposals/RFC-0001-Sharingan.md).
+> **Status: v0.2 in progress.** The fourteen heroes (six WebGPU, eight DOM) run locally (`pnpm dev`); nothing is published to the registry yet. The design is in [RFC-0001](proposals/RFC-0001-Sharingan.md).
 
 ## Heroes
 
@@ -31,7 +31,7 @@ Text, links and buttons always stay in the DOM. Colours come from your CSS varia
 | **Terminal boot** | A terminal types your install command, prints its output, and your product rises from it | Draft |
 | **App window** | Your product screen in HTML builds itself panel by panel, then leans toward the pointer | Draft |
 | **Beam grid** | Beams of light running along a fine grid; it brightens around the pointer, a click sends beams | Draft |
-| **Conic rays** | Slow rays of light behind the title | Planned |
+| **Conic rays** | Slow rays of coloured light turning behind the title, the universal counterpart of Aurora mesh | Draft |
 
 Later (WebGPU): **Black hole** (gravitational lensing on the headline), **Metaballs**.
 
