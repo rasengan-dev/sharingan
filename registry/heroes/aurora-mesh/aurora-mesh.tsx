@@ -1,5 +1,6 @@
-import { fallbackGradient } from "@/lib/sharingan";
-import { HeroCanvas, HeroSection } from "@/lib/sharingan/react";
+import { fallbackGradient } from "@/lib/sharingan/webgpu";
+import { HeroSection } from "@/lib/sharingan/react";
+import { HeroCanvas } from "@/lib/sharingan/webgpu/react";
 import type { RefObject } from "react";
 import { createAuroraMesh } from "./engine";
 import { auroraMeshExample } from "./example";

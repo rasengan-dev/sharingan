@@ -1,5 +1,5 @@
 import * as d from "typegpu/data";
-import { createHeroEngine, type HeroEngine, type HeroEngineOptions, type HeroResolved, type Scene, type SceneContext } from "@/lib/sharingan";
+import { createHeroEngine, type HeroEngine, type HeroEngineOptions, type HeroResolved, type Scene, type SceneContext } from "@/lib/sharingan/webgpu";
 import { auroraMeshConfigSchema, type AuroraMeshConfig, type AuroraMeshConfigInput } from "./schema";
 import { AuroraParams, auroraShader } from "./shaders";
 

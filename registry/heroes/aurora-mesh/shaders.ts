@@ -1,6 +1,6 @@
 import tgpu from "typegpu";
 import * as d from "typegpu/data";
-import { wgsl } from "@/lib/sharingan";
+import { wgsl } from "@/lib/sharingan/webgpu";
 
 /**
  * Aurora mesh is one fragment shader: up to four soft bands of light, bent

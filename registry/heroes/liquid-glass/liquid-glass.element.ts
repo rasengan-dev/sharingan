@@ -1,4 +1,4 @@
-import { defineHeroElement } from "@/lib/sharingan";
+import { defineHeroElement } from "@/lib/sharingan/webgpu";
 import { createLiquidGlass } from "./engine";
 import { liquidGlassFallbackStyle } from "./liquid-glass";
 import type { LiquidGlassConfigInput } from "./schema";

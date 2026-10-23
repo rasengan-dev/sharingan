@@ -3,10 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Shared runtime of Sharingan heroes: GPU device, frame loop, canvas sizing, motion modes, theme colours and fallback.",
+  "description": "Shared runtime of Sharingan heroes: frame loop, motion modes, pointer and theme colours, plus the WebGPU engine under ./webgpu.",
   "exports": {
     ".": "./src/index.ts",
-    "./react": "./src/react.tsx"
+    "./react": "./src/react.tsx",
+    "./webgpu": "./src/webgpu/index.ts",
+    "./webgpu/react": "./src/webgpu/react.tsx"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"

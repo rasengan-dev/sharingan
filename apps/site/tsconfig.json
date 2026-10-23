@@ -10,6 +10,8 @@
 
     /* Aliases for intellisence */
     "paths": {
+      "@/lib/sharingan/webgpu/react": ["../../packages/core/src/webgpu/react.tsx"],
+      "@/lib/sharingan/webgpu": ["../../packages/core/src/webgpu/index.ts"],
       "@/lib/sharingan": ["../../packages/core/src/index.ts"],
       "@/lib/sharingan/react": ["../../packages/core/src/react.tsx"],
       "@/heroes/*": ["../../registry/heroes/*"],

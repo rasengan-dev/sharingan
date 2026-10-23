@@ -1,4 +1,4 @@
-import { defineHeroElement } from "@/lib/sharingan";
+import { defineHeroElement } from "@/lib/sharingan/webgpu";
 import { gravityFieldFallbackStyle } from "./gravity-field";
 import { createGravityField } from "./engine";
 import type { GravityFieldConfigInput } from "./schema";

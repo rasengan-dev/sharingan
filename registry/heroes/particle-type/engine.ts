@@ -1,5 +1,5 @@
 import * as d from "typegpu/data";
-import { createHeroEngine, type HeroEngine, type HeroEngineOptions, type HeroResolved, type Scene, type SceneContext } from "@/lib/sharingan";
+import { createHeroEngine, type HeroEngine, type HeroEngineOptions, type HeroResolved, type Scene, type SceneContext } from "@/lib/sharingan/webgpu";
 import { particleTypeConfigSchema, type ParticleTypeConfig, type ParticleTypeConfigInput } from "./schema";
 import { DrawParams, Particle, SimParams, drawShader, simulateShader } from "./shaders";
 

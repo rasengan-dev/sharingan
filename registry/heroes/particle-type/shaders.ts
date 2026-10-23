@@ -1,6 +1,6 @@
 import tgpu from "typegpu";
 import * as d from "typegpu/data";
-import { wgsl } from "@/lib/sharingan";
+import { wgsl } from "@/lib/sharingan/webgpu";
 
 /**
  * Particle type gives every particle a home: a point inside a letter of the

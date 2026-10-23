@@ -1,6 +1,6 @@
 import type { FallbackReason } from "./device";
 import { mountScene, type MountedScene, type Scene, type SceneContext } from "./mount";
-import { onThemeChange, resolveColor, type LinearColor } from "./theme";
+import { onThemeChange, resolveColor, type LinearColor } from "../theme";
 
 /** Every hero's config has colours and a background, as CSS colours. */
 export type HeroBaseConfig = { colors: string[]; background: string };

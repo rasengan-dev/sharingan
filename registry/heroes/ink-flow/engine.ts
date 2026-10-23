@@ -4,11 +4,10 @@ import {
 	type HeroEngine,
 	type HeroEngineOptions,
 	type HeroResolved,
-	type LinearColor,
-	type PointerState,
 	type Scene,
 	type SceneContext,
-} from "@/lib/sharingan";
+} from "@/lib/sharingan/webgpu";
+import type { LinearColor, PointerState } from "@/lib/sharingan";
 import { inkFlowConfigSchema, type InkFlowConfig, type InkFlowConfigInput } from "./schema";
 import * as shaders from "./shaders";
 

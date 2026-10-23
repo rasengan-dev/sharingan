@@ -1,4 +1,4 @@
-import { defineHeroElement } from "@/lib/sharingan";
+import { defineHeroElement } from "@/lib/sharingan/webgpu";
 import { reactionDiffusionFallbackStyle } from "./reaction-diffusion";
 import { createReactionDiffusion } from "./engine";
 import type { ReactionDiffusionConfigInput } from "./schema";

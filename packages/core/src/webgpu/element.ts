@@ -1,6 +1,6 @@
 import type { FallbackReason } from "./device";
 import type { HeroEngine, HeroEngineOptions } from "./hero";
-import { splitColorList } from "./theme";
+import { splitColorList } from "../theme";
 
 /** How an attribute is read: `colors` splits a colour list on top-level commas. */
 export type AttributeKind = "string" | "number" | "boolean" | "colors";

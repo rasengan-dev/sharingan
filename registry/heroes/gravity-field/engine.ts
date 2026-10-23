@@ -1,5 +1,5 @@
 import * as d from "typegpu/data";
-import { createHeroEngine, type HeroEngine, type HeroEngineOptions, type HeroResolved, type Scene, type SceneContext } from "@/lib/sharingan";
+import { createHeroEngine, type HeroEngine, type HeroEngineOptions, type HeroResolved, type Scene, type SceneContext } from "@/lib/sharingan/webgpu";
 import { gravityFieldConfigSchema, type GravityFieldConfig, type GravityFieldConfigInput } from "./schema";
 import { DrawParams, Particle, SimParams, drawShader, seedShader, simulateShader } from "./shaders";
 

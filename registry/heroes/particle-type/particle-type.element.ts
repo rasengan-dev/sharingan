@@ -1,4 +1,4 @@
-import { defineHeroElement } from "@/lib/sharingan";
+import { defineHeroElement } from "@/lib/sharingan/webgpu";
 import { particleTypeFallbackStyle } from "./particle-type";
 import { createParticleType } from "./engine";
 import type { ParticleTypeConfigInput } from "./schema";

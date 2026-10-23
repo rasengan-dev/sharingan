@@ -1,8 +1,8 @@
 import type { TgpuRoot } from "typegpu";
 import { GpuUnavailableError, getRoot, onDeviceLost, type FallbackReason } from "./device";
-import { addFrame } from "./loop";
-import { onMotionPreferenceChange, readMotionMode, type MotionMode } from "./motion";
-import { trackPointer, type PointerState } from "./pointer";
+import { addFrame } from "../loop";
+import { onMotionPreferenceChange, readMotionMode, type MotionMode } from "../motion";
+import { trackPointer, type PointerState } from "../pointer";
 
 /** What a hero's renderer gives the runtime. Everything else is shared. */
 export interface Scene {

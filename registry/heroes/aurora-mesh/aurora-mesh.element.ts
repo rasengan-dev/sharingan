@@ -1,4 +1,4 @@
-import { defineHeroElement } from "@/lib/sharingan";
+import { defineHeroElement } from "@/lib/sharingan/webgpu";
 import { auroraMeshFallbackStyle } from "./aurora-mesh";
 import { createAuroraMesh } from "./engine";
 import type { AuroraMeshConfigInput } from "./schema";

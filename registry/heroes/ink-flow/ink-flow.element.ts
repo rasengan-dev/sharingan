@@ -1,4 +1,4 @@
-import { defineHeroElement } from "@/lib/sharingan";
+import { defineHeroElement } from "@/lib/sharingan/webgpu";
 import { createInkFlow } from "./engine";
 import { inkFlowFallbackStyle } from "./ink-flow";
 import type { InkFlowConfigInput } from "./schema";

@@ -1,6 +1,6 @@
 import tgpu from "typegpu";
 import * as d from "typegpu/data";
-import { wgsl } from "@/lib/sharingan";
+import { wgsl } from "@/lib/sharingan/webgpu";
 
 /**
  * Gravity field keeps its particles in one storage buffer. A compute pass

@@ -1,6 +1,6 @@
 import tgpu from "typegpu";
 import * as d from "typegpu/data";
-import { wgsl } from "@/lib/sharingan";
+import { wgsl } from "@/lib/sharingan/webgpu";
 
 /**
  * Liquid glass is one fragment shader. The scene under the glass is the

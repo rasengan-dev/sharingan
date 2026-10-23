@@ -1,6 +1,6 @@
 import tgpu from "typegpu";
 import * as d from "typegpu/data";
-import { wgsl } from "@/lib/sharingan";
+import { wgsl } from "@/lib/sharingan/webgpu";
 
 /**
  * Reaction-diffusion runs the Gray-Scott model on a grid of two chemicals:
