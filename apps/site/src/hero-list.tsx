@@ -8,6 +8,9 @@ import { meta as holoCardMeta } from '@/heroes/holo-card/meta';
 import { SplitHeadlineHero } from '@/heroes/split-headline/split-headline';
 import { defineSplitHeadlineElement } from '@/heroes/split-headline/split-headline.element';
 import { meta as splitHeadlineMeta } from '@/heroes/split-headline/meta';
+import { MarqueeTypeHero } from '@/heroes/marquee-type/marquee-type';
+import { defineMarqueeTypeElement } from '@/heroes/marquee-type/marquee-type.element';
+import { meta as marqueeTypeMeta } from '@/heroes/marquee-type/meta';
 import { AuroraMeshHero } from '@/heroes/aurora-mesh/aurora-mesh';
 import { defineAuroraMeshElement } from '@/heroes/aurora-mesh/aurora-mesh.element';
 import { meta as auroraMeshMeta } from '@/heroes/aurora-mesh/meta';
@@ -162,6 +165,38 @@ export const heroes: HeroEntry[] = [
         <p className="sg-sh-sub" data-sg-after="">
           &lt;sg-split-headline&gt;: the same engine, driven by attributes. Letters rise from below here, and a warmer accent follows the pointer.
         </p>
+      </>
+    ),
+  },
+  {
+    meta: marqueeTypeMeta,
+    Hero: MarqueeTypeHero,
+    defineElement: () => defineMarqueeTypeElement(),
+    elementAttributes: { look: 'outline', direction: 'left', tilt: '0', separator: '/', accent: 'oklch(0.7 0.19 40)', speed: '1.6' },
+    elementChildren: (
+      <>
+        <div className="sg-mq-copy">
+          <p className="sg-mq-eyebrow">Web Component · no framework</p>
+          <h2 className="text-5xl font-semibold tracking-tight">&lt;sg-marquee-type&gt;</h2>
+          <p>The same engine, driven by attributes: outlined, flat, all to the left, a slash between words.</p>
+        </div>
+        <div data-sg-rows="" role="group" aria-label="Line-up">
+          <div data-sg-row="">
+            <ul>
+              <li>Friday</li>
+              <li>Saturday</li>
+              <li>Sunday</li>
+            </ul>
+          </div>
+          <div data-sg-row="">
+            <ul>
+              <li>Afrobeats</li>
+              <li>Amapiano</li>
+              <li>Highlife</li>
+              <li>Jazz</li>
+            </ul>
+          </div>
+        </div>
       </>
     ),
   },
