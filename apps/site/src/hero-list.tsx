@@ -14,6 +14,9 @@ import { meta as marqueeTypeMeta } from '@/heroes/marquee-type/meta';
 import { TerminalBootHero } from '@/heroes/terminal-boot/terminal-boot';
 import { defineTerminalBootElement } from '@/heroes/terminal-boot/terminal-boot.element';
 import { meta as terminalBootMeta } from '@/heroes/terminal-boot/meta';
+import { AppWindowHero } from '@/heroes/app-window/app-window';
+import { defineAppWindowElement } from '@/heroes/app-window/app-window.element';
+import { meta as appWindowMeta } from '@/heroes/app-window/meta';
 import { AuroraMeshHero } from '@/heroes/aurora-mesh/aurora-mesh';
 import { defineAuroraMeshElement } from '@/heroes/aurora-mesh/aurora-mesh.element';
 import { meta as auroraMeshMeta } from '@/heroes/aurora-mesh/meta';
@@ -248,6 +251,54 @@ export const heroes: HeroEntry[] = [
                 <span>Done. Import TerminalBootHero.</span>
               </li>
             </ul>
+          </div>
+        </div>
+      </>
+    ),
+  },
+  {
+    meta: appWindowMeta,
+    Hero: AppWindowHero,
+    defineElement: () => defineAppWindowElement(),
+    elementAttributes: { accent: 'oklch(0.7 0.17 160)', stagger: '160' },
+    elementChildren: (
+      <>
+        <div className="sg-aw-copy">
+          <p className="sg-aw-eyebrow">Web Component · no framework</p>
+          <h2 className="text-5xl font-semibold tracking-tight">&lt;sg-app-window&gt;</h2>
+          <p>The same engine, driven by attributes. This screen is plain HTML with a data-points chart the engine draws.</p>
+        </div>
+        <div>
+          <div data-sg-window="" role="img" aria-label="Example habit tracker: three streak cards and a weekly chart">
+            <div className="sg-aw-chrome" data-sg-panel="" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+              <span className="sg-aw-address">streaks.app</span>
+            </div>
+            <div className="sg-aw-main" aria-hidden="true">
+              <div className="sg-aw-head" data-sg-panel="">
+                <h3>This week</h3>
+                <span className="sg-aw-button">Log a habit</span>
+              </div>
+              <div className="sg-aw-stats">
+                <div className="sg-aw-card" data-sg-panel="" data-depth="3">
+                  <div className="sg-aw-stat-label">Reading</div>
+                  <div className="sg-aw-stat-value"><span data-sg-count="">21 days</span></div>
+                </div>
+                <div className="sg-aw-card" data-sg-panel="" data-depth="3">
+                  <div className="sg-aw-stat-label">Running</div>
+                  <div className="sg-aw-stat-value"><span data-sg-count="">42 km</span></div>
+                </div>
+                <div className="sg-aw-card" data-sg-panel="" data-depth="3">
+                  <div className="sg-aw-stat-label">Sleep</div>
+                  <div className="sg-aw-stat-value"><span data-sg-count="">7.6 h</span></div>
+                </div>
+              </div>
+              <div className="sg-aw-card sg-aw-chart" data-sg-panel="" data-depth="1" data-sg-chart="" data-points="3,5,4,6,8,7,9,11,10,12">
+                <div className="sg-aw-stat-label">Habits done per day</div>
+              </div>
+            </div>
           </div>
         </div>
       </>

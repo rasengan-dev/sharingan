@@ -29,7 +29,7 @@ Text, links and buttons always stay in the DOM. Colours come from your CSS varia
 | **Split headline** | The headline assembles letter by letter; letters near the pointer thicken and take your accent | Draft |
 | **Marquee type** | Oversized words sliding in opposite rows; a row slows under the pointer, scrolling pushes them | Draft |
 | **Terminal boot** | A terminal types your install command, prints its output, and your product rises from it | Draft |
-| **App window** | An app screen that builds itself panel by panel | Planned |
+| **App window** | Your product screen in HTML builds itself panel by panel, then leans toward the pointer | Draft |
 | **Beam grid** | Beams of light running along an SVG grid | Planned |
 | **Conic rays** | Slow rays of light behind the title | Planned |
 

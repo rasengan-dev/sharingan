@@ -348,7 +348,7 @@ Separate project, shared conventions:
    panel, the registry, posters generated in CI. The site is also the first
    real user of the heroes, in React.
 4. **M3b — DOM heroes.** Split the core by engine (done), port the Noa Pad
-   as `gamepad` (done, in React and as a Web Component), `holo-card`, `split-headline`, `marquee-type` and `terminal-boot` (done),
+   as `gamepad` (done, in React and as a Web Component), `holo-card`, `split-headline`, `marquee-type`, `terminal-boot` and `app-window` (done),
    then the rest of the DOM collection (v0.2). Can run before or
    alongside M3.
 5. **M4 — Bridge.** Rasengan UI v2 integration and a first hero there.
