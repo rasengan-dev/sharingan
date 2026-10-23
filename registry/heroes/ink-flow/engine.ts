@@ -65,7 +65,7 @@ function ambientSplats(time: number, delta: number, resolved: Resolved, grid: [n
 			fx: vx * grid[0] * 1.6,
 			fy: vy * grid[1] * 1.6,
 			color: resolved.palette[i % resolved.palette.length],
-			amount: 0.9 * delta,
+			amount: 0.32 * delta,
 			radius: 0.003,
 		};
 	});
@@ -223,11 +223,13 @@ function createInkScene({ root, device, context, format }: SceneContext, current
 
 	function draw() {
 		const { config, background } = current();
+		// Ink fades into a light page much sooner than into a dark one: give light backgrounds denser ink.
+		const luminance = 0.2126 * background[0] + 0.7152 * background[1] + 0.0722 * background[2];
 		renderParams.buffer.write({
 			background: d.vec4f(background[0], background[1], background[2], 1),
 			calmZone: d.vec4f(0.5, 0.42, 0.34, 0.24),
 			calmStrength: config.calm,
-			gain: GAIN,
+			gain: GAIN * (1 + 2.5 * luminance),
 		});
 		const encoder = device.createCommandEncoder();
 		const pass = encoder.beginRenderPass({

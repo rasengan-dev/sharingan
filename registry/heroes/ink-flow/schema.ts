@@ -28,7 +28,7 @@ export const inkFlowConfigSchema = z.object({
 	flowFade: z.number().min(0).max(4).default(0.25).describe("How fast the flow calms down, per second."),
 	ambient: z.boolean().default(true).describe("Slow currents that keep the ink moving when nobody touches it."),
 	pointer: z.boolean().default(true).describe("The cursor stirs the ink."),
-	calm: z.number().min(0).max(1).default(0.55).describe("How clear the area behind the headline stays."),
+	calm: z.number().min(0).max(1).default(0.7).describe("How clear the area behind the headline stays."),
 	detail: z.enum(["low", "medium", "high"]).default("medium").describe("Simulation resolution: lower is lighter on the GPU."),
 	poster: z.string().optional().describe("Image shown when WebGPU is unavailable."),
 });

@@ -92,8 +92,12 @@ export async function mountScene({ canvas, host, create, onFallback, maxPixelRat
 
 	// A canvas is 300×150 before anything sizes it: wait for our first resize, which allocates the scene.
 	let sized = false;
+	// The still frame replays a few seconds of simulation: draw it once, again only when something changed.
+	let stillIsCurrent = false;
 	const drawStill = () => {
-		if (!destroyed && sized) scene.still();
+		if (destroyed || !sized || stillIsCurrent) return;
+		scene.still();
+		stillIsCurrent = true;
 	};
 	const sync = () => {
 		const live = mode === "ready" && visible && !destroyed;
@@ -116,6 +120,7 @@ export async function mountScene({ canvas, host, create, onFallback, maxPixelRat
 		canvas.height = height;
 		scene.resize(width, height);
 		sized = true;
+		stillIsCurrent = false;
 		if (mode !== "ready") drawStill();
 	});
 	resizeObserver.observe(canvas);
@@ -128,6 +133,7 @@ export async function mountScene({ canvas, host, create, onFallback, maxPixelRat
 
 	const stopMotionWatch = onMotionPreferenceChange(() => {
 		mode = readMotionMode();
+		stillIsCurrent = false;
 		sync();
 	});
 	const stopLostWatch = onDeviceLost(() => {
@@ -155,7 +161,10 @@ export async function mountScene({ canvas, host, create, onFallback, maxPixelRat
 		get mode() {
 			return mode;
 		},
-		invalidate: () => mode !== "ready" && drawStill(),
+		invalidate: () => {
+			stillIsCurrent = false;
+			if (mode !== "ready") drawStill();
+		},
 		destroy,
 	};
 }

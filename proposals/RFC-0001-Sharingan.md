@@ -218,6 +218,14 @@ real traffic shows otherwise.
 | First frame | ≤ 300 ms after the device is ready; poster shown before |
 | Off screen or hidden tab | 0 frames rendered |
 
+**Measured in M1** (Ink flow, `detail: "medium"`, Chrome 154 on Linux,
+Intel UHD Graphics P630, a Coffee Lake integrated GPU): 60 fps at 1440×900
+and 1920×1080; one simulation step costs about 2.5–2.9 ms of GPU time when
+steps run back to back, plus a light full-screen render pass, so about
+3 ms per frame against the 8 ms budget. Software rendering (SwiftShader)
+runs at about 8 fps: good for correctness checks, not for tuning, since
+anything injected per frame looks several times weaker there.
+
 ### Initial collection (v0.1)
 
 | Hero | Technique | Cost |
