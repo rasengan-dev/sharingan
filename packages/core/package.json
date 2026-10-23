@@ -1,0 +1,21 @@
+{
+  "name": "@sharingan/core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared runtime of Sharingan heroes: GPU device, frame loop, canvas sizing, motion modes, theme colours and fallback.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "typegpu": "0.12.8"
+  },
+  "devDependencies": {
+    "@webgpu/types": "^0.1.60",
+    "typescript": "^5.9.2"
+  },
+  "license": "MIT"
+}

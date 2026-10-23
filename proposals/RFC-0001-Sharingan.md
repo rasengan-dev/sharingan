@@ -1,6 +1,6 @@
 # RFC-0001: Sharingan — open-source WebGPU heroes
 
-- Status: Draft
+- Status: Draft (M1 implemented: `@sharingan/core`, `ink-flow` in React and as a Web Component, `apps/site`)
 - Author: Dilane Kombou
 - Created: 2026-10-23
 - Repository: `rasengan-dev/sharingan` (new, MIT)
@@ -66,7 +66,7 @@ enhancement: the hero must read well without it.
 | Question | Decision |
 |---|---|
 | GPU API | WebGPU in the browser, through **TypeGPU**. No Rust/wgpu: a wasm module per hero would be heavy and hard to copy and edit |
-| Shader language | TypeGPU shader functions in TypeScript (`"use gpu"`, compiled to WGSL by `unplugin-typegpu`); raw WGSL allowed where TypeGPU cannot express it yet |
+| Shader language | Data shared by CPU and GPU is declared once with TypeGPU schemas (`typegpu/data`); `tgpu.resolve` writes the matching WGSL structs into each shader. Passes are WGSL. Validated in M1: no build plugin is needed, so a copied hero works without configuring Vite. TypeScript shader functions (`"use gpu"` + `unplugin-typegpu`) stay possible once TypeGPU's texture and pipeline APIs leave `~unstable` |
 | Targets | React component **and** Web Component, both thin layers over one engine |
 | Distribution | **shadcn registry**: `registry:lib` for the core, `registry:block` per hero |
 | Website | a **Rasengan.js** app, created with `npx create-rasengan@beta` (create-rasengan 1.5.0-beta.5, Rasengan.js 2.0.0-beta.5 at the time of writing). It hosts the docs, the live previews and the registry files |
