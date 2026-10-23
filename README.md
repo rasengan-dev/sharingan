@@ -85,7 +85,7 @@ On Vercel, one project:
 
 ## Support
 
-Created by **[Dilane Kombou](https://github.com/dilane3)**, author of Rasengan.js and Rasengan UI.
+Created by **[Dilane Kombou](https://github.com/dilane3)**, author of Rasengan.js ecosystem.
 [Support this project and my other open-source work →](https://buymeacoffee.com/dilane3)
 
 ## License
