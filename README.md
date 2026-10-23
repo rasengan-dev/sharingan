@@ -1,15 +1,94 @@
 # Sharingan
 
-Open-source hero sections rendered with WebGPU: fluid ink, particle headlines, auroras, gravity fields, liquid glass.
+Open-source hero sections rendered with WebGPU.
+Built with TypeGPU, for React and as Web Components, and copied into your project with the shadcn CLI.
 
-- Copied into your project with the shadcn CLI, then yours to edit.
-- React components and framework-free Web Components, from one engine per hero.
-- Shaders in TypeScript with [TypeGPU](https://typegpu.com).
-- Text, links and buttons stay in the DOM; only the background is drawn on the GPU.
-- Colours come from your CSS variables. Without WebGPU or with reduced motion, a still poster is shown.
+Text, links and buttons stay in the DOM; only the background is drawn on the GPU. Colours come from your CSS variables, and a still poster takes over when WebGPU or motion is unavailable.
 
-Status: proposal. Read [RFC-0001](proposals/RFC-0001-Sharingan.md).
+> **Status: proposal.** Nothing is published yet. The design is in [RFC-0001](proposals/RFC-0001-Sharingan.md); previews and live links arrive with each hero.
 
-## Licence
+## Heroes
 
-MIT
+| Hero | Concept | GPU cost | Status |
+| --- | --- | --- | --- |
+| **Aurora mesh** | Slow bands of light drifting behind the headline, the quiet one | Light | Planned |
+| **Ink flow** | Brand-coloured ink that swirls and follows the cursor, a fluid simulation in compute passes | Medium | Next (M1) |
+| **Particle type** | The headline breaks into particles on hover, then reforms | Medium | Planned |
+| **Gravity field** | 200,000 particles pulled toward the pointer | Medium | Planned |
+| **Reaction-diffusion** | A living pattern that grows behind the title | Medium | Planned |
+| **Liquid glass** | Refraction and caustics over your product shot | Heavy | Planned |
+
+Later: **Black hole** (gravitational lensing on the headline), **Gamepad 3D** (a playable controller as navigation), **Metaballs**.
+
+## Use a hero
+
+Add the `@sharingan` registry to your `components.json`, then:
+
+```bash
+npx shadcn@latest add @sharingan/ink-flow
+```
+
+In React:
+
+```tsx
+<InkFlowHero
+  content={{ headline: "Ship invoices before coffee", primaryCta: { label: "Start free", href: "/signup" } }}
+  config={{ colors: ["var(--brand)", "var(--glow)"] }}
+/>
+```
+
+In any page, as a Web Component:
+
+```html
+<sg-ink-flow colors="var(--brand), var(--glow)">
+  <h1>Ship invoices before coffee</h1>
+  <a href="/signup">Start free</a>
+</sg-ink-flow>
+```
+
+Each hero ships its engine (TypeGPU shaders), the React component, the Web Component, a typed content and config schema, and its poster.
+
+## Run locally
+
+Requires **Node.js 20.18+**, **pnpm** and a browser with WebGPU (recent Chrome, Edge, Safari or Firefox). From the repository root:
+
+```bash
+pnpm install
+pnpm dev
+```
+
+This starts the website with every hero previewed. Add `?motion=final` to a preview URL to freeze it on its poster frame, or `?motion=off` to see the fallback.
+
+## Website
+
+`apps/site` is the collection website: docs, live previews with a config panel, and the registry files (`registry.json`, `/r/*.json`).
+It is a **[Rasengan.js](https://rasengan.dev)** app, created with:
+
+```bash
+npx create-rasengan@beta
+```
+
+## Deploy
+
+On Vercel, one project:
+
+| Site | Root Directory | Build |
+| --- | --- | --- |
+| Website and registry | `apps/site` | Rasengan.js with the `@rasenganjs/vercel` adapter, as Rasengan UI's sites |
+
+## Roadmap
+
+1. **M1** · Core and Ink flow, in React and as a Web Component, previewed in the Rasengan.js site.
+2. **M2** · The rest of the v0.1 collection.
+3. **M3** · Website, registry and posters generated in CI.
+4. **M4** · Bridge with [Rasengan UI](https://github.com/rasengan-dev/rasengan-ui) v2: Sharingan backgrounds under its art directions.
+
+## Support
+
+Created by **[Dilane Kombou](https://github.com/dilane3)**, author of Rasengan.js and Rasengan UI.
+[Support this project and my other open-source work →](https://buymeacoffee.com/dilane3)
+
+## License
+
+Code is licensed under [MIT](LICENSE).
+Fonts and third-party images keep their own licences; see each hero's credits.
