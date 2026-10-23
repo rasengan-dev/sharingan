@@ -5,6 +5,9 @@ import { meta as gamepadMeta } from '@/heroes/gamepad/meta';
 import { HoloCardHero } from '@/heroes/holo-card/holo-card';
 import { defineHoloCardElement } from '@/heroes/holo-card/holo-card.element';
 import { meta as holoCardMeta } from '@/heroes/holo-card/meta';
+import { SplitHeadlineHero } from '@/heroes/split-headline/split-headline';
+import { defineSplitHeadlineElement } from '@/heroes/split-headline/split-headline.element';
+import { meta as splitHeadlineMeta } from '@/heroes/split-headline/meta';
 import { AuroraMeshHero } from '@/heroes/aurora-mesh/aurora-mesh';
 import { defineAuroraMeshElement } from '@/heroes/aurora-mesh/aurora-mesh.element';
 import { meta as auroraMeshMeta } from '@/heroes/aurora-mesh/meta';
@@ -144,6 +147,21 @@ export const heroes: HeroEntry[] = [
             </div>
           </div>
         </div>
+      </>
+    ),
+  },
+  {
+    meta: splitHeadlineMeta,
+    Hero: SplitHeadlineHero,
+    defineElement: () => defineSplitHeadlineElement(),
+    elementAttributes: { intro: 'rise', accent: 'oklch(0.7 0.19 40)', radius: '2', stagger: '40' },
+    elementChildren: (
+      <>
+        <p className="sg-sh-eyebrow">Web Component · no framework</p>
+        <h2 data-sg-split="">Split, then answer</h2>
+        <p className="sg-sh-sub" data-sg-after="">
+          &lt;sg-split-headline&gt;: the same engine, driven by attributes. Letters rise from below here, and a warmer accent follows the pointer.
+        </p>
       </>
     ),
   },

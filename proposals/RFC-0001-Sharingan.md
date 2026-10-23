@@ -316,7 +316,7 @@ Later: `black-hole` (gravitational lensing on the headline), `gamepad-3d`
 |---|---|---|
 | `gamepad` | object | the Noa Pad: a controller whose D-pad and buttons navigate the page, also from a real gamepad |
 | `holo-card` | object | a card that tilts toward the pointer with a moving holographic sheen |
-| `split-headline` | type | the headline assembles letter by letter, then reacts to the pointer with a variable font axis |
+| `split-headline` | type | the headline assembles letter by letter, then letters near the pointer thicken (a text stroke, not a font axis: no reflow, any font) and take the accent |
 | `marquee-type` | type | oversized words sliding in opposite rows, slowing under the pointer |
 | `terminal-boot` | mockup | a terminal types the install command and the product appears from its output |
 | `app-window` | mockup | an app screen builds itself panel by panel, then follows the pointer in light 3D |
@@ -348,7 +348,7 @@ Separate project, shared conventions:
    panel, the registry, posters generated in CI. The site is also the first
    real user of the heroes, in React.
 4. **M3b — DOM heroes.** Split the core by engine (done), port the Noa Pad
-   as `gamepad` (done, in React and as a Web Component), `holo-card` (done),
+   as `gamepad` (done, in React and as a Web Component), `holo-card` and `split-headline` (done),
    then the rest of the DOM collection (v0.2). Can run before or
    alongside M3.
 5. **M4 — Bridge.** Rasengan UI v2 integration and a first hero there.
