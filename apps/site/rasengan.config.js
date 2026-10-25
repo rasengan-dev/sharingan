@@ -30,6 +30,8 @@ const lazyShiki = {
 
 export default defineConfig(async () => {
   return {
+    // The address `pnpm registry` and `pnpm posters` expect by default (Rasengan's own default is 5320).
+    server: { development: { port: 3100 } },
     vite: {
       plugins: [
         tailwindcss(),

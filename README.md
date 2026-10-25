@@ -86,7 +86,7 @@ pnpm install
 pnpm dev
 ```
 
-This starts the website with every hero previewed. Add `?motion=final` to a preview URL to freeze it on its poster frame, or `?motion=off` to see the fallback.
+This starts the website on [http://localhost:3100](http://localhost:3100) with every hero previewed. Add `?motion=final` to a preview URL to freeze it on its poster frame, or `?motion=off` to see the fallback.
 
 | Command | What it does |
 | --- | --- |
@@ -116,9 +116,13 @@ On Vercel, one project:
 
 1. **M1** · Core and Ink flow, in React and as a Web Component, previewed in the Rasengan.js site.
 2. **M2** · The rest of the v0.1 collection.
-3. **M3** · Website, registry and posters (local script; CI once the repository is public).
+3. **M3** · Website, registry and posters (local script; CI runs typecheck and build).
 4. **M3b** · DOM heroes: the second engine, eight heroes for every browser.
 5. **M4** · Bridge with [Rasengan UI](https://github.com/rasengan-dev/rasengan-ui) v2: Sharingan backgrounds under its art directions.
+
+## Contributing
+
+Bug reports, fixes and new heroes are welcome: [CONTRIBUTING.md](CONTRIBUTING.md) covers the setup, the anatomy of a hero and the checks to run. Please follow the [code of conduct](CODE_OF_CONDUCT.md), and report security issues as described in [SECURITY.md](SECURITY.md).
 
 ## Support
 

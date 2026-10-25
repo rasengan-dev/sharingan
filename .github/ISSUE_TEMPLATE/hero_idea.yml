@@ -1,0 +1,32 @@
+name: Hero idea
+description: Propose a new hero for the collection.
+labels: [hero idea]
+body:
+  - type: textarea
+    id: concept
+    attributes:
+      label: Concept
+      description: What the hero shows and how it moves, in a sentence or two. Links to references (sites, videos, Dribbble) are welcome.
+    validations:
+      required: true
+  - type: dropdown
+    id: engine
+    attributes:
+      label: Engine
+      options:
+        - WebGPU (drawn on the GPU)
+        - DOM (HTML, SVG, CSS 3D)
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: use-when
+    attributes:
+      label: Use it for
+      description: What kind of product or page would pick it.
+  - type: checkboxes
+    id: build
+    attributes:
+      label: Building it
+      options:
+        - label: I would like to build it myself

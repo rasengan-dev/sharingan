@@ -1,0 +1,55 @@
+name: Bug report
+description: A hero, the core, the registry or the website does not work as expected.
+labels: [bug]
+body:
+  - type: input
+    id: hero
+    attributes:
+      label: Hero
+      description: Which hero, or "core", "registry", "website".
+      placeholder: ink-flow
+    validations:
+      required: true
+  - type: dropdown
+    id: usage
+    attributes:
+      label: Used as
+      options:
+        - React component
+        - Web Component
+        - Preview on the website
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you expected, what you saw instead. A screenshot or recording helps a lot.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. npx shadcn@latest add @sharingan/ink-flow
+        2. …
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser, version and OS
+      placeholder: Chrome 141, macOS 15
+    validations:
+      required: true
+  - type: input
+    id: gpu
+    attributes:
+      label: GPU (WebGPU heroes)
+      description: From chrome://gpu or about:support, if the hero is a WebGPU one.
+  - type: textarea
+    id: console
+    attributes:
+      label: Console output
+      render: text
