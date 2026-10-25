@@ -98,10 +98,10 @@ This starts the website on [http://localhost:3100](http://localhost:3100) with e
 ## Website
 
 `apps/site` is the collection website: a getting-started guide, live previews with props tables and a config panel, and the registry files (`/r/*.json`, built by `pnpm registry`).
-It is a **[Rasengan.js](https://rasengan.dev)** app, created with:
+It is a **[Rasengan.js](https://rasengan.dev)** 2 app, created with:
 
 ```bash
-npx create-rasengan@beta
+npx create-rasengan@latest
 ```
 
 ## Deploy
