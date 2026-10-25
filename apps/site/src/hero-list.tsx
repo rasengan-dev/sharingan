@@ -35,6 +35,10 @@ import { GalleryFanHero } from '@/heroes/gallery-fan/gallery-fan';
 import { defineGalleryFanElement } from '@/heroes/gallery-fan/gallery-fan.element';
 import { meta as galleryFanMeta } from '@/heroes/gallery-fan/meta';
 import * as galleryFanSchema from '@/heroes/gallery-fan/schema';
+import { TrailMapHero } from '@/heroes/trail-map/trail-map';
+import { defineTrailMapElement } from '@/heroes/trail-map/trail-map.element';
+import { meta as trailMapMeta } from '@/heroes/trail-map/meta';
+import * as trailMapSchema from '@/heroes/trail-map/schema';
 import * as conicRaysSchema from '@/heroes/conic-rays/schema';
 import { AuroraMeshHero } from '@/heroes/aurora-mesh/aurora-mesh';
 import { defineAuroraMeshElement } from '@/heroes/aurora-mesh/aurora-mesh.element';
@@ -420,6 +424,35 @@ export const heroes: HeroEntry[] = [
         </div>
         <p className="sg-gf-sub">The same engine, driven by attributes: five cards, a narrower and deeper fan, one collaborator.</p>
       </>
+    ),
+  },
+  {
+    meta: trailMapMeta,
+    schemas: schemasOf(trailMapSchema),
+    Hero: TrailMapHero,
+    defineElement: () => defineTrailMapElement(),
+    elementAttributes: { accent: 'oklch(0.6 0.16 160)', clouds: 'false' },
+    elementChildren: (
+      <div className="sg-tm-main">
+        <div className="sg-tm-copy">
+          <p className="sg-tm-eyebrow">Web Component · no framework</p>
+          <h2 className="text-5xl font-bold tracking-tight">&lt;sg-trail-map&gt;</h2>
+          <p className="sg-tm-sub">The same engine, driven by attributes: a green route, no clouds, a shorter climb up Ama Dablam.</p>
+        </div>
+        <div data-sg-visual="">
+          <div data-sg-frame="" data-trail='{"points":[[18,95],[30,80],[44,70],[52,52],[60,36],[64,22]],"stops":[2,4]}'>
+            <div data-sg-scene="">
+              <img src="/sharingan/trail/ama-dablam.webp" alt="Ama Dablam's snowy peak above a valley in Nepal (photo: Rohit Tandon, Unsplash)" />
+            </div>
+          </div>
+          <div data-sg-summit="">
+            <span className="sg-tm-summit-text">
+              <b data-sg-distance="">42 km</b>
+              <small>To base camp</small>
+            </span>
+          </div>
+        </div>
+      </div>
     ),
   },
 ];

@@ -323,6 +323,7 @@ Later: `black-hole` (gravitational lensing on the headline), `gamepad-3d`
 | `beam-grid` | background | a grid (two CSS gradients) with beams of light running along its lines, moved by the Web Animations API |
 | `conic-rays` | background | slow conic rays behind the title, the universal counterpart of `aurora-mesh` |
 | `gallery-fan` | object | a full-screen fan of artwork cards in CSS 3D; the nearest card rises, collaborator cursors drift between cards (added after v0.2, from a design reference) |
+| `trail-map` | object | a route that draws itself up a photo in a shaped frame (a computed `clip-path`), a walker, clouds at their own depth, a scrolling strip of routes (added after v0.2, from a design reference) |
 
 ## Relation to Rasengan UI
 

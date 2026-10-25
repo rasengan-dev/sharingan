@@ -42,7 +42,7 @@ const visible = process.env.HEADLESS === "0";
 const flags = visible
 	? ["--enable-unsafe-webgpu", "--enable-features=Vulkan", "--ignore-gpu-blocklist", "--disable-background-timer-throttling", "--disable-renderer-backgrounding"]
 	: ["--headless=new", "--enable-unsafe-webgpu", "--use-webgpu-adapter=swiftshader", "--enable-features=Vulkan", "--use-angle=swiftshader"];
-const chrome = spawn(process.env.CHROME_BIN ?? "google-chrome", [...flags, "--hide-scrollbars", "--no-first-run", "--no-default-browser-check", `--user-data-dir=${profile}`, `--remote-debugging-port=${port}`, "about:blank"], { stdio: "ignore" });
+const chrome = spawn(process.env.CHROME_BIN ?? "google-chrome", [...flags, "--hide-scrollbars", "--no-first-run", "--no-default-browser-check", `--user-data-dir=${profile}`, `--remote-debugging-port=${port}`, "about:blank"], { stdio: "ignore", detached: true });
 
 let targets;
 for (let i = 0; i < 50 && !targets; i++) {
@@ -118,9 +118,13 @@ for (const { name, engine, poster } of heroes) {
 }
 
 socket.close();
-// Chrome writes to its profile until it has exited, and its helper processes a moment longer.
+// Chrome and its helper processes write to the profile until they have exited: stop the whole group.
 await new Promise((resolve) => {
 	chrome.once("exit", resolve);
-	chrome.kill();
+	try {
+		process.kill(-chrome.pid);
+	} catch {
+		chrome.kill();
+	}
 });
 rmSync(profile, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
