@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { useTheme, Themes } from '@rasenganjs/theme';
 
@@ -9,17 +10,30 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
+function useMounted() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted;
+}
+
 export default function ThemeToggle() {
   const { setTheme } = useTheme();
+  const mounted = useMounted();
+
+  const trigger = (
+    <Button variant="ghost" size="icon" aria-label="Toggle theme">
+      <Sun className="dark:hidden" />
+      <Moon className="hidden dark:block" />
+    </Button>
+  );
+
+  // Radix ids come from useId, which differs between the server render and hydration:
+  // the server renders the plain button and the menu takes over once mounted.
+  if (!mounted) return trigger;
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Toggle theme">
-          <Sun className="dark:hidden" />
-          <Moon className="hidden dark:block" />
-        </Button>
-      </DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme(Themes.light)}>
           Light
