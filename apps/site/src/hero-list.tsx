@@ -43,6 +43,10 @@ import { CurveReelHero } from '@/heroes/curve-reel/curve-reel';
 import { defineCurveReelElement } from '@/heroes/curve-reel/curve-reel.element';
 import { meta as curveReelMeta } from '@/heroes/curve-reel/meta';
 import * as curveReelSchema from '@/heroes/curve-reel/schema';
+import { BentoTilesHero } from '@/heroes/bento-tiles/bento-tiles';
+import { defineBentoTilesElement } from '@/heroes/bento-tiles/bento-tiles.element';
+import { meta as bentoTilesMeta } from '@/heroes/bento-tiles/meta';
+import * as bentoTilesSchema from '@/heroes/bento-tiles/schema';
 import * as conicRaysSchema from '@/heroes/conic-rays/schema';
 import { AuroraMeshHero } from '@/heroes/aurora-mesh/aurora-mesh';
 import { defineAuroraMeshElement } from '@/heroes/aurora-mesh/aurora-mesh.element';
@@ -482,6 +486,56 @@ export const heroes: HeroEntry[] = [
           <li data-sg-step=""><b><span>#</span>02</b>Shoot</li>
           <li data-sg-step=""><b><span>#</span>03</b>Ship</li>
         </ol>
+      </>
+    ),
+  },
+  {
+    meta: bentoTilesMeta,
+    schemas: schemasOf(bentoTilesSchema),
+    Hero: BentoTilesHero,
+    defineElement: () => defineBentoTilesElement(),
+    elementAttributes: { accent: 'oklch(0.82 0.13 75)', marks: 'oklch(0.6 0.2 262)', gradient: 'oklch(0.88 0.08 160), oklch(0.9 0.07 300)', 'tile-size': '80' },
+    elementChildren: (
+      <>
+        <div className="sg-bt-copy">
+          <h2 className="text-5xl font-medium tracking-tight">&lt;sg-bento-tiles&gt;</h2>
+          <p className="sg-bt-sub">The same engine, driven by attributes: smaller tiles, an amber figure card, blue crosses, a mint-to-lilac gradient.</p>
+        </div>
+        <div data-sg-bento="">
+          <article data-sg-card="integrations">
+            <ul className="sg-bt-apps" aria-label="Connects with">
+              <li data-sg-app=""><img src="/sharingan/bento/hubspot.svg" alt="HubSpot" /></li>
+              <li data-sg-app=""><img src="/sharingan/bento/slack.svg" alt="Slack" /></li>
+            </ul>
+            <div>
+              <h2>Plain HTML</h2>
+              <p>Six cards marked with data-sg-card.</p>
+            </div>
+          </article>
+          <article data-sg-card="stat">
+            <p className="sg-bt-figure"><span data-sg-count="">1,200</span></p>
+            <p>Figures with commas count too.</p>
+          </article>
+          <figure data-sg-card="portrait" data-focus="50,56">
+            <img src="/sharingan/bento/portrait.webp" alt="Black and white portrait of a man with a shaved head" />
+          </figure>
+          <article data-sg-card="highlight">
+            <span data-sg-progress="" aria-hidden="true" />
+            <p className="sg-bt-figure"><span data-sg-count="">64%</span></p>
+            <p>A percentage fills the bar.</p>
+          </article>
+          <div data-sg-card="folder">
+            <div data-sg-folder="">archive</div>
+          </div>
+          <article data-sg-card="orbit">
+            <h2>No framework, same orbits</h2>
+            <ul data-sg-orbits="">
+              <li data-sg-person=""><img src="/sharingan/bento/avatar-2.webp" alt="A customer" /></li>
+              <li data-sg-person=""><img src="/sharingan/bento/avatar-3.webp" alt="A team lead" /></li>
+              <li data-sg-person=""><img src="/sharingan/bento/avatar-4.webp" alt="A customer" /></li>
+            </ul>
+          </article>
+        </div>
       </>
     ),
   },
