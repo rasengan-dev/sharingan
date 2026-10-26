@@ -39,6 +39,10 @@ import { TrailMapHero } from '@/heroes/trail-map/trail-map';
 import { defineTrailMapElement } from '@/heroes/trail-map/trail-map.element';
 import { meta as trailMapMeta } from '@/heroes/trail-map/meta';
 import * as trailMapSchema from '@/heroes/trail-map/schema';
+import { CurveReelHero } from '@/heroes/curve-reel/curve-reel';
+import { defineCurveReelElement } from '@/heroes/curve-reel/curve-reel.element';
+import { meta as curveReelMeta } from '@/heroes/curve-reel/meta';
+import * as curveReelSchema from '@/heroes/curve-reel/schema';
 import * as conicRaysSchema from '@/heroes/conic-rays/schema';
 import { AuroraMeshHero } from '@/heroes/aurora-mesh/aurora-mesh';
 import { defineAuroraMeshElement } from '@/heroes/aurora-mesh/aurora-mesh.element';
@@ -453,6 +457,32 @@ export const heroes: HeroEntry[] = [
           </div>
         </div>
       </div>
+    ),
+  },
+  {
+    meta: curveReelMeta,
+    schemas: schemasOf(curveReelSchema),
+    Hero: CurveReelHero,
+    defineElement: () => defineCurveReelElement(),
+    elementAttributes: { curvature: '0.85', speed: '36', visible: '9', accent: 'oklch(0.6 0.2 262)' },
+    elementChildren: (
+      <>
+        <p className="sg-cr-eyebrow">Web Component · no framework</p>
+        <h2 className="text-5xl font-bold tracking-tight">&lt;sg-curve-reel&gt;</h2>
+        <p className="sg-cr-sub">The same engine, driven by attributes: a deeper curve, nine cards on the arc, a faster turn, a blue accent. Five photos, repeated to close the loop.</p>
+        <div data-sg-reel="" role="list" aria-label="Projects">
+          <a data-sg-card="" role="listitem" href="#teapot" aria-label="Red tea, blue set"><img src="/sharingan/reel/teapot.webp" alt="" /></a>
+          <a data-sg-card="" role="listitem" href="#headphones" aria-label="Pastel headphones"><img src="/sharingan/reel/headphones.webp" alt="" /></a>
+          <a data-sg-card="" role="listitem" href="#camera" aria-label="Pocket camera launch"><img src="/sharingan/reel/camera.webp" alt="" /></a>
+          <a data-sg-card="" role="listitem" href="#purple-soda" aria-label="Night soda campaign"><img src="/sharingan/reel/purple-soda.webp" alt="" /></a>
+          <a data-sg-card="" role="listitem" href="#jam" aria-label="Strawberry jam label"><img src="/sharingan/reel/jam.webp" alt="" /></a>
+        </div>
+        <ol className="sg-cr-steps">
+          <li data-sg-step=""><b><span>#</span>01</b>Brief</li>
+          <li data-sg-step=""><b><span>#</span>02</b>Shoot</li>
+          <li data-sg-step=""><b><span>#</span>03</b>Ship</li>
+        </ol>
+      </>
     ),
   },
 ];

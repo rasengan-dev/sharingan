@@ -5,7 +5,7 @@ Two engines: **WebGPU** heroes draw their background on the GPU with TypeGPU; **
 
 Text, links and buttons always stay in the DOM. Colours come from your CSS variables; a WebGPU hero shows a still poster when WebGPU or motion is unavailable.
 
-> **Status: v0.2 in progress.** The sixteen heroes (six WebGPU, ten DOM) run locally (`pnpm dev`); nothing is published to the registry yet. The design is in [RFC-0001](proposals/RFC-0001-Sharingan.md).
+> **Status: v0.2 in progress.** The seventeen heroes (six WebGPU, eleven DOM) run locally (`pnpm dev`); nothing is published to the registry yet. The design is in [RFC-0001](proposals/RFC-0001-Sharingan.md).
 
 ## Heroes
 
@@ -34,6 +34,7 @@ Text, links and buttons always stay in the DOM. Colours come from your CSS varia
 | **Conic rays** | Slow rays of coloured light turning behind the title, the universal counterpart of Aurora mesh | Draft |
 | **Gallery fan** | A full-screen fan of artwork cards; the nearest rises, collaborator cursors drift between them | Draft |
 | **Trail map** | A route draws itself up a mountain photo in a shaped frame, a walker climbs it, clouds drift; routes scroll below | Draft |
+| **Curve reel** | Project cards on the inside of a curved wall turn slowly; numbered steps light up as the cards pass | Draft |
 
 Later (WebGPU): **Black hole** (gravitational lensing on the headline), **Metaballs**.
 
