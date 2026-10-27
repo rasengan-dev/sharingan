@@ -103,6 +103,10 @@ export const terminalBootStyles = /* css */ `
 }
 @keyframes sg-tb-reveal { to { opacity: 1; } }
 
-/* Reduced motion and still modes: everything at rest */
-.sg-tb:not([data-motion="ready"]) *, .sg-tb:not([data-motion="ready"]) *::before { transition: none !important; animation: none !important; }
+/* Reduced motion and still modes: everything at rest. Before the engine has set a mode only transitions are off, so the reveal fallback can run */
+.sg-tb:not([data-motion="ready"]) *, .sg-tb:not([data-motion="ready"]) *::before { transition: none !important; }
+.sg-tb[data-motion]:not([data-motion="ready"]) *, .sg-tb[data-motion]:not([data-motion="ready"]) *::before { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {
+	.sg-tb:not([data-motion="ready"]) *, .sg-tb:not([data-motion="ready"]) *::before { animation: none !important; }
+}
 `;
