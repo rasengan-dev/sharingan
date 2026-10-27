@@ -71,9 +71,10 @@ With `pnpm dev` running, in another terminal:
 pnpm posters            # every hero and section, software rendering (works anywhere)
 pnpm posters trail-map  # one hero (or section)
 HEADLESS=0 pnpm posters # a visible Chrome, on the real GPU
+REEL=1 pnpm posters     # portrait stills for the home page's reel, into apps/site/public/reel
 ```
 
-It needs Google Chrome (`CHROME_BIN` to point at another binary). Commit the files it writes in `apps/site/public/thumbs` and `apps/site/public/posters`.
+It needs Google Chrome (`CHROME_BIN` to point at another binary). Commit the files it writes in `apps/site/public/thumbs`, `apps/site/public/posters` and `apps/site/public/reel`.
 
 ## Before you open a pull request
 

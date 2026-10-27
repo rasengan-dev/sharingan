@@ -10,6 +10,8 @@
  *   pnpm dev                      # in another terminal
  *   pnpm posters                  # software rendering (SwiftShader), works anywhere
  *   HEADLESS=0 pnpm posters       # a visible Chrome, on the real GPU
+ *   REEL=1 pnpm posters           # portrait stills (10:13, 400×520) into apps/site/public/reel,
+ *                                 # for the home page's curve reel: each one laid out in a portrait window
  *
  * SITE_URL (default http://localhost:3100) and CHROME_BIN (default google-chrome) can be set.
  */
@@ -33,7 +35,9 @@ const items = ["heroes", "sections"].flatMap((folder) =>
 		}),
 );
 
-const thumbs = join(root, "apps/site/public/thumbs");
+// Portrait mode: an 800×1040 window, so each component lays itself out for the reel's 10:13 cards.
+const reel = process.env.REEL === "1";
+const thumbs = join(root, reel ? "apps/site/public/reel" : "apps/site/public/thumbs");
 const posters = join(root, "apps/site/public/posters");
 mkdirSync(thumbs, { recursive: true });
 mkdirSync(posters, { recursive: true });
@@ -74,7 +78,7 @@ const send = (method, params = {}) =>
 const evaluate = async (expression) => (await send("Runtime.evaluate", { expression, awaitPromise: true, returnByValue: true })).result?.result?.value;
 
 await send("Page.enable");
-await send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
+await send("Emulation.setDeviceMetricsOverride", reel ? { width: 800, height: 1040, deviceScaleFactor: 1, mobile: false } : { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
 
 for (const { name, folder, engine, poster } of items) {
 	await send("Page.navigate", { url: `${site}/${folder}/${name}?motion=final` });
@@ -88,9 +92,16 @@ for (const { name, folder, engine, poster } of items) {
 			if (ready) break;
 			await new Promise((resolve) => setTimeout(resolve, 50));
 		}
+		// In portrait, anything shorter than the window is stretched to it, so it recomposes for the card: heroes centre
+		// their content already; a section is made a centred column for the capture only.
+		if (${reel}) {
+			const node = document.querySelector(${JSON.stringify(selector)});
+			node.style.minHeight = innerHeight + "px";
+			if (${folder === "sections"}) Object.assign(node.style, { display: "flex", flexDirection: "column", justifyContent: "center" });
+		}
 		await new Promise((resolve) => setTimeout(resolve, 1500));
 		const rect = document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();
-		const height = ${folder === "sections"} ? Math.min(rect.height, rect.width * 0.75) : rect.height;
+		const height = ${reel} ? Math.min(rect.height, rect.width * 1.3) : ${folder === "sections"} ? Math.min(rect.height, rect.width * 0.75) : rect.height;
 		return { x: rect.x, y: rect.y + scrollY, width: rect.width, height };
 	})()`);
 	if (!box) {
@@ -111,7 +122,7 @@ for (const { name, folder, engine, poster } of items) {
 		await evaluate(`document.querySelectorAll(".sg-hero-column").forEach((node) => (node.style.visibility = ""))`);
 		await shoot(join(thumbs, `${name}${suffix}.webp`), 0.5, 80);
 		notes.push(`thumb${suffix}`);
-		if (engine === "webgpu" && poster) {
+		if (engine === "webgpu" && poster && !reel) {
 			// The background alone: the text is the page's own, drawn over the poster.
 			await evaluate(`document.querySelectorAll(".sg-hero-column").forEach((node) => (node.style.visibility = "hidden")); new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))`);
 			await shoot(join(posters, `${name}${suffix}.webp`), 1, 82);

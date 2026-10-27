@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, PageComponent } from 'rasengan';
 import { catalogue } from '@/catalogue';
 import { ComponentCard } from '@/components/catalogue/component-card';
-import { InkFlowHero } from '@/heroes/ink-flow/ink-flow';
+import { CurveReelHero } from '@/heroes/curve-reel/curve-reel';
+import type { CurveReelContent } from '@/heroes/curve-reel/schema';
+import { useIsDark } from '@/hooks/use-is-dark';
 
 type Filter = 'all' | 'WebGPU' | 'DOM';
 
@@ -15,24 +17,59 @@ const FILTERS: { value: Filter; label: string; hint: string }[] = [
 const heroes = catalogue.filter((item) => item.kind === 'hero');
 const sections = catalogue.filter((item) => item.kind === 'section');
 
-// The site wears its own first hero.
+/** The components on the home reel, heroes and sections mixed, in the order they pass (the reel takes 16 at most). */
+const REEL = [
+  'gallery-fan',
+  'card-journey',
+  'holo-card',
+  'bento-tiles',
+  'mosaic-zoom',
+  'trail-map',
+  'gamepad',
+  'pinned-reveal',
+  'ink-flow',
+  'terminal-boot',
+  'scroll-read',
+  'app-window',
+  'aurora-mesh',
+  'split-headline',
+  'curve-reel',
+  'parallax-columns',
+];
+
+/** The home hero's copy, and the catalogue's own still frames as its cards (portrait, from `REEL=1 pnpm posters`), in the current theme. */
+function useHomeReel(): CurveReelContent {
+  const dark = useIsDark();
+  return useMemo(
+    () => ({
+      eyebrow: 'Sharingan · heroes and sections',
+      headline: 'Pick a hero. Keep it.',
+      subheadline: `${catalogue.length} animated heroes and sections, each copied into your project with one command, in React or as a Web Component, and yours to change.`,
+      cta: { label: 'Browse components', href: '/components' },
+      projects: REEL.flatMap((name) => {
+        const item = catalogue.find((entry) => entry.name === name);
+        return item ? [{ src: `/reel/${name}${dark ? '-dark' : ''}.webp`, alt: `A still frame of the ${item.title} ${item.kind}`, title: item.title, href: item.href }] : [];
+      }),
+      steps: [
+        { label: 'Pick', card: 0 },
+        { label: 'Copy', card: 5 },
+        { label: 'Own', card: 10 },
+      ],
+    }),
+    [dark],
+  );
+}
+
+// The site wears one of its own heroes, filled with the catalogue.
 const Home: PageComponent = () => {
   const [filter, setFilter] = useState<Filter>('all');
   const shown = heroes.filter((item) => filter === 'all' || item.tag === filter);
+  const reel = useHomeReel();
 
   return (
     <main>
-      <InkFlowHero
-        className="min-h-svh"
-        content={{
-          eyebrow: 'Sharingan · animated heroes',
-          headline: 'Hero sections that move like ink',
-          subheadline:
-            'Open-source animated heroes, on WebGPU or plain DOM, and the scroll-driven sections that follow them. Copy one into your project with the shadcn CLI, in React or as a Web Component.',
-          primaryCta: { label: 'Browse the heroes', href: '#collection' },
-          secondaryCta: { label: 'Get started', href: '/docs' },
-        }}
-      />
+      {/* A DOM hero, so the first screen moves in every browser: the catalogue itself, turning */}
+      <CurveReelHero content={reel} config={{ accent: 'var(--brand)', speed: 20 }} />
 
       <section id="collection" aria-labelledby="collection-title" className="mx-auto max-w-6xl scroll-mt-16 px-6 py-24">
         <div className="flex flex-wrap items-end justify-between gap-6">
