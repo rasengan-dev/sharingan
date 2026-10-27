@@ -173,6 +173,44 @@ html {
   body {
     @apply bg-background text-foreground font-sans;
   }
+
+  /*
+   * Thin scrollbars everywhere (page, sidebar, drawer, search, code blocks),
+   * in the theme's own ink: the thumb is the foreground colour, faded, so it
+   * follows light and dark with no second value. `color-scheme` lets the
+   * browser draw the track and corners for the same theme.
+   */
+  :root {
+    color-scheme: light;
+    --scrollbar-thumb: color-mix(in oklab, var(--foreground) 22%, transparent);
+    --scrollbar-thumb-hover: color-mix(in oklab, var(--foreground) 38%, transparent);
+  }
+  .dark {
+    color-scheme: dark;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+  }
+  /* Safari, which has neither property yet */
+  @supports not (scrollbar-color: auto) {
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track,
+    ::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      border: 2px solid transparent;
+      border-radius: 999px;
+      background: var(--scrollbar-thumb) padding-box;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--scrollbar-thumb-hover) padding-box;
+    }
+  }
 }
 
 /*

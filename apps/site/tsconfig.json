@@ -14,12 +14,14 @@
       "@/lib/sharingan/webgpu": ["../../packages/core/src/webgpu/index.ts"],
       "@/lib/sharingan": ["../../packages/core/src/index.ts"],
       "@/lib/sharingan/react": ["../../packages/core/src/react.tsx"],
+      "@/lib/sharingan/scroll": ["../../packages/core/src/scroll/index.ts"],
       "@/heroes/*": ["../../registry/heroes/*"],
+      "@/sections/*": ["../../registry/sections/*"],
       "@/*": ["src/*"]
     },
     "types": ["@webgpu/types"]
   },
-  "include": ["src", "mdx-components.tsx", "rasengan-env.d.ts", "../../registry/heroes", "../../packages/core/src"],
+  "include": ["src", "mdx-components.tsx", "rasengan-env.d.ts", "../../registry/heroes", "../../registry/sections", "../../packages/core/src"],
 
   "extends": "./node_modules/rasengan/tsconfig.base.json"
 }

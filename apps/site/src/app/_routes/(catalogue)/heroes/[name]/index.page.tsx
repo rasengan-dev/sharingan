@@ -1,6 +1,7 @@
 import { createElement, useEffect, useState } from 'react';
 import { defineStaticPaths, Link, PageComponent, useParams } from 'rasengan';
 import { ConfigPanel, type Overrides } from '@/components/config-panel';
+import { CataloguePager } from '@/components/catalogue/catalogue-pager';
 import { PropsTable } from '@/components/props-table';
 import { findHero, heroes, type HeroEntry } from '@/hero-list';
 import { useIsDark } from '@/hooks/use-is-dark';
@@ -30,8 +31,6 @@ function HeroDetail({ hero }: { hero: HeroEntry }) {
 
   // WebGPU heroes show a still frame of themselves, in the current theme, where WebGPU is missing.
   const poster = meta.engine === 'webgpu' && meta.poster !== false ? `/posters/${meta.name}${dark ? '-dark' : ''}.webp` : undefined;
-  const index = heroes.indexOf(hero);
-  const next = heroes[(index + 1) % heroes.length];
 
   return (
     <main>
@@ -76,9 +75,6 @@ function HeroDetail({ hero }: { hero: HeroEntry }) {
             Add <code className="font-mono">?motion=final</code> to the address for the repeatable still frame, or{' '}
             <code className="font-mono">?motion=off</code> for the reduced-motion version.
           </p>
-          <Link to={`/heroes/${next.meta.name}`} className="mt-2 self-start font-medium text-foreground underline underline-offset-4">
-            Next: {next.meta.title} →
-          </Link>
         </div>
       </section>
 
@@ -118,6 +114,10 @@ function HeroDetail({ hero }: { hero: HeroEntry }) {
           ),
         )}
       </section>
+
+      <div className="border-t border-border pt-12">
+        <CataloguePager name={meta.name} />
+      </div>
     </main>
   );
 }
@@ -130,7 +130,7 @@ const HeroPage: PageComponent = () => {
     return (
       <main className="mx-auto flex min-h-svh max-w-xl flex-col items-center justify-center gap-4 px-6 text-center">
         <h1 className="text-3xl font-semibold">No hero called “{name}”</h1>
-        <Link to="/" className="text-muted-foreground underline underline-offset-4">
+        <Link to="/components" className="text-muted-foreground underline underline-offset-4">
           Back to the collection
         </Link>
       </main>

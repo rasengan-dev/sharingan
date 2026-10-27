@@ -1,11 +1,11 @@
 # Sharingan
 
-Open-source animated hero sections, for React and as Web Components, copied into your project with the shadcn CLI.
-Two engines: **WebGPU** heroes draw their background on the GPU with TypeGPU; **DOM** heroes are made of HTML, SVG and CSS 3D and run in every browser.
+Open-source animated hero sections, and the scroll-driven sections that follow them, for React and as Web Components, copied into your project with the shadcn CLI.
+Two engines for heroes: **WebGPU** heroes draw their background on the GPU with TypeGPU; **DOM** heroes are made of HTML, SVG and CSS 3D and run in every browser. Sections are DOM too, animated against the scroll with GSAP.
 
 Text, links and buttons always stay in the DOM. Colours come from your CSS variables; a WebGPU hero shows a still poster when WebGPU or motion is unavailable.
 
-> **Status: v0.2 in progress.** The eighteen heroes (six WebGPU, twelve DOM) run locally (`pnpm dev`); nothing is published to the registry yet. The design is in [RFC-0001](proposals/RFC-0001-Sharingan.md).
+> **Status: v0.2.** The eighteen heroes (six WebGPU, twelve DOM) are live at [sharingan.hiraiship.app](https://sharingan.hiraiship.app). The design is in [RFC-0001](proposals/RFC-0001-Sharingan.md); the six sections below the hero (v0.3, local for now) follow [RFC-0002](proposals/RFC-0002-Sections.md).
 
 ## Heroes
 
@@ -38,6 +38,21 @@ Text, links and buttons always stay in the DOM. Colours come from your CSS varia
 | **Bento tiles** | A headline over soft raised tiles that rise under the pointer, and a bento of six cards: integrations, counting figures, a scanned portrait, a world map, avatars on orbits | Draft |
 
 Later (WebGPU): **Black hole** (gravitational lensing on the headline), **Metaballs**.
+
+## Sections
+
+What comes after the hero, animated against the scroll with GSAP (ScrollTrigger and Flip). The page keeps its own scroll speed; under reduced motion and below 768 px, sections show their final layout with short reveals. All six, under the gallery fan hero, on one page: `/demo`.
+
+| Section | Concept | Pinned | Status |
+| --- | --- | --- | --- |
+| **Card journey** | A paragraph darkens word by word while a deck shuffles beside it; the deck deals out into a staircase, then lands in a tabbed grid | ~3 screens | Draft |
+| **Pinned reveal** | A headline stays and darkens while a rounded image rises under it and grows to the full width | ~1.2 screens | Draft |
+| **Scroll read** | A large paragraph that darkens as it is read, with small images that grow inside the line | No | Draft |
+| **Parallax columns** | A staggered two-column grid of cards whose columns travel at different speeds | No | Draft |
+| **Mosaic zoom** | A large image shrinks back into the heart of a mosaic while the other tiles gather around it | ~1.6 screens | Draft |
+| **Image marquee** | A coloured band of oversized words and images, its rows pushed sideways by the scroll | No | Draft |
+
+Sections install like heroes (`npx shadcn@latest add @sharingan/card-journey`) into `components/sections/`, with `lib/sharingan/scroll/` and `gsap`. GSAP is free to use under its own [no-charge licence](https://gsap.com/standard-license), which is not an open-source licence; heroes do not use it.
 
 ## Use a hero
 
@@ -88,12 +103,12 @@ pnpm install
 pnpm dev
 ```
 
-This starts the website on [http://localhost:3100](http://localhost:3100) with every hero previewed. Add `?motion=final` to a preview URL to freeze it on its poster frame, or `?motion=off` to see the fallback.
+This starts the website on [http://localhost:3100](http://localhost:3100) with every hero and section previewed. Add `?motion=final` to a preview URL to freeze it on its poster frame, or `?motion=off` to see the fallback.
 
 | Command | What it does |
 | --- | --- |
 | `pnpm registry` | Writes `registry.json` from the sources and builds it into `apps/site/public/r` with the shadcn CLI. Set `SHARINGAN_URL` to the site's public address (default `http://localhost:3100`). |
-| `pnpm posters` | With `pnpm dev` running: renders every hero's still frame, light and dark, into `public/thumbs` (cards) and `public/posters` (WebGPU fallbacks). `HEADLESS=0` uses the real GPU. |
+| `pnpm posters` | With `pnpm dev` running: renders every hero's and section's still frame, light and dark, into `public/thumbs` (cards) and `public/posters` (WebGPU fallbacks). `HEADLESS=0` uses the real GPU. |
 | `pnpm build` | `pnpm registry`, then the website. |
 | `pnpm typecheck` | Every package. |
 
@@ -121,6 +136,7 @@ On Vercel, one project:
 3. **M3** · Website, registry and posters (local script; CI runs typecheck and build).
 4. **M3b** · DOM heroes: the second engine, eight heroes for every browser.
 5. **M4** · Bridge with [Rasengan UI](https://github.com/rasengan-dev/rasengan-ui) v2: Sharingan backgrounds under its art directions.
+6. **S1–S3** · Sections below the hero ([RFC-0002](proposals/RFC-0002-Sections.md)): the GSAP scroll layer, six sections and a demo landing page.
 
 ## Contributing
 

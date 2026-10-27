@@ -67,8 +67,9 @@ enhancement: the hero must read well without it.
   compose stay DOM. A third engine would double the maintenance for a
   shrinking gap.
 - Canvas 2D heroes. Anything drawn per pixel belongs to WebGPU.
-- Full pages or non-hero sections. Heroes first; other GPU backgrounds may
-  follow if the format proves itself.
+- Full pages. Non-hero sections were a non-goal here too; they are now a
+  collection of their own, with its own engine rules, in
+  [RFC-0002](RFC-0002-Sections.md).
 
 ## Decisions
 

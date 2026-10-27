@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Renders each hero's still frame (`?motion=final`) from the running site:
- * - apps/site/public/thumbs/<name>[-dark].webp, the whole hero, for the collection's cards;
+ * Renders each hero's and section's still frame (`?motion=final`) from the running site:
+ * - apps/site/public/thumbs/<name>[-dark].webp, the whole hero (a section's top), for the collection's cards;
  * - apps/site/public/posters/<name>[-dark].webp, the background alone, for WebGPU heroes:
  *   the image shown behind the real text when WebGPU is unavailable
  *   (not for heroes whose meta says `poster: false`).
@@ -10,6 +10,8 @@
  *   pnpm dev                      # in another terminal
  *   pnpm posters                  # software rendering (SwiftShader), works anywhere
  *   HEADLESS=0 pnpm posters       # a visible Chrome, on the real GPU
+ *   REEL=1 pnpm posters           # portrait stills (10:13, 400×520) into apps/site/public/reel,
+ *                                 # for the home page's curve reel: each one laid out in a portrait window
  *
  * SITE_URL (default http://localhost:3100) and CHROME_BIN (default google-chrome) can be set.
  */
@@ -24,14 +26,18 @@ const only = process.argv.slice(2);
 const port = 9341;
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const heroes = readdirSync(join(root, "registry/heroes"), { withFileTypes: true })
-	.filter((entry) => entry.isDirectory() && (only.length === 0 || only.includes(entry.name)))
-	.map((entry) => {
-		const meta = readFileSync(join(root, "registry/heroes", entry.name, "meta.ts"), "utf8");
-		return { name: entry.name, engine: meta.match(/\bengine: "(\w+)"/)?.[1], poster: !/\bposter: false\b/.test(meta) };
-	});
+const items = ["heroes", "sections"].flatMap((folder) =>
+	readdirSync(join(root, "registry", folder), { withFileTypes: true })
+		.filter((entry) => entry.isDirectory() && (only.length === 0 || only.includes(entry.name)))
+		.map((entry) => {
+			const meta = readFileSync(join(root, "registry", folder, entry.name, "meta.ts"), "utf8");
+			return { name: entry.name, folder, engine: meta.match(/\bengine: "(\w+)"/)?.[1], poster: !/\bposter: false\b/.test(meta) };
+		}),
+);
 
-const thumbs = join(root, "apps/site/public/thumbs");
+// Portrait mode: an 800×1040 window, so each component lays itself out for the reel's 10:13 cards.
+const reel = process.env.REEL === "1";
+const thumbs = join(root, reel ? "apps/site/public/reel" : "apps/site/public/thumbs");
 const posters = join(root, "apps/site/public/posters");
 mkdirSync(thumbs, { recursive: true });
 mkdirSync(posters, { recursive: true });
@@ -72,32 +78,42 @@ const send = (method, params = {}) =>
 const evaluate = async (expression) => (await send("Runtime.evaluate", { expression, awaitPromise: true, returnByValue: true })).result?.result?.value;
 
 await send("Page.enable");
-await send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
+await send("Emulation.setDeviceMetricsOverride", reel ? { width: 800, height: 1040, deviceScaleFactor: 1, mobile: false } : { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
 
-for (const { name, engine, poster } of heroes) {
-	await send("Page.navigate", { url: `${site}/heroes/${name}?motion=final` });
-	// The hero is ready when its engine says so (DOM) or its canvas has drawn (WebGPU).
+for (const { name, folder, engine, poster } of items) {
+	await send("Page.navigate", { url: `${site}/${folder}/${name}?motion=final` });
+	// A hero is ready when its engine says so (DOM) or its canvas has drawn (WebGPU); a section once its scroll scope has built.
+	// A section's thumbnail is its top, 4:3: a tall section would not read on a card.
+	const selector = folder === "heroes" ? "main > section" : "main [data-sharingan]";
 	const box = await evaluate(`(async () => {
 		for (let i = 0; i < 200; i++) {
-			const section = document.querySelector("main > section");
-			const ready = section && (section.hasAttribute("data-ready") || section.querySelector("[data-sharingan][data-state]"));
+			const section = document.querySelector(${JSON.stringify(selector)});
+			const ready = section && (section.hasAttribute("data-ready") || section.hasAttribute("data-motion") || section.querySelector("[data-sharingan][data-state]"));
 			if (ready) break;
 			await new Promise((resolve) => setTimeout(resolve, 50));
 		}
+		// In portrait, anything shorter than the window is stretched to it, so it recomposes for the card: heroes centre
+		// their content already; a section is made a centred column for the capture only.
+		if (${reel}) {
+			const node = document.querySelector(${JSON.stringify(selector)});
+			node.style.minHeight = innerHeight + "px";
+			if (${folder === "sections"}) Object.assign(node.style, { display: "flex", flexDirection: "column", justifyContent: "center" });
+		}
 		await new Promise((resolve) => setTimeout(resolve, 1500));
-		const rect = document.querySelector("main > section").getBoundingClientRect();
-		return { x: rect.x, y: rect.y + scrollY, width: rect.width, height: rect.height };
+		const rect = document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();
+		const height = ${reel} ? Math.min(rect.height, rect.width * 1.3) : ${folder === "sections"} ? Math.min(rect.height, rect.width * 0.75) : rect.height;
+		return { x: rect.x, y: rect.y + scrollY, width: rect.width, height };
 	})()`);
 	if (!box) {
-		console.error(`✗ ${name}: no hero found at ${site}/heroes/${name}`);
+		console.error(`✗ ${name}: nothing found at ${site}/${folder}/${name}`);
 		continue;
 	}
 	const shoot = async (file, scale, quality) => {
 		const shot = await send("Page.captureScreenshot", { format: "webp", quality, clip: { ...box, scale }, captureBeyondViewport: true });
 		writeFileSync(file, Buffer.from(shot.result.data, "base64"));
 	};
-	// The site's own header floats over every hero: not part of it.
-	await evaluate(`document.querySelectorAll("body header").forEach((node) => (node.style.visibility = "hidden"))`);
+	// The site's own header and Customize button float over every hero: not part of it.
+	await evaluate(`document.querySelectorAll("body header, main > button.fixed").forEach((node) => (node.style.visibility = "hidden"))`);
 	const notes = [];
 	for (const theme of ["light", "dark"]) {
 		const suffix = theme === "dark" ? "-dark" : "";
@@ -106,7 +122,7 @@ for (const { name, engine, poster } of heroes) {
 		await evaluate(`document.querySelectorAll(".sg-hero-column").forEach((node) => (node.style.visibility = ""))`);
 		await shoot(join(thumbs, `${name}${suffix}.webp`), 0.5, 80);
 		notes.push(`thumb${suffix}`);
-		if (engine === "webgpu" && poster) {
+		if (engine === "webgpu" && poster && !reel) {
 			// The background alone: the text is the page's own, drawn over the poster.
 			await evaluate(`document.querySelectorAll(".sg-hero-column").forEach((node) => (node.style.visibility = "hidden")); new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))`);
 			await shoot(join(posters, `${name}${suffix}.webp`), 1, 82);

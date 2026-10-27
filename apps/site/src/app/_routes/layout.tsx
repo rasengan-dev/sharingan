@@ -1,5 +1,9 @@
-import { useEffect, useState } from 'react';
-import { Link, Outlet, LayoutComponent, ScrollRestoration } from 'rasengan';
+import { useCallback, useEffect, useState } from 'react';
+import { Menu, Search } from 'lucide-react';
+import { Link, Outlet, LayoutComponent, ScrollRestoration, useLocation } from 'rasengan';
+import { CatalogueDrawer } from '@/components/catalogue/catalogue-drawer';
+import { CommandMenu, SearchButton, openSearch } from '@/components/catalogue/command-menu';
+import { SiteFooter } from '@/components/site-footer';
 import ThemeToggle from '@/components/theme-toggle';
 import { Button } from '@/components/ui/button';
 
@@ -26,6 +30,10 @@ function useScrolled() {
 
 const AppLayout: LayoutComponent = () => {
   const scrolled = useScrolled();
+  const [drawer, setDrawer] = useState(false);
+  const closeDrawer = useCallback(() => setDrawer(false), []);
+  const { pathname } = useLocation();
+  useEffect(() => setDrawer(false), [pathname]);
 
   return (
     <div className="min-h-svh bg-background text-foreground">
@@ -40,21 +48,34 @@ const AppLayout: LayoutComponent = () => {
           Sharingan
         </Link>
         <nav aria-label="Main" className="flex items-center gap-1 text-sm">
-          <a href="/#collection" className="rounded-md px-3 py-2 text-muted-foreground hover:text-foreground">
-            Heroes
-          </a>
-          <Link to="/docs" className="rounded-md px-3 py-2 text-muted-foreground hover:text-foreground">
+          <Link to="/components" className="hidden rounded-md px-3 py-2 text-muted-foreground hover:text-foreground sm:block">
+            Components
+          </Link>
+          <Link to="/demo" className="hidden rounded-md px-3 py-2 text-muted-foreground hover:text-foreground md:block">
+            Demo
+          </Link>
+          <Link to="/docs" className="hidden rounded-md px-3 py-2 text-muted-foreground hover:text-foreground sm:block">
             Docs
           </Link>
+          <SearchButton className="mx-2 hidden w-60 lg:flex" />
+          <Button variant="ghost" size="icon" className="lg:hidden" onClick={openSearch} aria-label="Search components">
+            <Search />
+          </Button>
           <Button variant="ghost" size="icon" asChild>
             <a href="https://github.com/rasengan-dev/sharingan" target="_blank" rel="noreferrer" aria-label="Sharingan on GitHub">
               <GitHubIcon />
             </a>
           </Button>
           <ThemeToggle />
+          <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setDrawer(true)} aria-label="Browse components" aria-expanded={drawer}>
+            <Menu />
+          </Button>
         </nav>
       </header>
       <Outlet />
+      <SiteFooter />
+      <CatalogueDrawer open={drawer} onClose={closeDrawer} />
+      <CommandMenu />
     </div>
   );
 };

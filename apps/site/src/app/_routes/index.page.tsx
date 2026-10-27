@@ -1,45 +1,75 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, PageComponent } from 'rasengan';
-import { heroes, type HeroEntry } from '@/hero-list';
-import { InkFlowHero } from '@/heroes/ink-flow/ink-flow';
+import { catalogue } from '@/catalogue';
+import { ComponentCard } from '@/components/catalogue/component-card';
+import { CurveReelHero } from '@/heroes/curve-reel/curve-reel';
+import type { CurveReelContent } from '@/heroes/curve-reel/schema';
+import { useIsDark } from '@/hooks/use-is-dark';
 
-type Filter = 'all' | HeroEntry['meta']['engine'];
+type Filter = 'all' | 'WebGPU' | 'DOM';
 
 const FILTERS: { value: Filter; label: string; hint: string }[] = [
   { value: 'all', label: 'All', hint: 'Every hero' },
-  { value: 'webgpu', label: 'WebGPU', hint: 'Shaders and simulations; a CSS fallback where WebGPU is missing' },
-  { value: 'dom', label: 'DOM', hint: 'HTML, SVG and CSS 3D; every browser' },
+  { value: 'WebGPU', label: 'WebGPU', hint: 'Shaders and simulations; a CSS fallback where WebGPU is missing' },
+  { value: 'DOM', label: 'DOM', hint: 'HTML, SVG and CSS 3D; every browser' },
 ];
 
-function EngineBadge({ meta }: { meta: HeroEntry['meta'] }) {
-  if (meta.engine === 'dom') return <span className="font-mono text-xs text-muted-foreground">DOM · every browser</span>;
-  const cost = meta.gpu?.cost ?? 1;
-  return (
-    <span className="font-mono text-xs text-muted-foreground" title={`GPU cost ${cost} of 3`}>
-      WebGPU {'●'.repeat(cost)}
-      {'○'.repeat(3 - cost)}
-    </span>
+const heroes = catalogue.filter((item) => item.kind === 'hero');
+const sections = catalogue.filter((item) => item.kind === 'section');
+
+/** The components on the home reel, heroes and sections mixed, in the order they pass (the reel takes 16 at most). */
+const REEL = [
+  'gallery-fan',
+  'card-journey',
+  'holo-card',
+  'bento-tiles',
+  'mosaic-zoom',
+  'trail-map',
+  'gamepad',
+  'pinned-reveal',
+  'ink-flow',
+  'terminal-boot',
+  'scroll-read',
+  'app-window',
+  'aurora-mesh',
+  'split-headline',
+  'curve-reel',
+  'parallax-columns',
+];
+
+/** The home hero's copy, and the catalogue's own still frames as its cards (portrait, from `REEL=1 pnpm posters`), in the current theme. */
+function useHomeReel(): CurveReelContent {
+  const dark = useIsDark();
+  return useMemo(
+    () => ({
+      eyebrow: 'Sharingan · heroes and sections',
+      headline: 'Pick a hero. Keep it.',
+      subheadline: `${catalogue.length} animated heroes and sections, each copied into your project with one command, in React or as a Web Component, and yours to change.`,
+      cta: { label: 'Browse components', href: '/components' },
+      projects: REEL.flatMap((name) => {
+        const item = catalogue.find((entry) => entry.name === name);
+        return item ? [{ src: `/reel/${name}${dark ? '-dark' : ''}.webp`, alt: `A still frame of the ${item.title} ${item.kind}`, title: item.title, href: item.href }] : [];
+      }),
+      steps: [
+        { label: 'Pick', card: 0 },
+        { label: 'Copy', card: 5 },
+        { label: 'Own', card: 10 },
+      ],
+    }),
+    [dark],
   );
 }
 
-// The site wears its own first hero.
+// The site wears one of its own heroes, filled with the catalogue.
 const Home: PageComponent = () => {
   const [filter, setFilter] = useState<Filter>('all');
-  const shown = heroes.filter(({ meta }) => filter === 'all' || meta.engine === filter);
+  const shown = heroes.filter((item) => filter === 'all' || item.tag === filter);
+  const reel = useHomeReel();
 
   return (
     <main>
-      <InkFlowHero
-        className="min-h-svh"
-        content={{
-          eyebrow: 'Sharingan · animated heroes',
-          headline: 'Hero sections that move like ink',
-          subheadline:
-            'Open-source animated heroes, on WebGPU or plain DOM. Copy one into your project with the shadcn CLI, in React or as a Web Component.',
-          primaryCta: { label: 'Browse the heroes', href: '#collection' },
-          secondaryCta: { label: 'Get started', href: '/docs' },
-        }}
-      />
+      {/* A DOM hero, so the first screen moves in every browser: the catalogue itself, turning */}
+      <CurveReelHero content={reel} config={{ accent: 'var(--brand)', speed: 20 }} />
 
       <section id="collection" aria-labelledby="collection-title" className="mx-auto max-w-6xl scroll-mt-16 px-6 py-24">
         <div className="flex flex-wrap items-end justify-between gap-6">
@@ -49,7 +79,11 @@ const Home: PageComponent = () => {
             </h2>
             <p className="mt-3 max-w-xl text-muted-foreground">
               Each hero ships as a React component and a Web Component. WebGPU heroes fall back to CSS where the GPU is missing; DOM heroes run in every
-              browser.
+              browser.{' '}
+              <Link to="/components" className="text-foreground underline underline-offset-4">
+                Browse them all with live previews
+              </Link>
+              .
             </p>
           </div>
           <div role="group" aria-label="Filter by engine" className="flex rounded-full border border-border p-1">
@@ -63,32 +97,41 @@ const Home: PageComponent = () => {
                 className="rounded-full px-4 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground aria-pressed:bg-foreground aria-pressed:text-background"
               >
                 {label}
-                <span className="ml-1.5 font-mono text-xs opacity-60">{value === 'all' ? heroes.length : heroes.filter(({ meta }) => meta.engine === value).length}</span>
+                <span className="ml-1.5 font-mono text-xs opacity-60">{value === 'all' ? heroes.length : heroes.filter((item) => item.tag === value).length}</span>
               </button>
             ))}
           </div>
         </div>
 
         <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite">
-          {shown.map(({ meta }) => (
-            <li key={meta.name}>
-              <Link
-                to={`/heroes/${meta.name}`}
-                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border transition-colors hover:border-foreground/30"
-              >
-                <span className="relative block aspect-[16/9] overflow-hidden bg-muted">
-                  {/* Still frames from `pnpm posters`, one per theme */}
-                  <img src={`/thumbs/${meta.name}.webp`} alt="" loading="lazy" className="size-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03] dark:hidden" />
-                  <img src={`/thumbs/${meta.name}-dark.webp`} alt="" loading="lazy" className="hidden size-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03] dark:block" />
-                </span>
-                <span className="flex flex-1 flex-col gap-2 p-5">
-                  <span className="flex items-center justify-between gap-3">
-                    <span className="text-lg font-semibold">{meta.title}</span>
-                    <EngineBadge meta={meta} />
-                  </span>
-                  <span className="text-sm text-muted-foreground">{meta.summary}</span>
-                </span>
-              </Link>
+          {shown.map((item) => (
+            <li key={item.name}>
+              <ComponentCard item={item} />
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section id="sections" aria-labelledby="sections-title" className="mx-auto max-w-6xl scroll-mt-16 px-6 pb-24">
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <h2 id="sections-title" className="text-3xl font-semibold tracking-tight">
+              The sections
+            </h2>
+            <p className="mt-3 max-w-xl text-muted-foreground">
+              What comes after the hero: sections that move with the scroll, pinned or not, built with GSAP. They run in every browser and keep still under
+              reduced motion.
+            </p>
+          </div>
+          <Link to="/demo" className="rounded-full border border-border px-4 py-2 text-sm transition-colors hover:border-foreground/30">
+            See them on a whole page →
+          </Link>
+        </div>
+
+        <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {sections.map((item) => (
+            <li key={item.name}>
+              <ComponentCard item={item} />
             </li>
           ))}
         </ul>

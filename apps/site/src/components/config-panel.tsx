@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import type { HeroEntry } from '@/hero-list';
+import type { z } from 'zod';
 import { highlight } from '@/lib/highlight';
 import { fieldsOf, type Field } from '@/lib/schema-fields';
 
@@ -10,14 +10,23 @@ const kebab = (name: string) => name.replace(/[A-Z]/g, (letter) => `-${letter.to
 const literal = (value: unknown): string =>
   Array.isArray(value) ? `[${value.map(literal).join(', ')}]` : typeof value === 'string' ? JSON.stringify(value) : String(value);
 
+/** What the panel needs from a hero or a section. */
+export type Configurable = {
+  meta: { name: string; title: string };
+  schemas: { config: z.ZodObject<z.ZodRawShape> };
+};
+
+export type Kind = 'hero' | 'section';
+
 /** The code that reproduces the current settings, in React and as a Web Component. */
-export function codeFor(name: string, overrides: Overrides) {
-  const component = `${pascal(name)}Hero`;
+export function codeFor(name: string, overrides: Overrides, kind: Kind = 'hero') {
+  const component = `${pascal(name)}${kind === 'hero' ? 'Hero' : 'Section'}`;
+  const folder = kind === 'hero' ? 'heroes' : 'sections';
   const entries = Object.entries(overrides);
   const config = entries.length ? ` config={{ ${entries.map(([key, value]) => `${key}: ${literal(value)}`).join(', ')} }}` : '';
-  const react = `import { ${component} } from "@/components/heroes/${name}/${name}";\n\n<${component}${config} />`;
+  const react = `import { ${component} } from "@/components/${folder}/${name}/${name}";\n\n<${component}${config} />`;
   const attributes = entries.map(([key, value]) => ` ${kebab(key)}="${Array.isArray(value) ? value.join(', ') : String(value)}"`).join('');
-  const element = `<script type="module">\n  import { define${pascal(name)}Element } from "@/components/heroes/${name}/${name}.element";\n  define${pascal(name)}Element();\n</script>\n\n<sg-${name}${attributes}>\n  <!-- your content -->\n</sg-${name}>`;
+  const element = `<script type="module">\n  import { define${pascal(name)}Element } from "@/components/${folder}/${name}/${name}.element";\n  define${pascal(name)}Element();\n</script>\n\n<sg-${name}${attributes}>\n  <!-- your content -->\n</sg-${name}>`;
   return { react, element };
 }
 
@@ -94,20 +103,21 @@ function Control({ field, value, onChange }: { field: Field; value: unknown; onC
 }
 
 type ConfigPanelProps = {
-  hero: HeroEntry;
+  hero: Configurable;
+  kind?: Kind;
   overrides: Overrides;
   onChange: (next: Overrides) => void;
-  /** Some settings (sizes, counts) only apply when the hero starts again. */
+  /** Some settings (sizes, counts) only apply when the hero or section starts again. */
   onRestart: () => void;
   onClose: () => void;
 };
 
-/** A drawer of controls generated from the hero's config schema, with the matching code. */
-export function ConfigPanel({ hero, overrides, onChange, onRestart, onClose }: ConfigPanelProps) {
+/** A drawer of controls generated from the hero's (or section's) config schema, with the matching code. */
+export function ConfigPanel({ hero, kind = 'hero', overrides, onChange, onRestart, onClose }: ConfigPanelProps) {
   const fields = useMemo(() => fieldsOf(hero.schemas.config).filter(controllable), [hero]);
   const [tab, setTab] = useState<'react' | 'element'>('react');
   const [copied, setCopied] = useState(false);
-  const code = codeFor(hero.meta.name, overrides)[tab];
+  const code = codeFor(hero.meta.name, overrides, kind)[tab];
   // Highlighted by shiki once it has loaded; plain text until then, or if it fails.
   const [html, setHtml] = useState<{ code: string; html: string } | null>(null);
   useEffect(() => {
@@ -145,7 +155,7 @@ export function ConfigPanel({ hero, overrides, onChange, onRestart, onClose }: C
           <button type="button" onClick={() => onChange({})} className="rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground">
             Reset
           </button>
-          <button type="button" onClick={onRestart} className="rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground" title="Some settings apply when the hero starts again">
+          <button type="button" onClick={onRestart} className="rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground" title={`Some settings apply when the ${kind} starts again`}>
             Restart
           </button>
           <button type="button" onClick={onClose} aria-label="Close" className="rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground">
