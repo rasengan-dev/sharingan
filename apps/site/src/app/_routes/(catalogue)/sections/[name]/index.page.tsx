@@ -1,6 +1,7 @@
 import { createElement, useEffect, useState, type ReactNode } from 'react';
 import { defineStaticPaths, Link, PageComponent, useParams } from 'rasengan';
 import { ConfigPanel, type Overrides } from '@/components/config-panel';
+import { CataloguePager } from '@/components/catalogue/catalogue-pager';
 import { PropsTable } from '@/components/props-table';
 import { findSection, sections, type SectionEntry } from '@/section-list';
 
@@ -26,8 +27,6 @@ function SectionDetail({ section }: { section: SectionEntry }) {
 
   useEffect(() => section.defineElement(), [section]);
 
-  const index = sections.indexOf(section);
-  const next = sections[(index + 1) % sections.length];
 
   return (
     <main>
@@ -87,9 +86,6 @@ function SectionDetail({ section }: { section: SectionEntry }) {
             Add <code className="font-mono">?motion=final</code> or <code className="font-mono">?motion=off</code> to the address for the version without scroll
             motion; phones below 768 px get it too, with short reveals.
           </p>
-          <Link to={`/sections/${next.meta.name}`} className="mt-2 self-start font-medium text-foreground underline underline-offset-4">
-            Next: {next.meta.title} →
-          </Link>
         </div>
       </section>
 
@@ -121,6 +117,10 @@ function SectionDetail({ section }: { section: SectionEntry }) {
         {createElement(`sg-${meta.name}`, { ...section.elementAttributes, 'data-sg-element': '' }, section.elementChildren)}
         <div className="min-h-[50svh]" />
       </section>
+
+      <div className="border-t border-border pt-12">
+        <CataloguePager name={meta.name} />
+      </div>
     </main>
   );
 }
@@ -133,7 +133,7 @@ const SectionPage: PageComponent = () => {
     return (
       <main className="mx-auto flex min-h-svh max-w-xl flex-col items-center justify-center gap-4 px-6 text-center">
         <h1 className="text-3xl font-semibold">No section called “{name}”</h1>
-        <Link to="/#sections" className="text-muted-foreground underline underline-offset-4">
+        <Link to="/components" className="text-muted-foreground underline underline-offset-4">
           Back to the collection
         </Link>
       </main>

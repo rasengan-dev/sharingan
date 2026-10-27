@@ -53,9 +53,10 @@ export const mosaicZoomStyles = /* css */ `
 }
 
 /* Scrubbing: the mosaic fills one screen, pinned */
-.sg-mz[data-scrub] .sg-mz-stage { display: grid; place-content: center; height: 100svh; padding: calc(var(--header-height, 64px) + 16px) var(--sg-mz-gutter) 24px; overflow: clip; }
+/* Sizes follow the section's width, not the screen's: it may sit beside a sidebar. */
+.sg-mz[data-scrub] .sg-mz-stage { display: grid; place-content: center; height: 100svh; padding: calc(var(--header-height, 64px) + 16px) var(--sg-mz-gutter) 24px; overflow: clip; container-type: inline-size; }
 .sg-mz[data-scrub] .sg-mz-grid {
-	--tw: min(calc((100vw - 2 * var(--sg-mz-gutter) - 70px) / 6), calc((100svh - var(--header-height, 64px) - 68px) / var(--rows, 3) * .8));
+	--tw: min(calc((100cqw - 70px) / 6), calc((100svh - var(--header-height, 64px) - 68px) / var(--rows, 3) * .8));
 	grid-template-columns: repeat(6, var(--tw));
 }
 `;

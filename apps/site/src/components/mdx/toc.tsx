@@ -13,7 +13,7 @@ export function Toc({ items }: { items: TOCItem[] }) {
     cn('block py-1 text-[13px] transition-colors', activeId === id ? 'font-semibold text-foreground' : 'text-muted-foreground hover:text-foreground');
 
   return (
-    <aside className="sticky top-[calc(var(--header-height)+40px)] hidden max-h-[calc(100svh-var(--header-height)-80px)] w-[200px] shrink-0 self-start overflow-y-auto hide-scrollbar lg:block">
+    <aside className="sticky top-[calc(var(--header-height)+40px)] hidden max-h-[calc(100svh-var(--header-height)-80px)] w-[200px] shrink-0 self-start overflow-y-auto hide-scrollbar xl:block">
       <h2 className="m-0 mb-3 font-mono text-[11px] tracking-[0.14em] text-muted-foreground uppercase">On this page</h2>
       <ul className="m-0 list-none border-l border-border p-0 pl-4">
         {items.map((item) => (

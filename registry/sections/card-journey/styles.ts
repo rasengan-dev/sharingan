@@ -87,6 +87,8 @@ export const cardJourneyStyles = /* css */ `
 .sg-cj[data-scrub] .sg-cj-stage {
 	display: grid; align-content: center; justify-content: stretch;
 	height: 100svh; max-width: none; overflow: clip;
+	/* Sizes follow the section's width, not the screen's: it may sit beside a sidebar. */
+	container-type: inline-size;
 	padding: calc(var(--header-height, 64px) + 16px) var(--sg-cj-gutter) 32px;
 }
 .sg-cj[data-scrub] .sg-cj-statement { position: absolute; inset: 0; z-index: 0; height: fit-content; margin: auto; padding: 0 var(--sg-cj-gutter); }
@@ -100,10 +102,10 @@ export const cardJourneyStyles = /* css */ `
 	top: calc(var(--header-height, 64px) + 5svh); bottom: auto; margin: 0 auto;
 	font-size: clamp(24px, 3.8vw, 44px);
 }
-.sg-cj[data-scrub] .sg-cj-aside { position: absolute; z-index: 1; top: calc(var(--header-height, 64px) + 8svh); left: var(--sg-cj-gutter); width: min(300px, 21vw); }
+.sg-cj[data-scrub] .sg-cj-aside { position: absolute; z-index: 1; top: calc(var(--header-height, 64px) + 8svh); left: var(--sg-cj-gutter); width: min(300px, 21cqw); }
 .sg-cj[data-scrub] .sg-cj-grid { position: relative; z-index: 2; grid-template-columns: minmax(0, 1fr) auto; max-width: 1280px; width: 100%; margin: 0 auto; }
 .sg-cj[data-scrub] .sg-cj-cards {
-	--cw: min(15vw, calc((100svh - var(--header-height, 64px) - 170px) / var(--rows, 2) * .7));
+	--cw: min(16cqw, calc((100svh - var(--header-height, 64px) - 170px) / var(--rows, 2) * .7));
 	grid-template-columns: repeat(3, var(--cw));
 }
 `;
