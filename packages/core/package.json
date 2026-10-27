@@ -3,24 +3,26 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Shared runtime of Sharingan heroes: frame loop, motion modes, pointer and theme colours, plus the WebGPU engine under ./webgpu.",
+  "description": "Shared runtime of Sharingan heroes and sections: frame loop, motion modes, pointer and theme colours, plus the WebGPU engine under ./webgpu and the GSAP scroll layer of sections under ./scroll.",
   "exports": {
     ".": "./src/index.ts",
     "./react": "./src/react.tsx",
     "./webgpu": "./src/webgpu/index.ts",
-    "./webgpu/react": "./src/webgpu/react.tsx"
+    "./webgpu/react": "./src/webgpu/react.tsx",
+    "./scroll": "./src/scroll/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "gsap": "3.15.0",
     "typegpu": "0.12.8"
   },
   "devDependencies": {
-    "@webgpu/types": "^0.1.60",
-    "typescript": "^5.9.2",
     "@types/react": "^19.2.0",
-    "react": "^19.2.0"
+    "@webgpu/types": "^0.1.60",
+    "react": "^19.2.0",
+    "typescript": "^5.9.2"
   },
   "license": "MIT",
   "peerDependencies": {

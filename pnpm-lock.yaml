@@ -43,6 +43,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      gsap:
+        specifier: 3.15.0
+        version: 3.15.0
       lucide-react:
         specifier: ^0.477.0
         version: 0.477.0(react@19.3.1)
@@ -101,6 +104,9 @@ importers:
 
   packages/core:
     dependencies:
+      gsap:
+        specifier: 3.15.0
+        version: 3.15.0
       typegpu:
         specifier: 0.12.8
         version: 0.12.8
@@ -123,6 +129,9 @@ importers:
       '@sharingan/core':
         specifier: workspace:*
         version: link:../packages/core
+      gsap:
+        specifier: 3.15.0
+        version: 3.15.0
       react:
         specifier: ^19.2.0
         version: 19.3.1
@@ -1212,6 +1221,9 @@ packages:
   gray-matter@4.0.3:
     resolution: {integrity: sha512-5v6yZd4JK3eMI3FqqCouswVqwugaA9r4dNZB1wwcmrD02QkV5H0y7XBQW8QwQqEaZY1pM9aqORSORhJRdNK44Q==}
     engines: {node: '>=6.0'}
+
+  gsap@3.15.0:
+    resolution: {integrity: sha512-dMW4CWBTUK1AEEDeZc1g4xpPGIrSf9fJF960qbTZmN/QwZIWY5wgliS6JWl9/25fpTGJrMRtSjGtOmPnfjZB+A==}
 
   has-flag@4.0.0:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
@@ -3180,6 +3192,8 @@ snapshots:
       kind-of: 6.0.3
       section-matter: 1.0.0
       strip-bom-string: 1.0.0
+
+  gsap@3.15.0: {}
 
   has-flag@4.0.0: {}
 

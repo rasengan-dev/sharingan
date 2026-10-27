@@ -45,12 +45,14 @@ export default defineConfig(async () => {
         // Give it a name nothing imports and declare "@" last ourselves.
         symbole: '@rasengan-src-unused',
         alias: [
-          // Heroes import the paths they have once installed by the shadcn CLI; these point them at the sources.
+          // Heroes and sections import the paths they have once installed by the shadcn CLI; these point them at the sources.
           { find: '@/lib/sharingan/webgpu/react', replacement: '../../packages/core/src/webgpu/react.tsx' },
           { find: '@/lib/sharingan/webgpu', replacement: '../../packages/core/src/webgpu/index.ts' },
           { find: '@/lib/sharingan/react', replacement: '../../packages/core/src/react.tsx' },
+          { find: '@/lib/sharingan/scroll', replacement: '../../packages/core/src/scroll/index.ts' },
           { find: '@/lib/sharingan', replacement: '../../packages/core/src/index.ts' },
           { find: '@/heroes', replacement: '../../registry/heroes' },
+          { find: '@/sections', replacement: '../../registry/sections' },
           { find: '@', replacement: './src' },
         ],
       },

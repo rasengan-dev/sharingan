@@ -1,7 +1,7 @@
 ---
 metadata:
   title: Getting started · Sharingan
-  description: Add the Sharingan registry, install a hero with the shadcn CLI, and use it in React or as a Web Component.
+  description: Add the Sharingan registry, install a hero or a section with the shadcn CLI, and use it in React or as a Web Component.
 toc: true
 ---
 
@@ -86,5 +86,35 @@ Without those tokens, WebGPU heroes default to a dark look (light on a dark back
 - `?motion=final` (or `data-motion="final"` on `<html>`) shows a repeatable still frame, for screenshots and visual tests; `?motion=off` turns motion off.
 - Heroes pause when they are off screen.
 - Where WebGPU is missing, WebGPU heroes show a CSS gradient in their colours, and the `poster` image if you give one. Their wrapper says why in `data-state`.
+
+## Sections below the hero
+
+Sections are the animated blocks a page scrolls through after its hero: a deck of cards that deals itself into a grid, an image that grows to full width under a pinned headline, a paragraph that darkens as it is read. They install and take `content` and `config` like heroes, into `components/sections/`:
+
+```bash title="Terminal"
+npx shadcn@latest add @sharingan/card-journey
+```
+
+```tsx title="app/page.tsx" showLineNumbers
+import { GalleryFanHero } from "@/components/heroes/gallery-fan/gallery-fan";
+import { CardJourneySection } from "@/components/sections/card-journey/card-journey";
+
+export default function Page() {
+  return (
+    <main>
+      <GalleryFanHero />
+      <CardJourneySection config={{ length: 2.5 }} />
+    </main>
+  );
+}
+```
+
+Sections animate against the scroll with [GSAP](https://gsap.com) (ScrollTrigger and Flip), which the CLI installs next to `lib/sharingan/scroll/`. GSAP is free to use under its own [no-charge licence](https://gsap.com/standard-license), not an open-source one; heroes do not use it.
+
+- The page scrolls at its own speed: a pinned section adds scroll length (`length`, in screen heights) and never captures the wheel.
+- Under reduced motion, `?motion=off` and on screens narrower than 768 px, pinned sections show their final layout with short reveals instead.
+- A section measures its layout once per width. When the page's height changes above it (late images, a hero's intro), every section recalculates where it starts.
+
+<Note>See them all on one page, under the gallery fan hero: <Link to="/demo">the demo landing page</Link>.</Note>
 
 Ready? <Link to="/#collection">Browse the collection</Link>.

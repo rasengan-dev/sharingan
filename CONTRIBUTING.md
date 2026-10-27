@@ -21,11 +21,12 @@ Add `?motion=final` to a preview URL to freeze it on its poster frame, or `?moti
 
 | Path | What it holds |
 | --- | --- |
-| `packages/core` | The shared runtime: frame loop, motion modes, pointer, theme colours, DOM helpers; the WebGPU engine under `src/webgpu`. Copied into projects as `lib/sharingan/`. |
+| `packages/core` | The shared runtime: frame loop, motion modes, pointer, theme colours, DOM helpers; the WebGPU engine under `src/webgpu`, the GSAP scroll layer of sections under `src/scroll`. Copied into projects as `lib/sharingan/`. |
 | `registry/heroes/<name>` | One hero, exactly as the shadcn CLI copies it into a project. |
+| `registry/sections/<name>` | One section (below the hero), the same way. |
 | `apps/site` | The website (a [Rasengan.js](https://rasengan.dev) app): previews, docs, and the registry files under `/r`. |
 | `scripts` | `registry.mjs` (builds the shadcn registry) and `posters.mjs` (renders still frames). |
-| `proposals` | RFCs. [RFC-0001](proposals/RFC-0001-Sharingan.md) describes the design every hero follows. |
+| `proposals` | RFCs. [RFC-0001](proposals/RFC-0001-Sharingan.md) describes the design every hero follows, [RFC-0002](proposals/RFC-0002-Sections.md) the sections. |
 
 ## Add a hero
 
@@ -50,6 +51,16 @@ Every hero must:
 - take its colours from CSS variables, so it follows the project's theme in light and dark;
 - for WebGPU heroes, show a poster when WebGPU is unavailable (no WebGL port).
 
+## Add a section
+
+Sections follow [RFC-0002](proposals/RFC-0002-Sections.md): the same files as a DOM hero, in `registry/sections/<name>`, with `kind: "section"` and `scroll: { pinned, length }` in `meta.ts`. The engine builds its animations inside `createScrollScope` from `@/lib/sharingan/scroll`, which rebuilds them when the motion mode, the 768 px breakpoint or the width changes, and returns a `SectionEngine` (`setConfig`, `refresh`, `destroy`). Copy `pinned-reveal` for a pinned section, `scroll-read` for one that is not.
+
+Then register it in `apps/site/src/section-list.tsx` and add it to the sections table in `README.md`. Every section must also:
+
+- leave the page's scroll speed alone: pins add scroll length, nothing captures the wheel;
+- render its final layout without JavaScript, under reduced motion and below 768 px (pinned sections show reveals there);
+- animate only its own elements, with `transform` and `opacity`.
+
 Images and fonts must be free to use; credit them in a `CREDITS.md` next to the files, as in `apps/site/public/sharingan/trail/`.
 
 ## Posters and thumbnails
@@ -57,8 +68,8 @@ Images and fonts must be free to use; credit them in a `CREDITS.md` next to the 
 With `pnpm dev` running, in another terminal:
 
 ```bash
-pnpm posters            # every hero, software rendering (works anywhere)
-pnpm posters trail-map  # one hero
+pnpm posters            # every hero and section, software rendering (works anywhere)
+pnpm posters trail-map  # one hero (or section)
 HEADLESS=0 pnpm posters # a visible Chrome, on the real GPU
 ```
 

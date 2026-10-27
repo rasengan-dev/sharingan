@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, PageComponent } from 'rasengan';
 import { heroes, type HeroEntry } from '@/hero-list';
+import { sections } from '@/section-list';
 import { InkFlowHero } from '@/heroes/ink-flow/ink-flow';
 
 type Filter = 'all' | HeroEntry['meta']['engine'];
@@ -35,7 +36,7 @@ const Home: PageComponent = () => {
           eyebrow: 'Sharingan · animated heroes',
           headline: 'Hero sections that move like ink',
           subheadline:
-            'Open-source animated heroes, on WebGPU or plain DOM. Copy one into your project with the shadcn CLI, in React or as a Web Component.',
+            'Open-source animated heroes, on WebGPU or plain DOM, and the scroll-driven sections that follow them. Copy one into your project with the shadcn CLI, in React or as a Web Component.',
           primaryCta: { label: 'Browse the heroes', href: '#collection' },
           secondaryCta: { label: 'Get started', href: '/docs' },
         }}
@@ -85,6 +86,47 @@ const Home: PageComponent = () => {
                   <span className="flex items-center justify-between gap-3">
                     <span className="text-lg font-semibold">{meta.title}</span>
                     <EngineBadge meta={meta} />
+                  </span>
+                  <span className="text-sm text-muted-foreground">{meta.summary}</span>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section id="sections" aria-labelledby="sections-title" className="mx-auto max-w-6xl scroll-mt-16 px-6 pb-24">
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <h2 id="sections-title" className="text-3xl font-semibold tracking-tight">
+              The sections
+            </h2>
+            <p className="mt-3 max-w-xl text-muted-foreground">
+              What comes after the hero: sections that move with the scroll, pinned or not, built with GSAP. They run in every browser and keep still under
+              reduced motion.
+            </p>
+          </div>
+          <Link to="/demo" className="rounded-full border border-border px-4 py-2 text-sm transition-colors hover:border-foreground/30">
+            See them on a whole page →
+          </Link>
+        </div>
+
+        <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {sections.map(({ meta }) => (
+            <li key={meta.name}>
+              <Link
+                to={`/sections/${meta.name}`}
+                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border transition-colors hover:border-foreground/30"
+              >
+                <span className="relative block aspect-[16/9] overflow-hidden bg-muted">
+                  {/* Still frames from `pnpm posters`, one per theme */}
+                  <img src={`/thumbs/${meta.name}.webp`} alt="" loading="lazy" className="size-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03] dark:hidden" />
+                  <img src={`/thumbs/${meta.name}-dark.webp`} alt="" loading="lazy" className="hidden size-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03] dark:block" />
+                </span>
+                <span className="flex flex-1 flex-col gap-2 p-5">
+                  <span className="flex items-center justify-between gap-3">
+                    <span className="text-lg font-semibold">{meta.title}</span>
+                    <span className="font-mono text-xs text-muted-foreground">{meta.scroll.pinned ? 'Pinned' : 'Scroll'} · GSAP</span>
                   </span>
                   <span className="text-sm text-muted-foreground">{meta.summary}</span>
                 </span>

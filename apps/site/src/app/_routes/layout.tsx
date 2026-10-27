@@ -43,6 +43,12 @@ const AppLayout: LayoutComponent = () => {
           <a href="/#collection" className="rounded-md px-3 py-2 text-muted-foreground hover:text-foreground">
             Heroes
           </a>
+          <a href="/#sections" className="rounded-md px-3 py-2 text-muted-foreground hover:text-foreground">
+            Sections
+          </a>
+          <Link to="/demo" className="hidden rounded-md px-3 py-2 text-muted-foreground hover:text-foreground sm:block">
+            Demo
+          </Link>
           <Link to="/docs" className="rounded-md px-3 py-2 text-muted-foreground hover:text-foreground">
             Docs
           </Link>

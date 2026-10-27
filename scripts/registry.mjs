@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Writes registry.json from the sources, then builds it with the shadcn CLI
+ * Writes registry.json from the sources (the core libs, every hero and every section), then builds it with the shadcn CLI
  * into apps/site/public/r, where the site serves it.
  *
  *   SHARINGAN_URL=https://example.com pnpm registry
@@ -15,6 +15,8 @@ import { join } from "node:path";
 const root = join(import.meta.dirname, "..");
 const base = (process.env.SHARINGAN_URL || "http://localhost:3100").replace(/\/$/, "");
 const url = (name) => `${base}/r/${name}.json`;
+// Sections only (RFC-0002); pinned like typegpu, one version per release.
+const GSAP = "gsap@3.15.0";
 
 const files = (dir, target, type) =>
 	readdirSync(join(root, dir), { withFileTypes: true })
@@ -43,6 +45,15 @@ const items = [
 		registryDependencies: [url("sharingan-core")],
 		files: files("packages/core/src/webgpu", "lib/sharingan/webgpu", "registry:lib"),
 	},
+	{
+		name: "sharingan-scroll",
+		type: "registry:lib",
+		title: "Sharingan scroll",
+		description: "What every Sharingan section shares: GSAP with ScrollTrigger and Flip, a scope per section that follows the motion modes and the narrow layout, and word splitting. Only sections need it.",
+		dependencies: [GSAP],
+		registryDependencies: [url("sharingan-core")],
+		files: files("packages/core/src/scroll", "lib/sharingan/scroll", "registry:lib"),
+	},
 ];
 
 const heroes = readdirSync(join(root, "registry/heroes"), { withFileTypes: true })
@@ -67,8 +78,28 @@ for (const name of heroes) {
 	});
 }
 
+const sections = readdirSync(join(root, "registry/sections"), { withFileTypes: true })
+	.filter((entry) => entry.isDirectory())
+	.map((entry) => entry.name)
+	.sort();
+
+for (const name of sections) {
+	const meta = readFileSync(join(root, "registry/sections", name, "meta.ts"), "utf8");
+	items.push({
+		name,
+		type: "registry:block",
+		title: field(meta, "title"),
+		description: field(meta, "summary"),
+		categories: ["section"],
+		meta: { kind: "section" },
+		dependencies: ["zod", GSAP],
+		registryDependencies: [url("sharingan-scroll")],
+		files: files(`registry/sections/${name}`, `components/sections/${name}`, "registry:component"),
+	});
+}
+
 const registry = { $schema: "https://ui.shadcn.com/schema/registry.json", name: "sharingan", homepage: base, items };
 writeFileSync(join(root, "registry.json"), `${JSON.stringify(registry, null, "\t")}\n`);
-console.log(`registry.json: ${items.length} items (${heroes.length} heroes), base ${base}`);
+console.log(`registry.json: ${items.length} items (${heroes.length} heroes, ${sections.length} sections), base ${base}`);
 
 execFileSync("npx", ["--yes", "shadcn@4.22.1", "build", "registry.json", "--output", "apps/site/public/r"], { cwd: root, stdio: "inherit" });

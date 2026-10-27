@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Renders each hero's still frame (`?motion=final`) from the running site:
- * - apps/site/public/thumbs/<name>[-dark].webp, the whole hero, for the collection's cards;
+ * Renders each hero's and section's still frame (`?motion=final`) from the running site:
+ * - apps/site/public/thumbs/<name>[-dark].webp, the whole hero (a section's top), for the collection's cards;
  * - apps/site/public/posters/<name>[-dark].webp, the background alone, for WebGPU heroes:
  *   the image shown behind the real text when WebGPU is unavailable
  *   (not for heroes whose meta says `poster: false`).
@@ -24,12 +24,14 @@ const only = process.argv.slice(2);
 const port = 9341;
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const heroes = readdirSync(join(root, "registry/heroes"), { withFileTypes: true })
-	.filter((entry) => entry.isDirectory() && (only.length === 0 || only.includes(entry.name)))
-	.map((entry) => {
-		const meta = readFileSync(join(root, "registry/heroes", entry.name, "meta.ts"), "utf8");
-		return { name: entry.name, engine: meta.match(/\bengine: "(\w+)"/)?.[1], poster: !/\bposter: false\b/.test(meta) };
-	});
+const items = ["heroes", "sections"].flatMap((folder) =>
+	readdirSync(join(root, "registry", folder), { withFileTypes: true })
+		.filter((entry) => entry.isDirectory() && (only.length === 0 || only.includes(entry.name)))
+		.map((entry) => {
+			const meta = readFileSync(join(root, "registry", folder, entry.name, "meta.ts"), "utf8");
+			return { name: entry.name, folder, engine: meta.match(/\bengine: "(\w+)"/)?.[1], poster: !/\bposter: false\b/.test(meta) };
+		}),
+);
 
 const thumbs = join(root, "apps/site/public/thumbs");
 const posters = join(root, "apps/site/public/posters");
@@ -74,30 +76,33 @@ const evaluate = async (expression) => (await send("Runtime.evaluate", { express
 await send("Page.enable");
 await send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
 
-for (const { name, engine, poster } of heroes) {
-	await send("Page.navigate", { url: `${site}/heroes/${name}?motion=final` });
-	// The hero is ready when its engine says so (DOM) or its canvas has drawn (WebGPU).
+for (const { name, folder, engine, poster } of items) {
+	await send("Page.navigate", { url: `${site}/${folder}/${name}?motion=final` });
+	// A hero is ready when its engine says so (DOM) or its canvas has drawn (WebGPU); a section once its scroll scope has built.
+	// A section's thumbnail is its top, 4:3: a tall section would not read on a card.
+	const selector = folder === "heroes" ? "main > section" : "main [data-sharingan]";
 	const box = await evaluate(`(async () => {
 		for (let i = 0; i < 200; i++) {
-			const section = document.querySelector("main > section");
-			const ready = section && (section.hasAttribute("data-ready") || section.querySelector("[data-sharingan][data-state]"));
+			const section = document.querySelector(${JSON.stringify(selector)});
+			const ready = section && (section.hasAttribute("data-ready") || section.hasAttribute("data-motion") || section.querySelector("[data-sharingan][data-state]"));
 			if (ready) break;
 			await new Promise((resolve) => setTimeout(resolve, 50));
 		}
 		await new Promise((resolve) => setTimeout(resolve, 1500));
-		const rect = document.querySelector("main > section").getBoundingClientRect();
-		return { x: rect.x, y: rect.y + scrollY, width: rect.width, height: rect.height };
+		const rect = document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();
+		const height = ${folder === "sections"} ? Math.min(rect.height, rect.width * 0.75) : rect.height;
+		return { x: rect.x, y: rect.y + scrollY, width: rect.width, height };
 	})()`);
 	if (!box) {
-		console.error(`✗ ${name}: no hero found at ${site}/heroes/${name}`);
+		console.error(`✗ ${name}: nothing found at ${site}/${folder}/${name}`);
 		continue;
 	}
 	const shoot = async (file, scale, quality) => {
 		const shot = await send("Page.captureScreenshot", { format: "webp", quality, clip: { ...box, scale }, captureBeyondViewport: true });
 		writeFileSync(file, Buffer.from(shot.result.data, "base64"));
 	};
-	// The site's own header floats over every hero: not part of it.
-	await evaluate(`document.querySelectorAll("body header").forEach((node) => (node.style.visibility = "hidden"))`);
+	// The site's own header and Customize button float over every hero: not part of it.
+	await evaluate(`document.querySelectorAll("body header, main > button.fixed").forEach((node) => (node.style.visibility = "hidden"))`);
 	const notes = [];
 	for (const theme of ["light", "dark"]) {
 		const suffix = theme === "dark" ? "-dark" : "";

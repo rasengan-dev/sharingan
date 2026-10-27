@@ -1,6 +1,6 @@
 # RFC-0002: Sections — the animated sections below the hero
 
-- Status: Draft
+- Status: Draft (S1, S2 and S3 implemented: `sharingan-scroll`, the six sections in React and as Web Components, `/sections/[name]` and `/demo` on the site)
 - Author: Dilane Kombou
 - Created: 2026-10-27
 - Amends: [RFC-0001](RFC-0001-Sharingan.md), non-goal "Full pages or non-hero sections"
@@ -130,8 +130,14 @@ none of it.
 - **Breakpoints**: the same `matchMedia` call gives each section a narrow
   layout (below 768 px by default), where long pins become shorter or are
   replaced by reveals (see "Open questions").
-- **Refresh**: one `ScrollTrigger.refresh()` after fonts and images above
-  the section have loaded, and after a hero's intro changes its height.
+- **Refresh**: `ScrollTrigger.refresh()` whenever the page's height changes
+  (images and fonts loading late, a hero's intro), watched once per page. A
+  rebuild keeps the scroll position: reverting a pin removes its spacer for a
+  moment, and scroll anchoring would otherwise carry the page up with it.
+- **Helpers**: `scrubs(context)` (motion on and a wide screen),
+  `revealOnEnter` (the quiet version), `splitWords` / `wordsOf` (text read on
+  scroll) and `boxWithin` (where an element sits in the stage, before any
+  transform).
 
 ### Anatomy of a section
 
@@ -162,8 +168,11 @@ export const meta = {
   name: "card-journey",
   title: "Card journey",
   kind: "section",
-  summary: "A deck of cards shuffles under a paragraph, deals out into a staircase, then lands in a tabbed grid.",
-  scroll: { pinned: true, length: 2.5 },   // viewport heights the section takes while pinned
+  engine: "dom",
+  summary: "A paragraph darkens word by word while a deck of cards shuffles beside it; …",
+  useWhen: "…",
+  avoidWhen: "…",
+  scroll: { pinned: true, length: 3 },     // screen heights the section takes while pinned
   interaction: ["scroll", "pointer", "keyboard"],
   weight: { jsKb: 0 },                     // the section's own code; GSAP is reported once
   status: "draft",
@@ -186,7 +195,8 @@ export const meta = {
 - **Focus.** Tabbing into a pinned section scrolls to the point where the
   focused element is visible and in its final place.
 - **Transforms and opacity only** while scrubbing; no layout per frame.
-  Flip measures layouts once per stage, then animates transforms.
+  Layouts are measured once per build, from element offsets (which ignore
+  transforms), then only transforms are scrubbed.
 
 ### GSAP
 
@@ -199,8 +209,10 @@ licence directly. The docs page for every section says so.
 
 Why GSAP rather than CSS scroll-driven animations or hand-written code:
 
-- **Flip** solves the hardest part of the design reference, a set of
-  elements moving between three layouts while scrubbed.
+- **Flip** reflows a grid when its content changes (the card journey's
+  tabs). The journey itself, cards moving between three layouts while
+  scrubbed, is a ScrollTrigger timeline over poses measured once per build:
+  Flip's own measurements would read the transforms the scrub has applied.
 - **ScrollTrigger** handles pinning, pin spacing, resize, and the mobile
   address bar, and behaves the same in every browser.
 - **`gsap.matchMedia()`** swaps whole setups for reduced motion and narrow
@@ -211,7 +223,7 @@ Why GSAP rather than CSS scroll-driven animations or hand-written code:
 | Item | Budget |
 |---|---|
 | Section code (gzip, its own files) | ≤ 12 KB |
-| GSAP, ScrollTrigger and Flip | loaded once per page, measured and reported (roughly 45–50 KB gzip, to confirm in S1) |
+| GSAP, ScrollTrigger and Flip | loaded once per page: 52.7 KB gzip, minified (GSAP 3.15.0, measured in S1) |
 | Scroll frame | no long task; transforms and opacity only |
 | Images | lazy-loaded below the fold, with sizes, so pins do not shift when they arrive |
 
@@ -220,14 +232,16 @@ Why GSAP rather than CSS scroll-driven animations or hand-written code:
 - `/sections/[name]`: a preview with enough page above and below to scroll
   through it, the props tables and the Customize panel, as for heroes.
 - The home page lists both collections, with a filter.
-- A demo page (`/demo`, name open) combines `gallery-fan` with the first
-  sections, in the spirit of the design reference.
+- A demo page, `/demo`, combines `gallery-fan` with all six sections, in the
+  spirit of the design reference.
+- `pnpm posters` renders each section's top (4:3, `?motion=final`) for its
+  card, light and dark.
 
 ### Initial collection
 
 | Section | Idea |
 |---|---|
-| `card-journey` | a pinned paragraph darkens word by word while a card deck shuffles over it; the deck deals out into a diagonal staircase, then lands in a tabbed grid (Flip) |
+| `card-journey` | a pinned paragraph darkens word by word while a card deck shuffles beside it; the deck deals out into a diagonal staircase, then lands in a tabbed grid (Flip) |
 | `pinned-reveal` | a headline stays pinned while a rounded image rises under it and grows to full width |
 | `scroll-read` | a large paragraph that darkens word by word as it is scrolled, with small inline images |
 | `parallax-columns` | a staggered two-column card grid whose columns move at different speeds |
@@ -238,12 +252,15 @@ Why GSAP rather than CSS scroll-driven animations or hand-written code:
 
 ## Milestones
 
-1. **S1 — Scroll lib and first section.** `sharingan-scroll`,
+1. **S1 — Scroll lib and first section.** Done: `sharingan-scroll`,
    `card-journey` in React and as a Web Component, `/sections/[name]` on the
    site, the registry script reading `registry/sections`. Validated by
-   installing the section into a blank Vite project, as heroes were.
-2. **S2 — The rest of the initial collection.**
-3. **S3 — Demo page** combining `gallery-fan` and the sections.
+   installing all six sections with the shadcn CLI into a blank Vite project
+   (React 19, TypeScript 7, `erasableSyntaxOnly`, `verbatimModuleSyntax`),
+   which type-checks and builds. Each section's own files weigh 3.8–8.1 KB
+   gzip (source), under the 12 KB budget.
+2. **S2 — The rest of the initial collection.** Done.
+3. **S3 — Demo page** combining `gallery-fan` and the sections. Done, at `/demo`.
 
 ## Alternatives considered
 
@@ -266,12 +283,17 @@ Why GSAP rather than CSS scroll-driven animations or hand-written code:
 
 1. Does the site's Customize panel, which writes a section's code from
    visual controls, fall within GSAP's licence exclusion? To confirm with
-   GSAP before S1 ships.
-2. Phones: should pinned sections keep a shorter pin, or become plain
-   reveals below the breakpoint?
-3. Should `gallery-fan` move to GSAP so the demo page runs one engine, or
-   do the core's frame loop and GSAP's ticker run side by side?
-4. The demo page: an art marketplace like the reference, or another
-   subject so it does not read as a longer `gallery-fan`?
-5. Images: reuse `public/sharingan/gallery` and `reel`, plus new openly
-   licensed images with credits, as for the heroes?
+   GSAP before sections are published.
+
+Settled while building S1–S3:
+
+- **Phones.** Below 768 px pinned sections become plain reveals: no pin,
+  the final layout, elements fading in once. Parallax columns become one
+  still column; scroll read and image marquee, which are not pinned, still
+  follow the scroll there.
+- **Heroes stay on their engines.** `gallery-fan` keeps the core's loop;
+  on the demo page it runs beside GSAP's ticker without conflict.
+- **The demo** is Atelier Nine, the art marketplace of `gallery-fan`'s
+  example, so the sections read as its page.
+- **Images** are the ones already credited in `public/sharingan`
+  (`gallery`, `reel`, `trail`, `bento`); no new image was added.
