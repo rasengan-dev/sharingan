@@ -324,6 +324,7 @@ Later: `black-hole` (gravitational lensing on the headline), `gamepad-3d`
 | `conic-rays` | background | slow conic rays behind the title, the universal counterpart of `aurora-mesh` |
 | `gallery-fan` | object | a full-screen fan of artwork cards in CSS 3D; the nearest card rises, collaborator cursors drift between cards (added after v0.2, from a design reference) |
 | `trail-map` | object | a route that draws itself up a photo in a shaped frame (a computed `clip-path`), a walker, clouds at their own depth, a scrolling strip of routes (added after v0.2, from a design reference) |
+| `curve-reel` | object | a looping reel of project cards on the inside of a curved wall (an elliptic arc in CSS 3D, cards spaced by arc length), drag with momentum, numbered steps that light up as cards pass (added after v0.2, from a design reference) |
 
 ## Relation to Rasengan UI
 
