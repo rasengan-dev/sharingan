@@ -112,8 +112,12 @@ export const galleryFanStyles = /* css */ `
 	.sg-gf-bubble { font-size: 11px; padding: 4px 8px; }
 }
 
-/* Reduced motion, ?motion=off and ?motion=final: no movement at all */
-.sg-gf:not([data-motion="ready"]) *, .sg-gf:not([data-motion="ready"]) *::before, .sg-gf:not([data-motion="ready"]) *::after { transition: none !important; animation: none !important; }
+/* Reduced motion, ?motion=off and ?motion=final: no movement at all. Before the engine has set a mode only transitions are off, so the reveal fallback can run */
+.sg-gf:not([data-motion="ready"]) *, .sg-gf:not([data-motion="ready"]) *::before, .sg-gf:not([data-motion="ready"]) *::after { transition: none !important; }
+.sg-gf[data-motion]:not([data-motion="ready"]) *, .sg-gf[data-motion]:not([data-motion="ready"]) *::before, .sg-gf[data-motion]:not([data-motion="ready"]) *::after { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {
+	.sg-gf:not([data-motion="ready"]) *, .sg-gf:not([data-motion="ready"]) *::before, .sg-gf:not([data-motion="ready"]) *::after { animation: none !important; }
+}
 
 /* Before the engine places the cards, keep them out of sight; without it, they appear after a moment */
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {

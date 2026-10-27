@@ -116,5 +116,10 @@ export const appWindowStyles = /* css */ `
 	.sg-aw:not([data-ready]) [data-sg-panel] { opacity: 0; animation: sg-aw-reveal .4s 2.5s forwards; }
 }
 @keyframes sg-aw-reveal { to { opacity: 1; } }
-.sg-aw:not([data-motion="ready"]) *, .sg-aw:not([data-motion="ready"]) *::before { transition: none !important; animation: none !important; }
+/* Reduced motion and still modes: nothing moves. Before the engine has set a mode only transitions are off, so the reveal fallback can run */
+.sg-aw:not([data-motion="ready"]) *, .sg-aw:not([data-motion="ready"]) *::before { transition: none !important; }
+.sg-aw[data-motion]:not([data-motion="ready"]) *, .sg-aw[data-motion]:not([data-motion="ready"]) *::before { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {
+	.sg-aw:not([data-motion="ready"]) *, .sg-aw:not([data-motion="ready"]) *::before { animation: none !important; }
+}
 `;
