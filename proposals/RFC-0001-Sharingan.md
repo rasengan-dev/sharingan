@@ -1,6 +1,6 @@
 # RFC-0001: Sharingan — open-source animated heroes
 
-- Status: Draft (M1, M2, M3 and M3b implemented: `@sharingan/core`, the six WebGPU heroes of v0.1 and the eight DOM heroes of v0.2, in React and as Web Components, previewed in `apps/site`)
+- Status: Draft (M1, M2, M3 and M3b implemented: `@sharingan/core`, the six WebGPU heroes of v0.1 and the eight DOM heroes of v0.2 (and those added after it, `iso-deck` the latest), in React and as Web Components, previewed in `apps/site`)
 - Author: Dilane Kombou
 - Created: 2026-10-23
 - Repository: `rasengan-dev/sharingan` (new, MIT)
@@ -327,6 +327,54 @@ Later: `black-hole` (gravitational lensing on the headline), `gamepad-3d`
 | `trail-map` | object | a route that draws itself up a photo in a shaped frame (a computed `clip-path`), a walker, clouds at their own depth, a scrolling strip of routes (added after v0.2, from a design reference) |
 | `curve-reel` | object | a looping reel of project cards on the inside of a curved wall (an elliptic arc in CSS 3D, cards spaced by arc length), drag with momentum, numbered steps that light up as cards pass (added after v0.2, from a design reference) |
 | `sky-launch` | object | a sun behind three layers of SVG clouds; the headline arrives word by word, a rocket takes off and leaves a trail through the sun, and the clouds rise to cover the hero as it scrolls out (proposed with RFC-0002's second collection, from a design reference) |
+| `iso-deck` | object | a macro pad in isometric line art (SVG built from code); a cursor selects the floating app tile, a tooltip types the tagline and the keys spell a word. Keys press under the pointer, typing the word "connects" the deck, and the front key is a link of its own (added after v0.2, from a design reference) |
+
+#### `iso-deck`
+
+The reference is a still illustration with one scripted loop. The hero
+keeps its look and its loop, and makes the deck something to play with.
+
+- **Geometry from code.** An isometric helper turns boxes
+  (`x, y, z, w, d, h`) into three face polygons and their outlines, in one
+  SVG (`deck.ts`, which React also runs on the server). The deck is laid
+  out from the config: a narrow strip at the back (knob, screen), the
+  letters (3–6, `"START"` by default), and with two rows a front row with
+  the wide key and the front key. Boxes are drawn back to front; each
+  key's cap sits in a clip that ends at the plate, so a pressed cap sinks
+  instead of growing. It is redrawn only when the layout changes, never per
+  frame. The object stays a deck: other objects in the same style would
+  need a scene engine, a separate proposal if ever.
+- **Loop.** About eight seconds, as in the reference: from the still frame
+  (cursor out, tile selected, tagline in the tooltip) the keys press one by
+  one to spell the word and the meter reacts; the tooltip closes, the
+  cursor dives back into the floating tile, comes out, selects it and types
+  the tagline again. The dotted line from the tile follows the axes (down,
+  then along the deck) to the screen. The loop is three attributes on the
+  deck and CSS transitions; the meter, the knob's dial and the cable share
+  one frame callback, only while the hero is on screen.
+- **Interaction.** A key under the pointer presses (it travels down, its
+  shadow tightens, the meter jumps) and the loop waits until the pointer
+  has been still for about three seconds. Typing the word on the page
+  presses the keys in turn (so does pressing them in order, for touch); the
+  whole word "connects" the deck: the meter fills, the tile pulses and the
+  tooltip reads `connectedLabel`. The coiled cable sways on a spring when
+  the pointer moves fast. The front key is a real link (`keyCta`, an HTML
+  link cut to the key's shape over it, with a focus ring drawn on the
+  key); the rest of the deck is `aria-hidden`. The Web Component takes it
+  from an `a[data-sg-key]` child, and the tooltip's lines from
+  `data-tagline` and `data-connected-label`.
+- **Colour.** One brand accent, `--accent` (the front key, the top of the
+  meter, the connected state). The second tone, for the tile and the low
+  end of the meter, is derived from it, a split complement kept light
+  enough for line art (`oklch(from var(--accent) …)` with the hue turned
+  by 150°, and a `color-mix()` fallback), and can be set as `accentAlt` (`accent-alt` on the element),
+  as in RFC-0002's sections. Lines and faces use the ink and surface
+  tokens, so dark mode flips the faces to graphite and keeps the lines.
+- **Reduced motion.** The still frame, no loop; keys still answer by
+  colour, without travel.
+- **Demo.** `/demos/tapwire`: Tapwire, a made-up wallet connection
+  service in the reference's spirit, with its own name and copy, and
+  sections of both collections below the hero (RFC-0002, Demo pages).
 
 ## Relation to Rasengan UI
 
@@ -364,7 +412,9 @@ Separate project, shared conventions:
 4. **M3b — DOM heroes.** Done: the core split by engine, the Noa Pad
    ported as `gamepad`, and the rest of the DOM collection (v0.2), each in
    React and as a Web Component.
-5. **M4 — Bridge.** Rasengan UI v2 integration and a first hero there.
+5. **M3c — `iso-deck`.** Done; the Tapwire demo lands with the `/demos`
+   pages (RFC-0002, S7).
+6. **M4 — Bridge.** Rasengan UI v2 integration and a first hero there.
 
 ## Alternatives considered
 
