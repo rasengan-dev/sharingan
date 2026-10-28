@@ -1,6 +1,6 @@
 # RFC-0002: Sections — the animated sections below the hero
 
-- Status: Draft (S1, S2 and S3 implemented: `sharingan-scroll`, the six sections in React and as Web Components, `/sections/[name]` and `/demo` on the site; S4–S7, the second collection, proposed)
+- Status: Draft (S1, S2 and S3 implemented: `sharingan-scroll`, the six sections in React and as Web Components, `/sections/[name]` and `/demo` on the site; S4–S7, the second collection: four sections, `sky-launch` and the demos under `/demos`)
 - Author: Dilane Kombou
 - Created: 2026-10-27
 - Amends: [RFC-0001](RFC-0001-Sharingan.md), non-goal "Full pages or non-hero sections"
@@ -314,6 +314,22 @@ like the heroes do (`.dark .sg-…` and `[data-tone="dark"]`), with a deeper
 coral and a dark sage. Changing two variables restyles a section to a
 brand; nothing in the engines depends on them.
 
+**Settled while building S4–S7:**
+
+- The second accent is `accentAlt` in the config (`accent-alt` on the
+  element), since attribute names map to camelCase keys and `accent-2` has
+  no camelCase form. The CSS variable stays `--sg-<prefix>-accent-2`.
+- `portrait-burst` places its slots under the page's header
+  (`--header-height`), so the top row is never hidden behind it while
+  pinned. Its exit drift is a second trigger on the pinned stage, which
+  ScrollTrigger places after the pin, whatever the refresh order.
+- `case-track`'s arrows read the page's scroll, not the trigger's progress,
+  which only updates on its next frame.
+- `split-word` sizes the word to its stage (`cqi`), then fits it exactly on
+  each build, so any word fills the line without overflowing it.
+- `sky-launch` writes one variable, `--exit`, on the layers it moves, once
+  per frame while the page scrolls; its intro is CSS animations.
+
 **Images.** People are new to the collection: `portrait-burst` needs about
 ten portraits, `bento-assemble` a portrait and four avatars, `case-track`
 two or three. They are Unsplash photos (Unsplash License), cropped to WebP
@@ -333,6 +349,9 @@ The site gets more than one demo, grouped under `/demos`:
   `bento-assemble`, `scroll-read`, `portrait-burst`, `case-track` and
   `split-word` as its contact block. It shows that a first-collection
   section sits well beside the new ones.
+- `/demos/tapwire`: Tapwire, a made-up wallet connection service, with
+  the `iso-deck` hero (RFC-0001, DOM collection), then `bento-assemble`,
+  `scroll-read`, `case-track` and `split-word` with Tapwire's own copy.
 
 The catalogue nav's "Landing page demo" link becomes a "Demos" group with
 one entry per page. Demo pages stay out of the registry.
@@ -348,13 +367,15 @@ one entry per page. Demo pages stay out of the registry.
    gzip (source), under the 12 KB budget.
 2. **S2 — The rest of the initial collection.** Done.
 3. **S3 — Demo page** combining `gallery-fan` and the sections. Done, at `/demo`.
-4. **S4 — `bento-assemble` and the counters.** The hardest of the second
-   collection: measured start poses and the counter exception. Adds the
-   `people` images.
-5. **S5 — `portrait-burst`, `case-track` and `split-word`.**
-6. **S6 — `sky-launch`**, as a hero (RFC-0001).
+4. **S4 — `bento-assemble` and the counters.** Done. The counters are
+   `createCounter` in the scroll lib, so any section can use them. Adds the
+   fourteen `people` portraits.
+5. **S5 — `portrait-burst`, `case-track` and `split-word`.** Done.
+6. **S6 — `sky-launch`**, as a hero (RFC-0001). Done.
 7. **S7 — Demo pages**: `/demos`, the move of Atelier Nine with the
-   redirect from `/demo`, and Upwind.
+   redirect from `/demo` (a `redirects` entry in the site's Rasengan
+   config), and Upwind. Done. The four sections and the hero weigh
+   6.5–7.5 KB gzip each (source), under the 12 KB budget.
 
 ## Alternatives considered
 

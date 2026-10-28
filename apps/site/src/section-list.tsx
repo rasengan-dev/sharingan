@@ -24,6 +24,22 @@ import { ImageMarqueeSection } from '@/sections/image-marquee/image-marquee';
 import { defineImageMarqueeElement } from '@/sections/image-marquee/image-marquee.element';
 import { meta as imageMarqueeMeta } from '@/sections/image-marquee/meta';
 import * as imageMarqueeSchema from '@/sections/image-marquee/schema';
+import { BentoAssembleSection } from '@/sections/bento-assemble/bento-assemble';
+import { defineBentoAssembleElement } from '@/sections/bento-assemble/bento-assemble.element';
+import { meta as bentoAssembleMeta } from '@/sections/bento-assemble/meta';
+import * as bentoAssembleSchema from '@/sections/bento-assemble/schema';
+import { PortraitBurstSection } from '@/sections/portrait-burst/portrait-burst';
+import { definePortraitBurstElement } from '@/sections/portrait-burst/portrait-burst.element';
+import { meta as portraitBurstMeta } from '@/sections/portrait-burst/meta';
+import * as portraitBurstSchema from '@/sections/portrait-burst/schema';
+import { CaseTrackSection } from '@/sections/case-track/case-track';
+import { defineCaseTrackElement } from '@/sections/case-track/case-track.element';
+import { meta as caseTrackMeta } from '@/sections/case-track/meta';
+import * as caseTrackSchema from '@/sections/case-track/schema';
+import { SplitWordSection } from '@/sections/split-word/split-word';
+import { defineSplitWordElement } from '@/sections/split-word/split-word.element';
+import { meta as splitWordMeta } from '@/sections/split-word/meta';
+import * as splitWordSchema from '@/sections/split-word/schema';
 
 type Schema = z.ZodObject<z.ZodRawShape>;
 
@@ -232,6 +248,146 @@ export const sections: SectionEntry[] = [
             <li>One row, further</li>
             <li className="sg-im-pic"><img src="/sharingan/reel/headphones.webp" alt="" /></li>
           </ul>
+        </div>
+      </div>
+    ),
+  },
+  {
+    meta: bentoAssembleMeta,
+    schemas: schemasOf(bentoAssembleSchema),
+    Section: BentoAssembleSection,
+    defineElement: () => defineBentoAssembleElement(),
+    elementAttributes: { accent: 'oklch(0.72 0.12 250)', 'accent-alt': 'oklch(0.86 0.09 95)', spread: '0.9', length: '1.4' },
+    elementChildren: (
+      <div data-sg-stage="">
+        <div data-sg-head="">
+          <div>
+            <h2>&lt;sg-bento-assemble&gt;</h2>
+          </div>
+          <div className="sg-ba-aside">
+            <p>Plain HTML tiles marked with data-sg-tile, a blue and butter palette, tiles that start further out.</p>
+            <a data-sg-badge="" href="#bento-assemble" aria-label="No framework needed" />
+          </div>
+        </div>
+        <ul data-sg-grid="">
+          <li data-sg-tile="" data-size="wide">
+            <p data-sg-count="">2,400</p>
+            <h3>Figures with commas</h3>
+          </li>
+          <li data-sg-tile="" data-size="tall" data-tone="photo">
+            <img src="/sharingan/people/person-05.webp" alt="A young woman with blonde hair smiling" />
+          </li>
+          <li data-sg-tile="" data-tone="accent">
+            <p data-sg-count="">64%</p>
+            <p>and percentages</p>
+          </li>
+          <li data-sg-tile="" data-tone="accent-2">
+            <p data-sg-count="">3.5x</p>
+            <p>and decimals</p>
+          </li>
+          <li data-sg-tile="" data-size="wide" data-tone="accent">
+            <h3>Attributes only</h3>
+            <p>accent, accent-alt, spread, length and count.</p>
+          </li>
+          <li data-sg-tile="">
+            <h3>No framework</h3>
+            <p>The ring is drawn from the badge's label.</p>
+          </li>
+        </ul>
+      </div>
+    ),
+  },
+  {
+    meta: portraitBurstMeta,
+    schemas: schemasOf(portraitBurstSchema),
+    Section: PortraitBurstSection,
+    defineElement: () => definePortraitBurstElement(),
+    elementAttributes: { tilt: '16', drift: '0.9', accent: 'oklch(0.75 0.12 160)' },
+    elementChildren: (
+      <div data-sg-stage="">
+        <div data-sg-head="">
+          <h2>&lt;sg-portrait-burst&gt;</h2>
+          <p>Eight portraits in plain HTML, a steeper lean in the stack, a longer drift and mint pills.</p>
+        </div>
+        <ul>
+          {['07', '12', '02', '13', '09', '05', '10', '14'].map((n) => (
+            <li key={n} data-sg-person="">
+              <figure>
+                <img src={`/sharingan/people/person-${n}.webp`} alt="A member of the team" />
+              </figure>
+            </li>
+          ))}
+        </ul>
+        <ul>
+          <li data-sg-pill="">No framework</li>
+          <li data-sg-pill="">Attributes only</li>
+        </ul>
+      </div>
+    ),
+  },
+  {
+    meta: caseTrackMeta,
+    schemas: schemasOf(caseTrackSchema),
+    Section: CaseTrackSection,
+    defineElement: () => defineCaseTrackElement(),
+    elementAttributes: { speed: '1.6', accent: 'oklch(0.72 0.12 250)', 'accent-alt': 'oklch(0.86 0.09 95)' },
+    elementChildren: (
+      <div data-sg-stage="">
+        <div data-sg-head="">
+          <h2>&lt;sg-case-track&gt;</h2>
+        </div>
+        <ul data-sg-track="" aria-label="Products">
+          {[
+            ['camera', 'Pocket camera'],
+            ['teapot', 'Red tea'],
+            ['jam', 'Strawberry jam'],
+            ['watch', 'Watch'],
+            ['iced-tea', 'Iced tea'],
+          ].map(([name, title]) => (
+            <li key={name} data-sg-card="">
+              <h3>
+                <a href={`#${name}`}>{title}</a>
+              </h3>
+              <figure className="sg-ct-media">
+                <img src={`/sharingan/reel/${name}.webp`} alt="" />
+              </figure>
+            </li>
+          ))}
+        </ul>
+        <div data-sg-foot="">
+          <button type="button" data-sg-prev="" aria-label="Previous">
+            ←
+          </button>
+          <button type="button" data-sg-next="" aria-label="Next">
+            →
+          </button>
+          <div data-sg-progress="" aria-hidden="true">
+            <span />
+          </div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    meta: splitWordMeta,
+    schemas: schemasOf(splitWordSchema),
+    Section: SplitWordSection,
+    defineElement: () => defineSplitWordElement(),
+    elementAttributes: { spread: '1.3', tilt: '6', accent: 'oklch(0.75 0.12 160)' },
+    elementChildren: (
+      <div data-sg-stage="">
+        <h2 className="sg-sw-title">Say hello</h2>
+        <div data-sg-line="">
+          <span data-sg-half="" aria-hidden="true">
+            Say
+          </span>
+          <a data-sg-card="" href="#split-word">
+            <b>Plain HTML</b>
+            <span>Two halves split into letters by the element itself.</span>
+          </a>
+          <span data-sg-half="" aria-hidden="true">
+            hello
+          </span>
         </div>
       </div>
     ),

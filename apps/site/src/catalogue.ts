@@ -16,6 +16,7 @@ import { meta as galleryFanMeta } from '@/heroes/gallery-fan/meta';
 import { meta as trailMapMeta } from '@/heroes/trail-map/meta';
 import { meta as curveReelMeta } from '@/heroes/curve-reel/meta';
 import { meta as bentoTilesMeta } from '@/heroes/bento-tiles/meta';
+import { meta as skyLaunchMeta } from '@/heroes/sky-launch/meta';
 import { meta as isoDeckMeta } from '@/heroes/iso-deck/meta';
 import { meta as cardJourneyMeta } from '@/sections/card-journey/meta';
 import { meta as pinnedRevealMeta } from '@/sections/pinned-reveal/meta';
@@ -23,6 +24,10 @@ import { meta as scrollReadMeta } from '@/sections/scroll-read/meta';
 import { meta as parallaxColumnsMeta } from '@/sections/parallax-columns/meta';
 import { meta as mosaicZoomMeta } from '@/sections/mosaic-zoom/meta';
 import { meta as imageMarqueeMeta } from '@/sections/image-marquee/meta';
+import { meta as bentoAssembleMeta } from '@/sections/bento-assemble/meta';
+import { meta as portraitBurstMeta } from '@/sections/portrait-burst/meta';
+import { meta as caseTrackMeta } from '@/sections/case-track/meta';
+import { meta as splitWordMeta } from '@/sections/split-word/meta';
 
 /**
  * Every hero and section by name, from their `meta.ts` only: the sidebar and the
@@ -41,7 +46,7 @@ export type CatalogueItem = {
 };
 
 export const catalogue: CatalogueItem[] = [
-  ...[auroraMeshMeta, inkFlowMeta, gravityFieldMeta, reactionDiffusionMeta, particleTypeMeta, liquidGlassMeta, gamepadMeta, holoCardMeta, splitHeadlineMeta, marqueeTypeMeta, terminalBootMeta, appWindowMeta, beamGridMeta, conicRaysMeta, galleryFanMeta, trailMapMeta, curveReelMeta, bentoTilesMeta, isoDeckMeta].map(
+  ...[auroraMeshMeta, inkFlowMeta, gravityFieldMeta, reactionDiffusionMeta, particleTypeMeta, liquidGlassMeta, gamepadMeta, holoCardMeta, splitHeadlineMeta, marqueeTypeMeta, terminalBootMeta, appWindowMeta, beamGridMeta, conicRaysMeta, galleryFanMeta, trailMapMeta, curveReelMeta, bentoTilesMeta, skyLaunchMeta, isoDeckMeta].map(
     (meta): CatalogueItem => ({
       name: meta.name,
       title: meta.title,
@@ -52,7 +57,7 @@ export const catalogue: CatalogueItem[] = [
       href: `/heroes/${meta.name}`,
     }),
   ),
-  ...[cardJourneyMeta, pinnedRevealMeta, scrollReadMeta, parallaxColumnsMeta, mosaicZoomMeta, imageMarqueeMeta].map(
+  ...[cardJourneyMeta, pinnedRevealMeta, scrollReadMeta, parallaxColumnsMeta, mosaicZoomMeta, imageMarqueeMeta, bentoAssembleMeta, portraitBurstMeta, caseTrackMeta, splitWordMeta].map(
     (meta): CatalogueItem => ({
       name: meta.name,
       title: meta.title,

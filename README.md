@@ -5,7 +5,7 @@ Two engines for heroes: **WebGPU** heroes draw their background on the GPU with 
 
 Text, links and buttons always stay in the DOM. Colours come from your CSS variables; a WebGPU hero shows a still poster when WebGPU or motion is unavailable.
 
-> **Status: v0.2.** The eighteen heroes (six WebGPU, twelve DOM) are live at [sharingan.hiraiship.app](https://sharingan.hiraiship.app). The design is in [RFC-0001](proposals/RFC-0001-Sharingan.md); the six sections below the hero (v0.3, local for now) follow [RFC-0002](proposals/RFC-0002-Sections.md); the iso deck hero (local for now) is in RFC-0001.
+> **Status: v0.2.** The eighteen heroes (six WebGPU, twelve DOM) are live at [sharingan.hiraiship.app](https://sharingan.hiraiship.app). The design is in [RFC-0001](proposals/RFC-0001-Sharingan.md); the ten sections below the hero and the sky launch hero (v0.3, local for now) follow [RFC-0002](proposals/RFC-0002-Sections.md); the iso deck hero (local for now) is in RFC-0001.
 
 ## Heroes
 
@@ -36,12 +36,13 @@ Text, links and buttons always stay in the DOM. Colours come from your CSS varia
 | **Trail map** | A route draws itself up a mountain photo in a shaped frame, a walker climbs it, clouds drift; routes scroll below | Draft |
 | **Curve reel** | Project cards on the inside of a curved wall turn slowly; numbered steps light up as the cards pass | Draft |
 | **Bento tiles** | A headline over soft raised tiles that rise under the pointer, and a bento of six cards: integrations, counting figures, a scanned portrait, a world map, avatars on orbits | Draft |
+| **Sky launch** | A sun behind pastel clouds; the headline arrives word by word, a rocket takes off through the sun, and the clouds rise to cover the hero as the page scrolls on | Draft |
 
 Later (WebGPU): **Black hole** (gravitational lensing on the headline), **Metaballs**.
 
 ## Sections
 
-What comes after the hero, animated against the scroll with GSAP (ScrollTrigger and Flip). The page keeps its own scroll speed; under reduced motion and below 768 px, sections show their final layout with short reveals. All six, under the gallery fan hero, on one page: `/demo`.
+What comes after the hero, animated against the scroll with GSAP (ScrollTrigger and Flip). The page keeps its own scroll speed; under reduced motion and below 768 px, sections show their final layout with short reveals. Three demo landing pages put them together under a hero, at `/demos`: Atelier Nine (gallery fan and the first six), Upwind (sky launch and the second collection) and Tapwire (iso deck and sections from both).
 
 | Section | Concept | Pinned | Status |
 | --- | --- | --- | --- |
@@ -51,6 +52,10 @@ What comes after the hero, animated against the scroll with GSAP (ScrollTrigger 
 | **Parallax columns** | A staggered two-column grid of cards whose columns travel at different speeds | No | Draft |
 | **Mosaic zoom** | A large image shrinks back into the heart of a mosaic while the other tiles gather around it | ~1.6 screens | Draft |
 | **Image marquee** | A coloured band of oversized words and images, its rows pushed sideways by the scroll | No | Draft |
+| **Bento assemble** | Bento tiles fly in from around the grid and lock into place; their figures count up as they land, a play badge turns with the scroll | ~1.8 screens | Draft |
+| **Portrait burst** | A stack of portraits rises behind a centred headline, then bursts into a constellation around it, with short facts between the faces | ~1.6 screens | Draft |
+| **Case track** | A row of case cards moves sideways with the scroll, the first wider with its story; a row you swipe on phones | As long as the row | Draft |
+| **Split word** | A giant word pulls its letters together, then parts so a card rises into the gap; a contact form fades in below | ~1.5 screens | Draft |
 
 Sections install like heroes (`npx shadcn@latest add @sharingan/card-journey`) into `components/sections/`, with `lib/sharingan/scroll/` and `gsap`. GSAP is free to use under its own [no-charge licence](https://gsap.com/standard-license), which is not an open-source licence; heroes do not use it.
 
@@ -137,6 +142,7 @@ On Vercel, one project:
 4. **M3b** · DOM heroes: the second engine, eight heroes for every browser.
 5. **M4** · Bridge with [Rasengan UI](https://github.com/rasengan-dev/rasengan-ui) v2: Sharingan backgrounds under its art directions.
 6. **S1–S3** · Sections below the hero ([RFC-0002](proposals/RFC-0002-Sections.md)): the GSAP scroll layer, six sections and a demo landing page.
+7. **S4–S7** · The second collection: four sections, the sky launch hero and a second demo page, the demos grouped under `/demos`.
 
 ## Contributing
 

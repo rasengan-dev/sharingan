@@ -188,3 +188,51 @@ export function boxWithin(element: HTMLElement, ancestor: HTMLElement) {
 
 /** A section's text, split into words for React: `<span data-sg-word>` each, spaces kept between. */
 export const wordsOf = (text: string) => text.split(/\s+/).filter(Boolean);
+
+/** A figure as it reads, split around its number: "2.5B+" → "", 2.5, "B+", one decimal. */
+function parseFigure(text: string) {
+	const match = text.match(/^(\D*?)(\d[\d,]*(?:\.\d+)?)(.*)$/);
+	if (!match) return null;
+	const [, prefix, digits, suffix] = match;
+	return { prefix, value: Number(digits.replace(/,/g, "")), suffix, decimals: digits.split(".")[1]?.length ?? 0, grouped: digits.includes(",") };
+}
+
+/**
+ * A figure that counts up while scrubbed: the one place a section changes
+ * text on scroll (RFC-0002, "Second collection"). The real figure stays in
+ * the DOM, transparent, so it keeps the width and screen readers read it; the
+ * counting digits are drawn over it, `aria-hidden`, in tabular figures. Text
+ * that holds no number is left alone.
+ */
+export function createCounter(element: HTMLElement) {
+	const figure = parseFigure((element.textContent ?? "").trim());
+	if (!figure) return null;
+	const format = new Intl.NumberFormat("en-US", { minimumFractionDigits: figure.decimals, maximumFractionDigits: figure.decimals, useGrouping: figure.grouped });
+	const digits = document.createElement("span");
+	digits.setAttribute("aria-hidden", "true");
+	Object.assign(digits.style, { position: "absolute", inset: "0", whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" });
+	const position = element.style.position;
+	const state = { progress: 1 };
+	const draw = () => (digits.textContent = `${figure.prefix}${format.format(figure.value * state.progress)}${figure.suffix}`);
+
+	return {
+		/** A tween target: 0 shows zero, 1 the figure. */
+		state,
+		draw,
+		start() {
+			const style = getComputedStyle(element);
+			if (style.position === "static") element.style.position = "relative";
+			// The figure turns transparent; the digits keep the colour it had.
+			digits.style.color = style.color;
+			element.style.color = "transparent";
+			element.append(digits);
+			state.progress = 0;
+			draw();
+		},
+		restore() {
+			digits.remove();
+			element.style.color = "";
+			element.style.position = position;
+		},
+	};
+}

@@ -1,12 +1,12 @@
 import type { ReactNode } from 'react';
 import { Link, useLocation } from 'rasengan';
 import { catalogueGroups } from '@/catalogue';
+import { demos } from '@/demo-list';
 
 /** Pages that are not components but belong in the catalogue's tree. */
 export const startLinks = [
   { href: '/components', title: 'Overview' },
   { href: '/docs', title: 'Installation' },
-  { href: '/demo', title: 'Landing page demo' },
 ];
 
 function NavItem({ href, title, tag, onNavigate }: { href: string; title: string; tag?: string; onNavigate?: () => void }) {
@@ -37,8 +37,8 @@ function NavGroup({ title, children }: { title: string; children: ReactNode }) {
 }
 
 /**
- * The catalogue's tree: getting started, then every hero by engine and every
- * section. Rendered in the desktop sidebar and in the mobile drawer.
+ * The catalogue's tree: getting started, the demo pages, then every hero by
+ * engine and every section. Rendered in the desktop sidebar and in the mobile drawer.
  */
 export function CatalogueNav({ onNavigate }: { onNavigate?: () => void }) {
   return (
@@ -46,6 +46,12 @@ export function CatalogueNav({ onNavigate }: { onNavigate?: () => void }) {
       <NavGroup title="Get started">
         {startLinks.map((link) => (
           <NavItem key={link.href} {...link} onNavigate={onNavigate} />
+        ))}
+      </NavGroup>
+      <NavGroup title={`Demos · ${demos.length}`}>
+        <NavItem href="/demos" title="All demos" onNavigate={onNavigate} />
+        {demos.map((demo) => (
+          <NavItem key={demo.slug} href={`/demos/${demo.slug}`} title={demo.title} onNavigate={onNavigate} />
         ))}
       </NavGroup>
       {catalogueGroups.map((group) => (

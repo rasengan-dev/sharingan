@@ -30,6 +30,8 @@ const lazyShiki = {
 
 export default defineConfig(async () => {
   return {
+    // The first demo lived at /demo before the demos were grouped (RFC-0002, "Demo pages").
+    redirects: async () => [{ source: '/demo', destination: '/demos/atelier-nine', permanent: true }],
     // The address `pnpm registry` and `pnpm posters` expect by default (Rasengan's own default is 5320).
     server: { development: { port: 3100 } },
     vite: {
