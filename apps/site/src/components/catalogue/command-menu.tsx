@@ -3,6 +3,7 @@ import { Search } from 'lucide-react';
 import { useNavigate } from 'rasengan';
 import { catalogue } from '@/catalogue';
 import { startLinks } from '@/components/catalogue/catalogue-nav';
+import { demos } from '@/demo-list';
 
 const OPEN_EVENT = 'sharingan:search';
 
@@ -18,7 +19,9 @@ const everything: Result[] = [
     detail: item.summary,
     group: item.kind === 'hero' ? `Heroes · ${item.tag}` : 'Sections',
   })),
+  ...demos.map((demo) => ({ href: `/demos/${demo.slug}`, title: demo.title, detail: demo.summary, group: 'Demos' })),
   ...startLinks.map((link) => ({ href: link.href, title: link.title, detail: '', group: 'Pages' })),
+  { href: '/demos', title: 'Demos', detail: 'Every demo landing page', group: 'Pages' },
 ];
 
 /** Every word of the query must appear in the title, the summary or the group. */

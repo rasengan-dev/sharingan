@@ -326,7 +326,7 @@ Later: `black-hole` (gravitational lensing on the headline), `gamepad-3d`
 | `gallery-fan` | object | a full-screen fan of artwork cards in CSS 3D; the nearest card rises, collaborator cursors drift between cards (added after v0.2, from a design reference) |
 | `trail-map` | object | a route that draws itself up a photo in a shaped frame (a computed `clip-path`), a walker, clouds at their own depth, a scrolling strip of routes (added after v0.2, from a design reference) |
 | `curve-reel` | object | a looping reel of project cards on the inside of a curved wall (an elliptic arc in CSS 3D, cards spaced by arc length), drag with momentum, numbered steps that light up as cards pass (added after v0.2, from a design reference) |
-| `sky-launch` | object | a sun behind three layers of SVG clouds; the headline arrives word by word, a rocket takes off and leaves a trail through the sun, and the clouds rise to cover the hero as it scrolls out (proposed with RFC-0002's second collection, from a design reference) |
+| `sky-launch` | object | a sun behind three layers of SVG clouds; the headline arrives word by word, a rocket takes off and leaves a trail through the sun, and the clouds rise to cover the hero as it scrolls out (added with RFC-0002's second collection, from a design reference) |
 | `iso-deck` | object | a macro pad in isometric line art (SVG built from code); a cursor selects the floating app tile, a tooltip types the tagline and the keys spell a word. Keys press under the pointer, typing the word "connects" the deck, and the front key is a link of its own (added after v0.2, from a design reference) |
 
 #### `iso-deck`

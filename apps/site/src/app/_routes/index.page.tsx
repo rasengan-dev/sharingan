@@ -123,8 +123,8 @@ const Home: PageComponent = () => {
               reduced motion.
             </p>
           </div>
-          <Link to="/demo" className="rounded-full border border-border px-4 py-2 text-sm transition-colors hover:border-foreground/30">
-            See them on a whole page →
+          <Link to="/demos" className="rounded-full border border-border px-4 py-2 text-sm transition-colors hover:border-foreground/30">
+            See them on whole pages →
           </Link>
         </div>
 

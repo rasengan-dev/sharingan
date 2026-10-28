@@ -32,8 +32,8 @@ const Components: PageComponent = () => {
         <p className="max-w-2xl text-muted-foreground">
           {catalogue.filter((item) => item.kind === 'hero').length} heroes for the top of a page and {catalogue.filter((item) => item.kind === 'section').length} sections
           for what follows it. Each one is copied into your project with the shadcn CLI, in React or as a Web Component.{' '}
-          <Link to="/demo" className="text-foreground underline underline-offset-4">
-            See them together on a landing page
+          <Link to="/demos" className="text-foreground underline underline-offset-4">
+            See them together on landing pages
           </Link>
           .
         </p>

@@ -47,6 +47,10 @@ import { BentoTilesHero } from '@/heroes/bento-tiles/bento-tiles';
 import { defineBentoTilesElement } from '@/heroes/bento-tiles/bento-tiles.element';
 import { meta as bentoTilesMeta } from '@/heroes/bento-tiles/meta';
 import * as bentoTilesSchema from '@/heroes/bento-tiles/schema';
+import { SkyLaunchHero } from '@/heroes/sky-launch/sky-launch';
+import { defineSkyLaunchElement } from '@/heroes/sky-launch/sky-launch.element';
+import { meta as skyLaunchMeta } from '@/heroes/sky-launch/meta';
+import * as skyLaunchSchema from '@/heroes/sky-launch/schema';
 import { IsoDeckHero } from '@/heroes/iso-deck/iso-deck';
 import { defineIsoDeckElement } from '@/heroes/iso-deck/iso-deck.element';
 import { meta as isoDeckMeta } from '@/heroes/iso-deck/meta';
@@ -541,6 +545,20 @@ export const heroes: HeroEntry[] = [
           </article>
         </div>
       </>
+    ),
+  },
+  {
+    meta: skyLaunchMeta,
+    schemas: schemasOf(skyLaunchSchema),
+    Hero: SkyLaunchHero,
+    defineElement: () => defineSkyLaunchElement(),
+    elementAttributes: { sun: 'oklch(0.82 0.13 75)', sky: 'oklch(0.9 0.05 250)', clouds: 'oklch(0.88 0.06 300)', launch: '4' },
+    elementChildren: (
+      <div>
+        <p className="sg-sl-eyebrow">Web Component · no framework</p>
+        <h2 className="text-5xl tracking-tight">&lt;sg-sky-launch&gt;</h2>
+        <p className="sg-sl-sub">The same engine, driven by attributes: a golden sun, a blue sky, lilac clouds and a slower climb. The sky is added behind the copy.</p>
+      </div>
     ),
   },
   {

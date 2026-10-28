@@ -51,8 +51,8 @@ const AppLayout: LayoutComponent = () => {
           <Link to="/components" className="hidden rounded-md px-3 py-2 text-muted-foreground hover:text-foreground sm:block">
             Components
           </Link>
-          <Link to="/demo" className="hidden rounded-md px-3 py-2 text-muted-foreground hover:text-foreground md:block">
-            Demo
+          <Link to="/demos" className="hidden rounded-md px-3 py-2 text-muted-foreground hover:text-foreground md:block">
+            Demos
           </Link>
           <Link to="/docs" className="hidden rounded-md px-3 py-2 text-muted-foreground hover:text-foreground sm:block">
             Docs
