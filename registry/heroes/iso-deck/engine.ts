@@ -88,7 +88,7 @@ export function createIsoDeck({ host, config }: DomHeroOptions<IsoDeckConfigInpu
 	const connectedLabel = () => deck.dataset.connectedLabel ?? host.dataset.connectedLabel ?? "Connected";
 
 	// The drawing, and the parts the engine moves. Drawn here unless the server already did.
-	type Parts = { keys: Map<string, SVGGElement>; letters: SVGGElement[]; bars: SVGRectElement[]; dial: SVGGElement | null; sway: SVGGElement | null; tile: SVGGElement | null };
+	type Parts = { keys: Map<string, SVGGElement>; letters: SVGGElement[]; bars: SVGRectElement[]; dial: SVGGElement | null; sway: SVGGElement | null };
 	let parts: Parts;
 	let layoutKey = "";
 	const draw = (force: boolean) => {
@@ -105,7 +105,6 @@ export function createIsoDeck({ host, config }: DomHeroOptions<IsoDeckConfigInpu
 			bars: [...art.querySelectorAll<SVGRectElement>(".sg-id-bar")],
 			dial: art.querySelector(".sg-id-dial"),
 			sway: art.querySelector(".sg-id-sway"),
-			tile: art.querySelector(".sg-id-tile-body"),
 		};
 		levels = new Float32Array(parts.bars.length);
 		written = new Float32Array(parts.bars.length).fill(-1);
@@ -131,6 +130,8 @@ export function createIsoDeck({ host, config }: DomHeroOptions<IsoDeckConfigInpu
 	const still = () => {
 		deck.dataset.cursor = "out";
 		deck.dataset.select = "";
+		delete deck.dataset.drag;
+		delete deck.dataset.press;
 		delete deck.dataset.typing;
 		const text = connected ? connectedLabel() : tagline();
 		tip.dataset.text = text;
@@ -188,8 +189,8 @@ export function createIsoDeck({ host, config }: DomHeroOptions<IsoDeckConfigInpu
 		}, CONNECTED);
 	};
 
-	// The story, while nobody plays: spell, hold, close, the cursor dives into the tile and comes back
-	// out, selects it and types the tagline, which is the still frame again.
+	// The story, while nobody plays: spell, hold, close; the cursor deselects the tile, drags a marquee
+	// over it as in a design tool, and the tooltip types the tagline, which is the still frame again.
 	let story: AbortController | null = null;
 	let idleTimer = 0;
 	const sleep = (ms: number, until: AbortSignal) =>
@@ -206,18 +207,25 @@ export function createIsoDeck({ host, config }: DomHeroOptions<IsoDeckConfigInpu
 			}
 			await sleep(1500, until);
 			delete deck.dataset.tip;
+			await sleep(350, until);
+			// A click on the empty canvas drops the selection.
+			deck.dataset.press = "";
+			await sleep(110, until);
+			delete deck.dataset.press;
 			delete deck.dataset.select;
-			await sleep(260, until);
-			deck.dataset.cursor = "in";
-			await sleep(420, until);
-			parts.tile?.setAttribute("data-gulp", "");
 			await sleep(450, until);
-			parts.tile?.removeAttribute("data-gulp");
-			await sleep(900, until);
+			// Then a marquee, dragged from above the tile's corner to past the opposite one.
+			deck.dataset.cursor = "start";
+			await sleep(800, until);
+			deck.dataset.press = "";
+			await sleep(120, until);
+			deck.dataset.drag = "";
 			deck.dataset.cursor = "out";
-			await sleep(700, until);
+			await sleep(950, until);
+			delete deck.dataset.press;
+			delete deck.dataset.drag;
 			deck.dataset.select = "";
-			await sleep(380, until);
+			await sleep(420, until);
 			const text = tagline();
 			if (text) {
 				tip.dataset.text = "";
@@ -241,7 +249,6 @@ export function createIsoDeck({ host, config }: DomHeroOptions<IsoDeckConfigInpu
 		if (!story) return;
 		story.abort();
 		story = null;
-		parts.tile?.removeAttribute("data-gulp");
 		still();
 	};
 	/** The visitor is playing: the story steps aside, and comes back after a quiet moment. */

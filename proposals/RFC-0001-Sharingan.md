@@ -336,10 +336,16 @@ keeps its look and its loop, and makes the deck something to play with.
 
 - **Geometry from code.** An isometric helper turns boxes
   (`x, y, z, w, d, h`) into three face polygons and their outlines, in one
-  SVG (`deck.ts`, which React also runs on the server). The deck is laid
+  SVG (`deck.ts`, which React also runs on the server). Like a product
+  shot, it is larger than its panel and reaches past the panel's left edge
+  into the gap, never into the copy; the cable leaves through the panel's
+  right edge, or its bottom when it is on the left. The deck is laid
   out from the config: a narrow strip at the back (knob, screen), the
   letters (3–6, `"START"` by default), and with two rows a front row with
-  the wide key and the front key. Boxes are drawn back to front; each
+  the wide key and the front key. Every box has rounded vertical edges
+  (a rounded rectangle on its plane, extruded: the wall is a band between
+  the bottom and top outlines, shaded left and right of the front corner).
+  Boxes are drawn back to front; each
   key's cap sits in a clip that ends at the plate, so a pressed cap sinks
   instead of growing. It is redrawn only when the layout changes, never per
   frame. The object stays a deck: other objects in the same style would
@@ -347,11 +353,15 @@ keeps its look and its loop, and makes the deck something to play with.
 - **Loop.** About eight seconds, as in the reference: from the still frame
   (cursor out, tile selected, tagline in the tooltip) the keys press one by
   one to spell the word and the meter reacts; the tooltip closes, the
-  cursor dives back into the floating tile, comes out, selects it and types
-  the tagline again. The dotted line from the tile follows the axes (down,
-  then along the deck) to the screen. The loop is three attributes on the
-  deck and CSS transitions; the meter, the knob's dial and the cable share
-  one frame callback, only while the hero is on screen.
+  cursor clicks the empty canvas to drop the selection, then drags a
+  marquee over the floating tile as in a design tool (the marquee and the
+  cursor share one duration and curve, so its corner stays on the tip),
+  the selection snaps on with its handles and size, and the tooltip types
+  the tagline again. The cursor never leaves the picture. The dotted line
+  from the tile follows the axes (down, then along the deck) to the screen.
+  The loop is a few attributes on the deck and CSS transitions; the meter,
+  the knob's dial and the cable share one frame callback, only while the
+  hero is on screen.
 - **Interaction.** A key under the pointer presses (it travels down, its
   shadow tightens, the meter jumps) and the loop waits until the pointer
   has been still for about three seconds. Typing the word on the page

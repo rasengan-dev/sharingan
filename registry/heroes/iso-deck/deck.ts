@@ -27,25 +27,77 @@ const escape = (text: string) => text.replace(/[&<>"]/g, (char) => `&#${char.cha
 /** Draws on the horizontal plane at height z, in world units × UNIT. */
 const plane = (z: number) => `matrix(${round(COS * 1000) / 1000} ${SIN} ${-round(COS * 1000) / 1000} ${SIN} 0 ${round(-z * UNIT)})`;
 
-type Box = { x0: number; y0: number; x1: number; y1: number; z0: number; z1: number; taper?: number };
+/** A box, its vertical edges rounded by `r` (world units); a keycap's top is inset by `taper`. */
+type Box = { x0: number; y0: number; x1: number; y1: number; z0: number; z1: number; taper?: number; r?: number };
 
-/** The three visible faces of a box whose top may be inset (a keycap). */
-function faces({ x0, y0, x1, y1, z0, z1, taper = 0 }: Box) {
+/** Points along a rounded rectangle on a horizontal plane, in world units, as one closed loop. */
+function loop(x0: number, y0: number, x1: number, y1: number, radius: number): Point[] {
+	const r = Math.max(0, Math.min(radius, (x1 - x0) / 2, (y1 - y0) / 2));
+	const corners: [number, number, number][] = [[x1 - r, y1 - r, 0], [x0 + r, y1 - r, 90], [x0 + r, y0 + r, 180], [x1 - r, y0 + r, 270]];
+	const steps = r > 0 ? 5 : 0;
+	const list: Point[] = [];
+	for (const [cx, cy, from] of corners) {
+		for (let i = 0; i <= steps; i++) {
+			const angle = ((from + (90 * i) / Math.max(1, steps)) * Math.PI) / 180;
+			list.push([cx + r * Math.cos(angle), cy + r * Math.sin(angle)]);
+		}
+	}
+	return list;
+}
+
+/**
+ * The visible faces of a rounded box: its top, and the side wall seen from the front, the band
+ * between the bottom outline and the top one, split at the front corner into a left (+y) and a
+ * right (+x) shade.
+ */
+function faces({ x0, y0, x1, y1, z0, z1, taper = 0, r = 0 }: Box) {
 	const t = taper;
-	const A = iso(x0, y1, z0), B = iso(x1, y1, z0), C = iso(x1, y0, z0);
-	const a = iso(x0 + t, y1 - t, z1), b = iso(x1 - t, y1 - t, z1), c = iso(x1 - t, y0 + t, z1), d = iso(x0 + t, y0 + t, z1);
+	const bottomWorld = loop(x0, y0, x1, y1, r);
+	const topWorld = loop(x0 + t, y0 + t, x1 - t, y1 - t, Math.max(0.03, r - t * 0.6));
+	const bottom = bottomWorld.map(([x, y]) => iso(x, y, z0));
+	const top = topWorld.map(([x, y]) => iso(x, y, z1));
+	/** From the leftmost to the rightmost point on screen, along the front (lower) half; and the front corner's index in it. */
+	const front = (screen: Point[], world: Point[]) => {
+		const n = screen.length;
+		let left = 0, right = 0;
+		screen.forEach(([x], i) => {
+			if (x < screen[left]![0]) left = i;
+			if (x > screen[right]![0]) right = i;
+		});
+		const walk = (step: number) => {
+			const path: number[] = [left];
+			for (let i = left; i !== right; ) path.push((i = (i + step + n) % n));
+			return path;
+		};
+		const a = walk(1), b = walk(-1);
+		const mean = (path: number[]) => path.reduce((sum, i) => sum + screen[i]![1], 0) / path.length;
+		const path = mean(a) >= mean(b) ? a : b;
+		const back = path === a ? b : a;
+		let corner = 0;
+		path.forEach((index, i) => {
+			const [wx, wy] = world[index]!;
+			const [cx, cy] = world[path[corner]!]!;
+			if (wx + wy > cx + cy) corner = i;
+		});
+		return { path, corner, back };
+	};
+	const fb = front(bottom, bottomWorld), ft = front(top, topWorld);
+	const at = (screen: Point[], indexes: number[]) => indexes.map((i) => screen[i]!);
+	const bottomFront = at(bottom, fb.path), topFront = at(top, ft.path);
 	return {
-		left: [A, B, b, a],
-		right: [B, C, c, b],
-		top: [a, b, c, d],
+		left: [...bottomFront.slice(0, fb.corner + 1), ...topFront.slice(0, ft.corner + 1).reverse()],
+		right: [...bottomFront.slice(fb.corner), ...topFront.slice(ft.corner).reverse()],
+		/** The silhouette's lower edge: up the left side, along the bottom, up the right side. */
+		edge: [topFront[0]!, ...bottomFront, topFront[topFront.length - 1]!],
+		top,
 		/** The outline of the whole box on screen. */
-		hull: [A, B, C, c, d, a],
+		hull: [...bottomFront, ...at(top, ft.back).reverse()],
 	};
 }
 
 function drawBox(box: Box, extra = "") {
 	const f = faces(box);
-	return `<polygon class="sg-id-l" points="${points(f.left)}"/><polygon class="sg-id-r" points="${points(f.right)}"/><polygon class="sg-id-t" points="${points(f.top)}"/>${extra}`;
+	return `<polygon class="sg-id-l sg-id-band" points="${points(f.left)}"/><polygon class="sg-id-r sg-id-band" points="${points(f.right)}"/><polyline class="sg-id-edge" points="${points(f.edge)}"/><polygon class="sg-id-t" points="${points(f.top)}"/>${extra}`;
 }
 
 /** Where a key may be seen: its footprint, from the plate up. Clipping the cap to it hides what sinks below. */
@@ -130,8 +182,8 @@ export function drawDeck(config: IsoDeckConfig, { id, cta }: { id: string; cta?:
 	const track = (list: Point[]) => (seen.push(...list), list);
 
 	// The plate: a tray, then a slightly smaller deck on it.
-	const tray: Box = { x0: -0.36, y0: -0.36, x1: columns + 0.36, y1: rows + 0.36, z0: 0, z1: 0.3 };
-	const top: Box = { x0: -0.2, y0: -0.2, x1: columns + 0.2, y1: rows + 0.2, z0: 0.3, z1: DECK_Z };
+	const tray: Box = { x0: -0.36, y0: -0.36, x1: columns + 0.36, y1: rows + 0.36, z0: 0, z1: 0.3, r: 0.34 };
+	const top: Box = { x0: -0.2, y0: -0.2, x1: columns + 0.2, y1: rows + 0.2, z0: 0.3, z1: DECK_Z, r: 0.24 };
 	track(faces(tray).hull);
 	const clips: string[] = [];
 	const parts: string[] = [`<g class="sg-id-plate" aria-hidden="true">${drawBox(tray)}${drawBox(top)}</g>`];
@@ -149,15 +201,16 @@ export function drawDeck(config: IsoDeckConfig, { id, cta }: { id: string; cta?:
 	if (config.cable !== "none") {
 		const right = config.cable === "right";
 		const plug: Box = right
-			? { x0: columns + 0.36, x1: columns + 0.72, y0: rows / 2 - 0.13, y1: rows / 2 + 0.13, z0: 0.06, z1: 0.26 }
-			: { x0: 0.6, x1: 0.86, y0: rows + 0.36, y1: rows + 0.72, z0: 0.06, z1: 0.26 };
+			? { x0: columns + 0.36, x1: columns + 0.72, y0: rows / 2 - 0.13, y1: rows / 2 + 0.13, z0: 0.06, z1: 0.26, r: 0.05 }
+			: { x0: 0.6, x1: 0.86, y0: rows + 0.36, y1: rows + 0.72, z0: 0.06, z1: 0.26, r: 0.05 };
 		track(faces(plug).hull);
 		const [ox, oy] = right ? iso(columns + 0.72, rows / 2, 0.16) : iso(0.73, rows + 0.72, 0.16);
 		const coil: Point[] = [[0, 0], [12, 0]];
 		for (let t = 0; t <= Math.PI * 14; t += 0.2) coil.push([12 + t * 2.3 - 7 * Math.sin(t), 7 - 7 * Math.cos(t)]);
-		coil.push([coil[coil.length - 1]![0] + 120, 4]);
+		coil.push([coil[coil.length - 1]![0] + 600, 4]);
 		const path = `M${coil.map(([x, y]) => `${round(x)} ${round(y)}`).join("L")}`;
-		const turn = right ? "rotate(-8)" : "rotate(188) scale(1 -1)";
+		// Out of the panel on the right, or down toward its bottom on the left, never across the copy.
+		const turn = right ? "rotate(-8)" : "rotate(68) scale(1 -1)";
 		parts.push(
 			`<g class="sg-id-cable" aria-hidden="true"><g transform="translate(${round(ox)} ${round(oy)}) ${turn}"><g class="sg-id-sway"><path class="sg-id-wire" d="${path}"/></g></g>${drawBox(plug)}</g>`,
 		);
@@ -165,7 +218,7 @@ export function drawDeck(config: IsoDeckConfig, { id, cta }: { id: string; cta?:
 
 	// The keys, the knob and the screen, back to front.
 	const items = cells.map((cell) => {
-		const box: Box = { x0: cell.x + GAP, y0: cell.y + GAP, x1: cell.x + cell.w - GAP, y1: cell.y + cell.d - GAP, z0: DECK_Z, z1: DECK_Z + (cell.kind === "cta" ? 0.5 : 0.42), taper: TAPER };
+		const box: Box = { x0: cell.x + GAP, y0: cell.y + GAP, x1: cell.x + cell.w - GAP, y1: cell.y + cell.d - GAP, z0: DECK_Z, z1: DECK_Z + (cell.kind === "cta" ? 0.5 : 0.42), taper: TAPER, r: cell.kind === "screen" ? 0.08 : 0.13 };
 		return { cell, box };
 	});
 	let linkHull: Point[] | null = null;
@@ -231,14 +284,19 @@ export function drawDeck(config: IsoDeckConfig, { id, cta }: { id: string; cta?:
 	}
 
 	// The tile, its selection box and the cursor, over everything.
-	const tile: Box = { x0: tx, y0: ty, x1: tx + 1, y1: ty + 1, z0: tz, z1: tz + 0.3 };
+	const tile: Box = { x0: tx, y0: ty, x1: tx + 1, y1: ty + 1, z0: tz, z1: tz + 0.3, r: 0.16 };
 	const tileShape = faces(tile);
 	track(tileShape.hull);
-	const tileTop = iso(tx + 0.5, ty + 0.5, tz + 0.3);
 	const xs = tileShape.hull.map(([x]) => x), ys = tileShape.hull.map(([, y]) => y);
 	const box = { x0: Math.min(...xs) - 5, y0: Math.min(...ys) - 5, x1: Math.max(...xs) + 5, y1: Math.max(...ys) + 5 };
 	const handle = (x: number, y: number) => `<rect x="${round(x - 3)}" y="${round(y - 3)}" width="6" height="6"/>`;
+	// The cursor drags a marquee from above the tile's top-left to past its bottom-right, as in a
+	// design tool, and rests there; the marquee is drawn at full size and scaled from its start.
+	const start: Point = [box.x0 - 12, box.y0 - 10];
 	const out: Point = [box.x1 + 6, box.y1 + 2];
+	track([start]);
+	const size = `${Math.round(box.x1 - box.x0) * 2} × ${Math.round(box.y1 - box.y0) * 2}`;
+	const pill = { w: size.length * 5.2 + 10, h: 13, x: (box.x0 + box.x1) / 2, y: box.y1 + 6 };
 	// The spinner lies flat on its own plane, floating above the knob (or the first key), and turns in it.
 	const knobCell = cells.find((cell) => cell.kind === "knob") ?? cells[0]!;
 	const spinAt = { x: knobCell.x + 0.5, y: knobCell.y + knobCell.d / 2, z: DECK_Z + 1.35 };
@@ -247,8 +305,9 @@ export function drawDeck(config: IsoDeckConfig, { id, cta }: { id: string; cta?:
 	parts.push(
 		`<g class="sg-id-spin" aria-hidden="true" transform="${plane(spinAt.z)}"><g transform="translate(${round(spinAt.x * UNIT)} ${round(spinAt.y * UNIT)})"><circle r="${round(spinR * UNIT)}"/></g></g>`,
 		`<g class="sg-id-tile" aria-hidden="true"><ellipse class="sg-id-halo" cx="${round(lead[0]![0])}" cy="${round(lead[0]![1])}" rx="${round(1.1 * UNIT)}" ry="${round(0.64 * UNIT)}"/><g class="sg-id-tile-body">${drawBox(tile, `<g transform="${plane(tile.z1)}"><g transform="translate(${(tx + 0.5) * UNIT - 6} ${(ty + 0.5) * UNIT - 9}) scale(.8)"><path class="sg-id-emblem" d="${ARROW}"/></g></g>`)}</g></g>`,
-		`<g class="sg-id-select" aria-hidden="true"><rect class="sg-id-frame" x="${round(box.x0)}" y="${round(box.y0)}" width="${round(box.x1 - box.x0)}" height="${round(box.y1 - box.y0)}"/>${handle(box.x0, box.y0)}${handle(box.x1, box.y0)}${handle(box.x0, box.y1)}${handle(box.x1, box.y1)}</g>`,
-		`<g class="sg-id-cursor" aria-hidden="true" style="--in-x:${round(tileTop[0])}px;--in-y:${round(tileTop[1])}px;--out-x:${round(out[0])}px;--out-y:${round(out[1])}px"><path d="${ARROW}"/></g>`,
+		`<rect class="sg-id-marquee" aria-hidden="true" x="${round(start[0])}" y="${round(start[1])}" width="${round(out[0] - start[0])}" height="${round(out[1] - start[1])}" style="transform-origin:${round(start[0])}px ${round(start[1])}px"/>`,
+		`<g class="sg-id-select" aria-hidden="true"><rect class="sg-id-frame" x="${round(box.x0)}" y="${round(box.y0)}" width="${round(box.x1 - box.x0)}" height="${round(box.y1 - box.y0)}"/>${handle(box.x0, box.y0)}${handle(box.x1, box.y0)}${handle(box.x0, box.y1)}${handle(box.x1, box.y1)}<rect class="sg-id-size" x="${round(pill.x - pill.w / 2)}" y="${round(pill.y)}" width="${round(pill.w)}" height="${pill.h}" rx="3"/><text class="sg-id-size-text" x="${round(pill.x)}" y="${round(pill.y + pill.h / 2)}">${size}</text></g>`,
+		`<g class="sg-id-cursor" aria-hidden="true" style="--start-x:${round(start[0])}px;--start-y:${round(start[1])}px;--out-x:${round(out[0])}px;--out-y:${round(out[1])}px"><path d="${ARROW}"/></g>`,
 	);
 
 	// The tooltip opens beside the cursor; the drawing makes room for it.
