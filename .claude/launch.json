@@ -1,0 +1,22 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "site",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "dev"
+      ],
+      "port": 3100
+    },
+    {
+      "name": "site-3101",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "cd apps/site && PORT=3101 exec node node_modules/rasengan/dist/server/dev/server"
+      ],
+      "port": 3101
+    }
+  ]
+}
