@@ -47,6 +47,10 @@ import { BentoTilesHero } from '@/heroes/bento-tiles/bento-tiles';
 import { defineBentoTilesElement } from '@/heroes/bento-tiles/bento-tiles.element';
 import { meta as bentoTilesMeta } from '@/heroes/bento-tiles/meta';
 import * as bentoTilesSchema from '@/heroes/bento-tiles/schema';
+import { IsoDeckHero } from '@/heroes/iso-deck/iso-deck';
+import { defineIsoDeckElement } from '@/heroes/iso-deck/iso-deck.element';
+import { meta as isoDeckMeta } from '@/heroes/iso-deck/meta';
+import * as isoDeckSchema from '@/heroes/iso-deck/schema';
 import * as conicRaysSchema from '@/heroes/conic-rays/schema';
 import { AuroraMeshHero } from '@/heroes/aurora-mesh/aurora-mesh';
 import { defineAuroraMeshElement } from '@/heroes/aurora-mesh/aurora-mesh.element';
@@ -537,6 +541,23 @@ export const heroes: HeroEntry[] = [
           </article>
         </div>
       </>
+    ),
+  },
+  {
+    meta: isoDeckMeta,
+    schemas: schemasOf(isoDeckSchema),
+    Hero: IsoDeckHero,
+    defineElement: () => defineIsoDeckElement(),
+    elementAttributes: { keys: 'HELLO', 'wide-key': 'Deploy', accent: 'oklch(0.72 0.17 255)', cable: 'left', 'data-tagline': 'Type HELLO to wake the deck up.', 'data-connected-label': 'Hello to you too.' },
+    elementChildren: (
+      <div>
+        <p className="sg-id-eyebrow">Web Component · no framework</p>
+        <h2 className="text-5xl font-semibold tracking-tight">&lt;sg-iso-deck&gt;</h2>
+        <p className="sg-id-sub">The same engine, driven by attributes: another word, a blue accent and the cable on the left. The deck is drawn after the copy.</p>
+        <a data-sg-key="" href="#top">
+          Docs
+        </a>
+      </div>
     ),
   },
 ];

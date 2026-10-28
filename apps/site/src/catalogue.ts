@@ -16,6 +16,7 @@ import { meta as galleryFanMeta } from '@/heroes/gallery-fan/meta';
 import { meta as trailMapMeta } from '@/heroes/trail-map/meta';
 import { meta as curveReelMeta } from '@/heroes/curve-reel/meta';
 import { meta as bentoTilesMeta } from '@/heroes/bento-tiles/meta';
+import { meta as isoDeckMeta } from '@/heroes/iso-deck/meta';
 import { meta as cardJourneyMeta } from '@/sections/card-journey/meta';
 import { meta as pinnedRevealMeta } from '@/sections/pinned-reveal/meta';
 import { meta as scrollReadMeta } from '@/sections/scroll-read/meta';
@@ -40,7 +41,7 @@ export type CatalogueItem = {
 };
 
 export const catalogue: CatalogueItem[] = [
-  ...[auroraMeshMeta, inkFlowMeta, gravityFieldMeta, reactionDiffusionMeta, particleTypeMeta, liquidGlassMeta, gamepadMeta, holoCardMeta, splitHeadlineMeta, marqueeTypeMeta, terminalBootMeta, appWindowMeta, beamGridMeta, conicRaysMeta, galleryFanMeta, trailMapMeta, curveReelMeta, bentoTilesMeta].map(
+  ...[auroraMeshMeta, inkFlowMeta, gravityFieldMeta, reactionDiffusionMeta, particleTypeMeta, liquidGlassMeta, gamepadMeta, holoCardMeta, splitHeadlineMeta, marqueeTypeMeta, terminalBootMeta, appWindowMeta, beamGridMeta, conicRaysMeta, galleryFanMeta, trailMapMeta, curveReelMeta, bentoTilesMeta, isoDeckMeta].map(
     (meta): CatalogueItem => ({
       name: meta.name,
       title: meta.title,

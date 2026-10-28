@@ -1,6 +1,6 @@
 # RFC-0002: Sections — the animated sections below the hero
 
-- Status: Draft (S1, S2 and S3 implemented: `sharingan-scroll`, the six sections in React and as Web Components, `/sections/[name]` and `/demo` on the site)
+- Status: Draft (S1, S2 and S3 implemented: `sharingan-scroll`, the six sections in React and as Web Components, `/sections/[name]` and `/demo` on the site; S4–S7, the second collection, proposed)
 - Author: Dilane Kombou
 - Created: 2026-10-27
 - Amends: [RFC-0001](RFC-0001-Sharingan.md), non-goal "Full pages or non-hero sections"
@@ -233,7 +233,8 @@ Why GSAP rather than CSS scroll-driven animations or hand-written code:
   through it, the props tables and the Customize panel, as for heroes.
 - The home page lists both collections, with a filter.
 - A demo page, `/demo`, combines `gallery-fan` with all six sections, in the
-  spirit of the design reference.
+  spirit of the design reference. (The second collection groups the demos
+  under `/demos`; see "Demo pages".)
 - `pnpm posters` renders each section's top (4:3, `?motion=final`) for its
   card, light and dark.
 
@@ -250,6 +251,92 @@ Why GSAP rather than CSS scroll-driven animations or hand-written code:
 
 `card-journey` comes first: it is the hardest and proves the scroll lib.
 
+### Second collection
+
+A second design reference (a growth-consultancy landing page by Qclay,
+also shared on Pinterest as a screen recording) adds four moments the first
+collection does not cover. Each part of that page starts from a clean white
+stage and has one assembly moment, timed to the scroll: tiles that lock
+into a bento, portraits that burst into a constellation, a row of cases
+moving sideways, a giant word that a card splits open. They are taken here
+as four sections, plus one hero, under the rules above.
+
+| Section | Idea | Pinned |
+|---|---|---|
+| `bento-assemble` | bento tiles start spread out from the grid's centre, small and transparent, and lock into place in a stagger; figures marked `data-count` count up on the same timeline; a play badge ringed by circular text turns with the scroll | yes, about 2 screens |
+| `portrait-burst` | a stack of portrait cards rises behind a centred headline, then bursts out to its slots around it, with small stat pills set between the cards; on exit each card drifts up at its own speed | yes, about 1.5 screens |
+| `case-track` | a row of case cards, the first wider and holding the story, moves sideways as the page scrolls, with a progress bar and arrow buttons | yes, as long as the row overflows |
+| `split-word` | a giant word, its letters pulled together from wide spacing, parts at a set letter; a card rises into the gap, then the content below (a form, links) fades in | yes, about 1.5 screens |
+
+The hero, `sky-launch`, is listed in RFC-0001's DOM collection: a sun
+behind three layers of SVG clouds, a headline that arrives word by word, a
+rocket that takes off and leaves a trail through the sun, and clouds that
+rise to cover the hero as it scrolls out. It stays on the core's loop, with
+a passive scroll listener for the exit (as `marquee-type` does), not GSAP.
+
+The reference also has a services part (two large frosted cards with a
+figure each). It is left out: it is `bento-assemble` with two tiles.
+
+**How each one meets the rules:**
+
+- **`bento-assemble`.** The final layout is a CSS grid; tiles are any
+  children with a size (`wide`, `tall`, `small`), so it is not tied to one
+  bento. Unlike the `bento-tiles` hero, whose bento is still and whose tiles
+  answer the pointer, the motion here is the assembly, driven by the scroll.
+  Start poses are measured once per build from each tile's offset to the
+  grid's centre.
+- **`portrait-burst`.** Slots are set in CSS (positions in percent of the
+  stage), so the constellation is the no-JavaScript layout. The stack is the
+  same cards translated to the centre. Pills fade in after the burst. Below
+  768 px: a grid of portraits under the headline, revealed once.
+- **`case-track`.** The track scrolls sideways by `translateX` only; the pin
+  lasts the track's overflow, measured once per build. Tabbing to a card, or
+  pressing an arrow, scrolls the page to the point where that card is in
+  view. Below 768 px: no pin, a native horizontal row with scroll snap.
+- **`split-word`.** No `letter-spacing` is animated: each letter is its own
+  span and moves by `translateX`. The final layout is the two halves of the
+  word with the card between them (stacked below 768 px). `content.split`
+  sets the letter where the word parts.
+- **Counters** are the one exception to "transforms and opacity only": a
+  figure's text changes while scrubbed. It uses tabular figures and reserves
+  the final value's width, so nothing reflows, and the animated digits are
+  `aria-hidden` beside the real value for screen readers. Under `reduced`,
+  `off` and `final`, figures show their final value.
+- **No blur.** The reference fades things in with blur; these sections use
+  opacity and scale, which stay within the scroll-frame budget.
+
+**Colour.** Like the first six, each section takes the page's tokens
+(`--foreground`, `--muted-foreground`, `--background`) for ink and paper,
+so it fits any site. It adds two accents, `--sg-<prefix>-accent` (coral,
+`#ee8a7b`) and `--sg-<prefix>-accent-2` (sage, `#b9ccb1`), which colour the
+tiles, pills and the split card in the example. They follow the dark tone
+like the heroes do (`.dark .sg-…` and `[data-tone="dark"]`), with a deeper
+coral and a dark sage. Changing two variables restyles a section to a
+brand; nothing in the engines depends on them.
+
+**Images.** People are new to the collection: `portrait-burst` needs about
+ten portraits, `bento-assemble` a portrait and four avatars, `case-track`
+two or three. They are Unsplash photos (Unsplash License), cropped to WebP
+under `public/sharingan/people`, with a `CREDITS.md` like the other folders.
+`case-track` also reuses images from `reel`.
+
+### Demo pages
+
+The site gets more than one demo, grouped under `/demos`:
+
+- `/demos`: a list of the demo pages, each with its poster and the pieces
+  it uses.
+- `/demos/atelier-nine`: the existing page, moved from `/demo`, which now
+  redirects there.
+- `/demos/upwind`: Upwind, a made-up growth studio for startups, in the
+  reference's spirit but with its own name and copy: `sky-launch`, then
+  `bento-assemble`, `scroll-read`, `portrait-burst`, `case-track` and
+  `split-word` as its contact block. It shows that a first-collection
+  section sits well beside the new ones.
+
+The catalogue nav's "Landing page demo" link becomes a "Demos" group with
+one entry per page. Demo pages stay out of the registry.
+
 ## Milestones
 
 1. **S1 — Scroll lib and first section.** Done: `sharingan-scroll`,
@@ -261,6 +348,13 @@ Why GSAP rather than CSS scroll-driven animations or hand-written code:
    gzip (source), under the 12 KB budget.
 2. **S2 — The rest of the initial collection.** Done.
 3. **S3 — Demo page** combining `gallery-fan` and the sections. Done, at `/demo`.
+4. **S4 — `bento-assemble` and the counters.** The hardest of the second
+   collection: measured start poses and the counter exception. Adds the
+   `people` images.
+5. **S5 — `portrait-burst`, `case-track` and `split-word`.**
+6. **S6 — `sky-launch`**, as a hero (RFC-0001).
+7. **S7 — Demo pages**: `/demos`, the move of Atelier Nine with the
+   redirect from `/demo`, and Upwind.
 
 ## Alternatives considered
 

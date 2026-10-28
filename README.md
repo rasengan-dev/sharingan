@@ -5,7 +5,7 @@ Two engines for heroes: **WebGPU** heroes draw their background on the GPU with 
 
 Text, links and buttons always stay in the DOM. Colours come from your CSS variables; a WebGPU hero shows a still poster when WebGPU or motion is unavailable.
 
-> **Status: v0.2.** The eighteen heroes (six WebGPU, twelve DOM) are live at [sharingan.hiraiship.app](https://sharingan.hiraiship.app). The design is in [RFC-0001](proposals/RFC-0001-Sharingan.md); the six sections below the hero (v0.3, local for now) follow [RFC-0002](proposals/RFC-0002-Sections.md).
+> **Status: v0.2.** The eighteen heroes (six WebGPU, twelve DOM) are live at [sharingan.hiraiship.app](https://sharingan.hiraiship.app). The design is in [RFC-0001](proposals/RFC-0001-Sharingan.md); the six sections below the hero (v0.3, local for now) follow [RFC-0002](proposals/RFC-0002-Sections.md); the iso deck hero (local for now) is in RFC-0001.
 
 ## Heroes
 
