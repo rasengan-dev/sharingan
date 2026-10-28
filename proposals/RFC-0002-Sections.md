@@ -349,6 +349,9 @@ The site gets more than one demo, grouped under `/demos`:
   `bento-assemble`, `scroll-read`, `portrait-burst`, `case-track` and
   `split-word` as its contact block. It shows that a first-collection
   section sits well beside the new ones.
+- `/demos/tapwire`: Tapwire, a made-up wallet connection service, with
+  the `iso-deck` hero (RFC-0001, DOM collection), then `bento-assemble`,
+  `scroll-read`, `case-track` and `split-word` with Tapwire's own copy.
 
 The catalogue nav's "Landing page demo" link becomes a "Demos" group with
 one entry per page. Demo pages stay out of the registry.

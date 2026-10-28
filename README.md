@@ -42,7 +42,7 @@ Later (WebGPU): **Black hole** (gravitational lensing on the headline), **Metaba
 
 ## Sections
 
-What comes after the hero, animated against the scroll with GSAP (ScrollTrigger and Flip). The page keeps its own scroll speed; under reduced motion and below 768 px, sections show their final layout with short reveals. Two demo landing pages put them together under a hero, at `/demos`: Atelier Nine (gallery fan and the first six) and Upwind (sky launch and the second collection).
+What comes after the hero, animated against the scroll with GSAP (ScrollTrigger and Flip). The page keeps its own scroll speed; under reduced motion and below 768 px, sections show their final layout with short reveals. Three demo landing pages put them together under a hero, at `/demos`: Atelier Nine (gallery fan and the first six), Upwind (sky launch and the second collection) and Tapwire (iso deck and sections from both).
 
 | Section | Concept | Pinned | Status |
 | --- | --- | --- | --- |

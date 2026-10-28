@@ -422,8 +422,7 @@ Separate project, shared conventions:
 4. **M3b — DOM heroes.** Done: the core split by engine, the Noa Pad
    ported as `gamepad`, and the rest of the DOM collection (v0.2), each in
    React and as a Web Component.
-5. **M3c — `iso-deck`.** Done; the Tapwire demo lands with the `/demos`
-   pages (RFC-0002, S7).
+5. **M3c — `iso-deck`** and the Tapwire demo. Done.
 6. **M4 — Bridge.** Rasengan UI v2 integration and a first hero there.
 
 ## Alternatives considered

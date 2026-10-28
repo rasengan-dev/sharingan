@@ -26,4 +26,11 @@ export const demos: DemoEntry[] = [
     hero: 'sky-launch',
     sections: ['bento-assemble', 'scroll-read', 'portrait-burst', 'case-track', 'split-word'],
   },
+  {
+    slug: 'tapwire',
+    title: 'Tapwire',
+    summary: 'A made-up wallet connection service: the iso deck hero, then sections from both collections, in mint and violet.',
+    hero: 'iso-deck',
+    sections: ['bento-assemble', 'scroll-read', 'case-track', 'split-word'],
+  },
 ];
