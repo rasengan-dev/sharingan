@@ -5,7 +5,7 @@ Before a large change (a new hero, a change to the core), open an issue first so
 
 ## Set up
 
-You need **Node.js 20.18+** (see `.nvmrc`), **pnpm 10** (`corepack enable` installs the version pinned in `package.json`) and a browser with WebGPU for the WebGPU heroes (recent Chrome or Edge; Safari and Firefox work on recent versions). DOM heroes run in every browser.
+You need **Node.js 20.19+** (`.nvmrc` pins 22; Vite 8 and its rolldown bindings need `^20.19.0 || >=22.12.0`), **pnpm 10** (`corepack enable` installs the version pinned in `package.json`) and a browser with WebGPU for the WebGPU heroes (recent Chrome or Edge; Safari and Firefox work on recent versions). DOM heroes run in every browser.
 
 ```bash
 git clone https://github.com/rasengan-dev/sharingan.git
@@ -85,7 +85,7 @@ pnpm build
 
 CI runs both. Then check your hero in the browser, in light and dark themes, at phone width, and with reduced motion.
 
-`pnpm build` runs `pnpm registry` first, which writes `registry.json` and `apps/site/public/r`. Both are generated, and ignored by git: do not commit them.
+The site's build (`pnpm build`, or `pnpm --filter @sharingan/site build`) runs `pnpm registry` first, which writes `registry.json` and `apps/site/public/r`. Both are generated, and ignored by git: do not commit them. Items point at the production site by default; use `pnpm registry:local` to point them at the dev server while you try an install, and `pnpm check:registry` after a build to check the result.
 
 ## Commits
 
