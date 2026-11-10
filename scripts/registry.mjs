@@ -3,17 +3,24 @@
  * Writes registry.json from the sources (the core libs, every hero and every section), then builds it with the shadcn CLI
  * into apps/site/public/r, where the site serves it.
  *
+ *   pnpm registry           # items point at https://sharingan.hiraiship.app
+ *   pnpm registry:local     # items point at the dev server, http://localhost:3100
  *   SHARINGAN_URL=https://example.com pnpm registry
  *
  * SHARINGAN_URL is where the site (and so /r/*.json) will be served; items
- * point at each other through it. It defaults to the local dev server.
+ * point at each other through it. It defaults to the production site, so a
+ * build that forgets to set it still ships a registry that installs anywhere.
+ *
+ * The site's own build runs this script (apps/site/package.json), so every
+ * deploy regenerates /r/*.json, whatever command the host runs.
  */
 import { execFileSync } from "node:child_process";
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const root = join(import.meta.dirname, "..");
-const base = (process.env.SHARINGAN_URL || "http://localhost:3100").replace(/\/$/, "");
+const PRODUCTION = "https://sharingan.hiraiship.app";
+const base = (process.env.SHARINGAN_URL || PRODUCTION).replace(/\/$/, "");
 const url = (name) => `${base}/r/${name}.json`;
 // Sections only (RFC-0002); pinned like typegpu, one version per release.
 const GSAP = "gsap@3.15.0";

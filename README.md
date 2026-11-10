@@ -112,9 +112,11 @@ This starts the website on [http://localhost:3100](http://localhost:3100) with e
 
 | Command | What it does |
 | --- | --- |
-| `pnpm registry` | Writes `registry.json` from the sources and builds it into `apps/site/public/r` with the shadcn CLI. Set `SHARINGAN_URL` to the site's public address (default `http://localhost:3100`). |
+| `pnpm registry` | Writes `registry.json` from the sources and builds it into `apps/site/public/r` with the shadcn CLI. Items point at `SHARINGAN_URL` (default `https://sharingan.hiraiship.app`). |
+| `pnpm registry:local` | The same, with items pointing at the dev server (`http://localhost:3100`), to try an install against `pnpm dev`. |
 | `pnpm posters` | With `pnpm dev` running: renders every hero's and section's still frame, light and dark, into `public/thumbs` (cards) and `public/posters` (WebGPU fallbacks). `HEADLESS=0` uses the real GPU. |
-| `pnpm build` | `pnpm registry`, then the website. |
+| `pnpm build` | The website. Its build runs `pnpm registry` first, so every deploy ships `/r/*.json`. |
+| `pnpm check:registry` | After a build, checks that every item is in `apps/site/dist/client/r` and that its dependencies point at the public address. CI runs it. |
 | `pnpm typecheck` | Every package. |
 
 ## Website

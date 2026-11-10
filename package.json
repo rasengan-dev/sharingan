@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "pnpm --filter @sharingan/site dev",
     "registry": "node scripts/registry.mjs",
-    "build": "pnpm registry && pnpm --filter @sharingan/site build",
+    "registry:local": "SHARINGAN_URL=http://localhost:3100 node scripts/registry.mjs",
+    "build": "pnpm --filter @sharingan/site build",
+    "check:registry": "node scripts/check-registry.mjs",
     "typecheck": "pnpm -r typecheck",
     "posters": "node scripts/posters.mjs"
   },

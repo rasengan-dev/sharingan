@@ -85,7 +85,7 @@ pnpm build
 
 CI runs both. Then check your hero in the browser, in light and dark themes, at phone width, and with reduced motion.
 
-`pnpm build` runs `pnpm registry` first, which writes `registry.json` and `apps/site/public/r`. Both are generated, and ignored by git: do not commit them.
+The site's build (`pnpm build`, or `pnpm --filter @sharingan/site build`) runs `pnpm registry` first, which writes `registry.json` and `apps/site/public/r`. Both are generated, and ignored by git: do not commit them. Items point at the production site by default; use `pnpm registry:local` to point them at the dev server while you try an install, and `pnpm check:registry` after a build to check the result.
 
 ## Commits
 

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "rasengan dev",
-    "build": "rasengan build",
+    "build": "node ../../scripts/registry.mjs && rasengan build",
     "serve": "rasengan-serve ./dist",
     "typecheck": "tsc --noEmit"
   },
