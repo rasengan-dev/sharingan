@@ -101,7 +101,7 @@ Each hero ships its engine, the React component, the Web Component and a typed c
 
 ## Run locally
 
-Requires **Node.js 20.18+**, **pnpm** and a browser with WebGPU (recent Chrome, Edge, Safari or Firefox). From the repository root:
+Requires **Node.js 20.19+** (22 recommended), **pnpm** and a browser with WebGPU (recent Chrome, Edge, Safari or Firefox). From the repository root:
 
 ```bash
 pnpm install

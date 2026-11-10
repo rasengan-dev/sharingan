@@ -5,7 +5,7 @@ Before a large change (a new hero, a change to the core), open an issue first so
 
 ## Set up
 
-You need **Node.js 20.18+** (see `.nvmrc`), **pnpm 10** (`corepack enable` installs the version pinned in `package.json`) and a browser with WebGPU for the WebGPU heroes (recent Chrome or Edge; Safari and Firefox work on recent versions). DOM heroes run in every browser.
+You need **Node.js 20.19+** (`.nvmrc` pins 22; Vite 8 and its rolldown bindings need `^20.19.0 || >=22.12.0`), **pnpm 10** (`corepack enable` installs the version pinned in `package.json`) and a browser with WebGPU for the WebGPU heroes (recent Chrome or Edge; Safari and Firefox work on recent versions). DOM heroes run in every browser.
 
 ```bash
 git clone https://github.com/rasengan-dev/sharingan.git
